@@ -1,0 +1,21 @@
+version: '3.1'
+
+services:
+  db:
+    image: postgres:11.2
+    restart: always
+    environment:
+      POSTGRES_PASSWORD: example
+    volumes:
+      - ../db:/var/lib/postgresql/data
+      - ./postgresql.conf:/etc/postgresql/postgresql.conf
+    ports:
+      - 5432:5432
+  adminer:
+    image: adminer
+    restart: always
+    ports:
+      - 8080:8080
+
+#  db — это контейнер непосредственно с базой данных. В нашем случае используется postgresql версии 11.2;
+# adminer — менеджер работы с базой данных. Предоставляет web-интерфейс для просмотра и управления базой.

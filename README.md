@@ -28,16 +28,15 @@ yarn add @nestjsx/crud class-transformer class-validator
 # @nestjsx/crud — базовый пакет, который предоставляет декоратор Crud() для генерации роутов, конфигурирования и валидации;
 # @nestjsx/crud-request — пакет, предоставляющий билдер/парсер запросов для использования на стороне frontend;
 # @nestjsx/crud-typeorm — пакет для интеграции с TypeORM, предоставляющий базовый сервис TypeOrmCrudService с CRUD методами работы с сущностями в БД.
-
-
-docker-compose up -d # запуск бд
-npm start # запуск проекта
 ```
 
 
 ### JOB
 
 ```shell
+docker-compose up -d # запуск бд
+npm start # запуск проекта
+
 nest g module users # создание модуля users
 nest g controller users/controllers/users # создание контроллера users
 

@@ -7,9 +7,6 @@
     "no-unused-expression": true
   },
   "rules": {
-    "semi": [
-      false
-    ],
     "quotemark": [
       true,
       "single"

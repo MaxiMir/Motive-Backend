@@ -42,3 +42,15 @@ nest g controller users/controllers/users # создание контролле�
 
 npm run migration:generate -- CreateUserTable # создать миграцию на основе изменений в моделях
 ```
+
+### STATIC FILES:
+
+```shell
+npm i @nestjs/serve-static
+```
+В app.module.ts:
+```typescript
+ServeStaticModule.forRoot({
+      rootPath: path.resolve(__dirname, 'client'),
+})
+```

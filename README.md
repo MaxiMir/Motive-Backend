@@ -11,7 +11,9 @@ yarn add typeorm @nestjs/typeorm pg
 
 yarn add -D ts-node #  CLI написана на javascript и запускается в среде nodejs. Однако все наши модели и миграции будут написаны на typescript. Поэтому необходимо провести транспиляцию наших миграций и моделей до использования CLI. Для этого нам понадобится пакет ts-node:
 ```
+
 В package.json:
+
 ```json
 {
   "typeorm": "ts-node -r tsconfig-paths/register ./node_modules/typeorm/cli.js", // добавляет обертку в виде ts-node для запуска cli TypeORM
@@ -30,7 +32,6 @@ yarn add @nestjsx/crud class-transformer class-validator
 # @nestjsx/crud-typeorm — пакет для интеграции с TypeORM, предоставляющий базовый сервис TypeOrmCrudService с CRUD методами работы с сущностями в БД.
 ```
 
-
 ### JOB
 
 ```shell
@@ -38,9 +39,11 @@ docker-compose up -d # запуск бд
 npm start # запуск проекта
 
 nest g module users # создание модуля users
-nest g controller users/controllers/users # создание контроллера users
+nest g controller users # создание контроллера users
+nest g service users # создание сервиса users
 
 npm run migration:generate -- CreateUserTable # создать миграцию на основе изменений в моделях
+npm run migration:run # накатить миграцию
 ```
 
 ### STATIC FILES:
@@ -51,6 +54,6 @@ npm i @nestjs/serve-static
 В app.module.ts:
 ```typescript
 ServeStaticModule.forRoot({
-      rootPath: path.resolve(__dirname, 'client'),
+  exclude: ['/api*'], // default floder - client
 })
 ```

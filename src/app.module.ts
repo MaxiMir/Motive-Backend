@@ -3,6 +3,8 @@ import { ServeStaticModule } from '@nestjs/serve-static';
 import { Module } from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { UsersModule } from './users/users.module';
+import { GoalsModule } from './goals/goals.module';
+import { CharacteristicsModule } from './characteristics/characteristics.module';
 
 @Module({
   imports: [
@@ -17,9 +19,12 @@ import { UsersModule } from './users/users.module';
       password: process.env.POSTGRES_PASSWORD || 'example',
       database: 'postgres',
       entities: [__dirname + '/**/*.entity{.ts,.js}'],
-      synchronize: true,
+      synchronize: true, // TODO shouldn't be used in production - otherwise you can lose production data
     }),
     UsersModule,
+    CharacteristicsModule,
+    GoalsModule,
   ],
+  controllers: [],
 })
 export class AppModule {}

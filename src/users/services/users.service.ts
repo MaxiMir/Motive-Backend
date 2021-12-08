@@ -2,8 +2,8 @@ import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { TypeOrmCrudService } from '@nestjsx/crud-typeorm';
 import { getRepository, Repository } from 'typeorm';
-import { User } from '../entities/user.entity';
-import { CreateUserDto } from '../dto/CreateUserDto';
+import { User } from 'src/users/entities/user.entity';
+import { CreateUserDto } from 'src/users/dto/create-user.dto';
 
 @Injectable()
 export class UsersService extends TypeOrmCrudService<User> {
@@ -11,8 +11,10 @@ export class UsersService extends TypeOrmCrudService<User> {
     super(usersRepository);
   }
 
-  async getById(nickname: string) {
-    return await this.findOne({ nickname });
+  async getById(id: string) {
+    // favorite: boolean
+    // role: Role
+    return await this.findOne({ id });
   }
 
   async createUser(dto: CreateUserDto) {

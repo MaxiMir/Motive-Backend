@@ -18,6 +18,8 @@ export class UsersController {
     return this.service.getById(id);
   }
 
+  @ApiOperation({ summary: 'Create user' })
+  @ApiResponse({ status: 200, type: User })
   @Post()
   async create(@Body() dto: CreateUserDto) {
     return this.service.createUser(dto);

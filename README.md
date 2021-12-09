@@ -36,20 +36,20 @@ yarn add @nestjsx/crud class-transformer class-validator
 
 ```shell
 docker-compose up -d # запуск бд
-npm start # запуск проекта
+yarn start # запуск проекта
 
 nest g module users # создание модуля users
 nest g controller users # создание контроллера users
 nest g service users # создание сервиса users
 
-npm run migration:generate -- CreateUserTable # создать миграцию на основе изменений в моделях
-npm run migration:run # накатить миграцию
+yarn run migration:generate -- CreateUserTable # создать миграцию на основе изменений в моделях
+yarn run migration:run # накатить миграцию
 ```
 
 ### STATIC FILES:
 
 ```shell
-npm i @nestjs/serve-static
+yarn add @nestjs/serve-static
 ```
 В app.module.ts:
 ```typescript

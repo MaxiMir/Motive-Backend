@@ -15,7 +15,7 @@ export class CreateUserDto {
 
   @ApiProperty({
     example: '/images/4du4de.png',
-    description: 'server path to avatar image',
+    description: 'path to avatar',
   })
   readonly avatar: string;
 }

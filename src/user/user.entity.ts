@@ -12,40 +12,40 @@ import { Characteristic } from 'src/characteristic/characteristic.entity';
 
 @Entity('users')
 export class User {
+  @PrimaryColumn('varchar', { unique: true, length: 100 })
   @ApiProperty({
     example: 'maximir',
     description: 'nickname',
   })
-  @PrimaryColumn('varchar', { unique: true, length: 100 })
   id: string;
 
+  @Column({ length: 100 })
   @ApiProperty({
     example: 'Maxim Minchenko',
     description: 'name',
   })
-  @Column({ length: 100 })
   name: string;
 
+  @Column({ unique: true })
   @ApiProperty({
     example: '/images/4du4de.png',
     description: 'path to avatar',
   })
-  @Column({ unique: true })
   avatar: string;
 
+  @Column({ default: 0 })
   @ApiProperty({
     example: 1433,
     description: 'page views',
   })
-  @Column({ default: 0 })
   views: number;
 
-  @ApiProperty({ type: () => Characteristic })
   @OneToOne(() => Characteristic, { cascade: ['insert'] }) // cascade
   @JoinColumn()
+  @ApiProperty({ type: () => Characteristic })
   characteristic: Characteristic;
 
-  @ApiProperty({ type: () => Goal, isArray: true })
-  @OneToMany(() => Goal, (goal) => goal.user)
+  @OneToMany(() => Goal, (goal) => goal.owner)
+  @ApiProperty({ type: () => User, isArray: true })
   goals: Goal[];
 }

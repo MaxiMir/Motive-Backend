@@ -1,30 +1,32 @@
 import { ApiProperty } from '@nestjs/swagger';
 import { Column, Entity, ManyToOne, PrimaryGeneratedColumn } from 'typeorm';
+import { UserBaseDto } from 'src/user/dto/user-base.dto';
 import { User } from 'src/user/user.entity';
 
 @Entity('goals')
 export class Goal {
+  @PrimaryGeneratedColumn()
   @ApiProperty({
     example: 1,
     description: 'unique identifier',
   })
-  @PrimaryGeneratedColumn()
   id: number;
 
+  @Column()
   @ApiProperty({
     example: 'Learn English',
     description: 'name',
   })
-  @Column()
   name: string;
 
+  @Column({ type: 'timestamp', default: () => 'CURRENT_TIMESTAMP' })
   @ApiProperty({
     example: '2021-08-15 21:05:15.723336+07',
     description: 'created date',
   })
-  @Column({ type: 'timestamp', default: () => 'CURRENT_TIMESTAMP' })
   started: string;
 
+  @Column('simple-array')
   @ApiProperty({
     example: [
       'foreignLanguage',
@@ -35,9 +37,9 @@ export class Goal {
     ],
     description: 'hashtags',
   })
-  @Column('simple-array')
   hashtags: string[];
 
   @ManyToOne(() => User, (user) => user.goals)
-  user: User;
+  @ApiProperty({ type: () => UserBaseDto })
+  owner: User;
 }

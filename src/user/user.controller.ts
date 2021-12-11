@@ -7,9 +7,9 @@ import {
   Post,
 } from '@nestjs/common';
 import { ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
+import { CreateUserDto } from './dto/create-user-dto';
 import { ApiImageFile } from 'src/decorators/api-image.decorator';
 import { ParseFile } from 'src/pipes/parse-file.pipe';
-import { CreateUserDto } from './dto/create-user.dto';
 import { UserService } from './user.service';
 import { User } from './user.entity';
 

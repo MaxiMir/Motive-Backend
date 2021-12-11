@@ -3,7 +3,7 @@ import { ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
 import { GoalService } from './goal.service';
 import { Goal } from './goal.entity';
 
-@Controller('users')
+@Controller('goals')
 @ApiTags('Goals')
 export class GoalController {
   constructor(public service: GoalService) {}

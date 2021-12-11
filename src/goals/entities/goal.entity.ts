@@ -1,8 +1,8 @@
+import { ApiProperty } from '@nestjs/swagger';
 import { Column, Entity, ManyToOne, PrimaryGeneratedColumn } from 'typeorm';
 import { User } from 'src/users/entities/user.entity';
-import { ApiProperty } from '@nestjs/swagger';
 
-@Entity()
+@Entity('goals')
 export class Goal {
   @ApiProperty({
     example: 1,

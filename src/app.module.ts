@@ -26,5 +26,6 @@ import { CharacteristicsModule } from './characteristics/characteristics.module'
     GoalsModule,
   ],
   controllers: [],
+  providers: [],
 })
 export class AppModule {}

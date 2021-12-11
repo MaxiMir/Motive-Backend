@@ -57,3 +57,20 @@ ServeStaticModule.forRoot({
   exclude: ['/api*'], // default floder - client
 })
 ```
+
+### VALIDATION
+
+```shell
+yarn add class-validator class-transformer # https://docs.nestjs.com/techniques/validation
+```
+В `main.js`:
+```shell
+app.useGlobalPipes(new ValidationPipe()); # устанавливаем pipe на все endpoints
+````
+*pipe* - отвечают за преобразование или валидацию входных данных
+
+### FILES:
+
+```shell
+yarn add -D @types/multer # Nest uses multer for handling file uploads using the multipart/form-data format.
+```

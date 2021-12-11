@@ -1,3 +1,4 @@
+import { ApiProperty } from '@nestjs/swagger';
 import {
   Column,
   Entity,
@@ -8,22 +9,21 @@ import {
 } from 'typeorm';
 import { Goal } from 'src/goals/entities/goal.entity';
 import { Characteristic } from 'src/characteristics/entities/characteristic.entity';
-import { ApiProperty } from '@nestjs/swagger';
 
-@Entity()
+@Entity('users')
 export class User {
   @ApiProperty({
     example: 'maximir',
     description: 'nickname',
   })
-  @PrimaryColumn('varchar', { unique: true, length: 256 })
+  @PrimaryColumn('varchar', { unique: true, length: 100 })
   id: string;
 
   @ApiProperty({
     example: 'Maxim Minchenko',
     description: 'name',
   })
-  @Column()
+  @Column({ length: 100 })
   name: string;
 
   @ApiProperty({
@@ -41,7 +41,7 @@ export class User {
   views: number;
 
   @ApiProperty({ type: () => Characteristic })
-  @OneToOne(() => Characteristic)
+  @OneToOne(() => Characteristic, { cascade: ['insert'] })
   @JoinColumn()
   characteristic: Characteristic;
 

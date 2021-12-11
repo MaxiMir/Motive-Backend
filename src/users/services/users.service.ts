@@ -14,10 +14,13 @@ export class UsersService extends TypeOrmCrudService<User> {
   async getById(id: string) {
     // favorite: boolean
     // role: Role
-    return await this.findOne({ id });
+    return await this.findOne(
+      { id },
+      { relations: ['characteristic', 'goals'] },
+    );
   }
 
-  async createUser(dto: CreateUserDto) {
+  async createUser(dto: CreateUserDto, file: Express.Multer.File) {
     const userRepository = getRepository(User);
     return await userRepository.save(dto);
   }

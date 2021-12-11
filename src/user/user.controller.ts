@@ -8,15 +8,15 @@ import {
 } from '@nestjs/common';
 import { ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
 import { ApiImageFile } from 'src/decorators/api-image.decorator';
-import { UsersService } from 'src/users/services/users.service';
-import { CreateUserDto } from 'src/users/dto/create-user.dto';
-import { User } from 'src/users/entities/user.entity';
 import { ParseFile } from 'src/pipes/parse-file.pipe';
+import { CreateUserDto } from './dto/create-user.dto';
+import { UserService } from './user.service';
+import { User } from './user.entity';
 
-@ApiTags('User')
 @Controller('users')
-export class UsersController {
-  constructor(public service: UsersService) {}
+@ApiTags('User')
+export class UserController {
+  constructor(public service: UserService) {}
 
   @Get(':id')
   @ApiOperation({ summary: 'Get user' })

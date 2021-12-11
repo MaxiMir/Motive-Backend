@@ -1,7 +1,7 @@
 import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
 
 @Injectable()
-export class FilesService {
+export class FileService {
   async create(file: Express.Multer.File): Promise<string> {
     try {
       // TODO

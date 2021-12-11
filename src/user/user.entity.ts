@@ -7,8 +7,8 @@ import {
   OneToOne,
   PrimaryColumn,
 } from 'typeorm';
-import { Goal } from 'src/goals/entities/goal.entity';
-import { Characteristic } from 'src/characteristics/entities/characteristic.entity';
+import { Goal } from 'src/goal/goal.entity';
+import { Characteristic } from 'src/characteristic/characteristic.entity';
 
 @Entity('users')
 export class User {

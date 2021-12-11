@@ -4,10 +4,10 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 import { ConfigModule } from '@nestjs/config';
 import { Module } from '@nestjs/common';
 import { MulterModule } from '@nestjs/platform-express';
-import { UsersModule } from './users/users.module';
-import { GoalsModule } from './goals/goals.module';
-import { CharacteristicsModule } from './characteristics/characteristics.module';
-import { FilesModule } from './files/files.module';
+import { UserModule } from './user/user.module';
+import { GoalModule } from './goal/goal.module';
+import { CharacteristicModule } from './characteristic/characteristic.module';
+import { FilesModule } from './file/files.module';
 
 @Module({
   imports: [
@@ -26,9 +26,9 @@ import { FilesModule } from './files/files.module';
       entities: [__dirname + '/**/*.entity{.ts,.js}'],
       synchronize: true, // TODO shouldn't be used in production - otherwise you can lose production data
     }),
-    UsersModule,
-    CharacteristicsModule,
-    GoalsModule,
+    UserModule,
+    CharacteristicModule,
+    GoalModule,
     FilesModule,
   ],
   controllers: [],

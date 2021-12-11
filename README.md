@@ -38,9 +38,9 @@ yarn add @nestjsx/crud class-transformer class-validator
 docker-compose up -d # запуск бд
 yarn start # запуск проекта
 
-nest g module users # создание модуля users
-nest g controller users # создание контроллера users
-nest g service users # создание сервиса users
+nest g module user # создание модуля user
+nest g controller user # создание контроллера user
+nest g service user # создание сервиса user
 
 yarn run migration:generate -- CreateUserTable # создать миграцию на основе изменений в моделях
 yarn run migration:run # накатить миграцию

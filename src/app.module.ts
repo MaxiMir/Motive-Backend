@@ -5,6 +5,7 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 import { UsersModule } from './users/users.module';
 import { GoalsModule } from './goals/goals.module';
 import { CharacteristicsModule } from './characteristics/characteristics.module';
+import { FilesModule } from './files/files.module';
 
 @Module({
   imports: [
@@ -24,6 +25,7 @@ import { CharacteristicsModule } from './characteristics/characteristics.module'
     UsersModule,
     CharacteristicsModule,
     GoalsModule,
+    FilesModule,
   ],
   controllers: [],
   providers: [],

@@ -2,19 +2,12 @@ import {
   Body,
   Controller,
   Param,
-  UseInterceptors,
   UploadedFile,
   Get,
   Post,
 } from '@nestjs/common';
-import { FileInterceptor } from '@nestjs/platform-express';
-import {
-  ApiBody,
-  ApiConsumes,
-  ApiOperation,
-  ApiResponse,
-  ApiTags,
-} from '@nestjs/swagger';
+import { ApiOperation, ApiParam, ApiResponse, ApiTags } from '@nestjs/swagger';
+import { ApiImageFile } from 'src/decorators/api-image.decorator';
 import { UsersService } from 'src/users/services/users.service';
 import { CreateUserDto } from 'src/users/dto/create-user.dto';
 import { User } from 'src/users/entities/user.entity';
@@ -33,29 +26,25 @@ export class UsersController {
     return this.service.getById(id);
   }
 
-  @Post('upload')
-  @UseInterceptors(FileInterceptor('avatar'))
-  @ApiConsumes('multipart/form-data')
-  @ApiOperation({ summary: 'Create user' })
-  @ApiBody({
-    schema: {
-      type: 'object',
-      properties: {
-        id: { type: 'string' },
-        name: { type: 'string' },
-        avatar: {
-          type: 'string',
-          format: 'binary',
-        },
-      },
-      required: ['id', 'name', 'avatar'],
-    },
+  @Post()
+  @ApiParam({
+    name: 'name',
+    example: 'Maxim Minchenko',
+    description: 'name',
   })
-  @ApiResponse({ status: 200, type: User })
+  @ApiParam({
+    name: 'id',
+    example: 'maximir',
+    description: 'nickname',
+  })
+  @ApiOperation({ summary: 'Create user' })
+  @ApiImageFile('avatar', true)
+  @ApiResponse({ status: 201, type: User })
   async create(
     @UploadedFile() file: Express.Multer.File,
     @Body() dto: CreateUserDto,
   ) {
+    console.log(dto);
     return this.service.createUser(dto, file);
   }
 }

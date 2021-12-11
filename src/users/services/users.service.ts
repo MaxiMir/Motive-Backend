@@ -25,8 +25,8 @@ export class UsersService extends TypeOrmCrudService<User> {
   }
 
   async createUser(dto: CreateUserDto, file: Express.Multer.File) {
-    const avatar = this.filesService.create(file);
+    const avatar = await this.filesService.create(file);
     const userRepository = getRepository(User);
-    // return await userRepository.save(dto);
+    return await userRepository.save({ ...dto, avatar, characteristic: {} });
   }
 }

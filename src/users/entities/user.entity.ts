@@ -41,7 +41,7 @@ export class User {
   views: number;
 
   @ApiProperty({ type: () => Characteristic })
-  @OneToOne(() => Characteristic, { cascade: ['insert'] })
+  @OneToOne(() => Characteristic, { cascade: ['insert'] }) // cascade
   @JoinColumn()
   characteristic: Characteristic;
 

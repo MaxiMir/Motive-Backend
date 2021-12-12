@@ -8,6 +8,7 @@ import { UserModule } from './user/user.module';
 import { GoalModule } from './goal/goal.module';
 import { CharacteristicModule } from './characteristic/characteristic.module';
 import { FilesModule } from './file/files.module';
+import { Unique } from './validators/unique';
 
 @Module({
   imports: [
@@ -32,6 +33,6 @@ import { FilesModule } from './file/files.module';
     FilesModule,
   ],
   controllers: [],
-  providers: [],
+  providers: [Unique],
 })
 export class AppModule {}

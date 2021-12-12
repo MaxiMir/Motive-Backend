@@ -1,14 +1,16 @@
-import { ApiProperty } from '@nestjs/swagger';
+import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
 import {
   Column,
   Entity,
   JoinColumn,
+  ManyToOne,
   OneToMany,
   OneToOne,
   PrimaryColumn,
 } from 'typeorm';
 import { Goal } from 'src/goal/goal.entity';
 import { Characteristic } from 'src/characteristic/characteristic.entity';
+import { Page } from '../page/page.entity';
 
 @Entity('users')
 export class User {
@@ -28,24 +30,21 @@ export class User {
 
   @Column({ unique: true })
   @ApiProperty({
-    example: '/images/4du4de.png',
-    description: 'path to avatar',
+    example: '/avatars/15058de3-3950-4d29-a380-7d3813aab1bc.webp',
+    description: 'the path to the avatar',
   })
   avatar: string;
 
-  @Column({ default: 0 })
-  @ApiProperty({
-    example: 1433,
-    description: 'page views',
-  })
-  views: number;
-
   @OneToOne(() => Characteristic, { cascade: ['insert'] }) // cascade
   @JoinColumn()
-  @ApiProperty({ type: () => Characteristic })
+  @ApiPropertyOptional({ type: () => Characteristic })
   characteristic: Characteristic;
 
   @OneToMany(() => Goal, (goal) => goal.owner)
-  @ApiProperty({ type: () => User, isArray: true })
+  @ApiPropertyOptional({ type: () => Goal, isArray: true })
   goals: Goal[];
+
+  @ManyToOne(() => Page, (page) => page.favorites)
+  @ApiPropertyOptional({ type: () => Page })
+  page: Page;
 }

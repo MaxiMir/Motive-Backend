@@ -16,16 +16,11 @@ export class UserService extends TypeOrmCrudService<User> {
     super(userRepository);
   }
 
-  async getById(id: string) {
-    // favorite: boolean
-    // role: Role
-    return await this.findOne(
-      { id },
-      { relations: ['characteristic', 'goals'] },
-    );
+  async findById(id: string) {
+    return await this.findOne({ id });
   }
 
-  async createUser(dto: CreateUserDto, file: Express.Multer.File) {
+  async create(dto: CreateUserDto, file: Express.Multer.File) {
     const avatar = await this.fileService.create(file);
 
     return await this.userRepository.save({

@@ -14,18 +14,15 @@ import { UserService } from './user.service';
 import { User } from './user.entity';
 
 @Controller('users')
-@ApiTags('User')
+@ApiTags('Users')
 export class UserController {
   constructor(public service: UserService) {}
 
   @Get(':id')
   @ApiOperation({ summary: 'Get user' })
   @ApiResponse({ status: 200, type: User })
-  async findOne(@Param('id') id: string) {
-    // views increment if auth && user.id !=== db.user.id
-    // favorite: boolean
-    // role: Role
-    return this.service.getById(id);
+  async findById(@Param('id') id: string) {
+    return this.service.findById(id);
   }
 
   @Post()
@@ -36,6 +33,6 @@ export class UserController {
     @Query() dto: CreateUserDto,
     @UploadedFile(ParseFile) file: Express.Multer.File,
   ) {
-    return this.service.createUser(dto, file);
+    return this.service.create(dto, file);
   }
 }

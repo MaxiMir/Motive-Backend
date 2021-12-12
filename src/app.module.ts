@@ -9,6 +9,7 @@ import { GoalModule } from './goal/goal.module';
 import { CharacteristicModule } from './characteristic/characteristic.module';
 import { FilesModule } from './file/files.module';
 import { Unique } from './validators/unique';
+import { PageModule } from './page/page.module';
 
 @Module({
   imports: [
@@ -31,6 +32,7 @@ import { Unique } from './validators/unique';
     CharacteristicModule,
     GoalModule,
     FilesModule,
+    PageModule,
   ],
   controllers: [],
   providers: [Unique],

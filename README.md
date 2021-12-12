@@ -35,12 +35,14 @@ yarn add @nestjsx/crud class-transformer class-validator
 ### JOB
 
 ```shell
-docker-compose up -d # запуск бд
+docker-compose up -d # установка образа с бд
 yarn start # запуск проекта
 
 nest g module user # создание модуля user
 nest g controller user # создание контроллера user
 nest g service user # создание сервиса user
+# или:
+nest g resource user # генерирует все разом 
 
 yarn run migration:generate -- CreateUserTable # создать миграцию на основе изменений в моделях
 yarn run migration:run # накатить миграцию

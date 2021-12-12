@@ -1,6 +1,5 @@
 import { ApiProperty } from '@nestjs/swagger';
 import { Column, Entity, ManyToOne, PrimaryGeneratedColumn } from 'typeorm';
-import { UserBaseDto } from 'src/user/dto/user-base.dto';
 import { User } from 'src/user/user.entity';
 
 @Entity('goals')
@@ -40,6 +39,6 @@ export class Goal {
   hashtags: string[];
 
   @ManyToOne(() => User, (user) => user.goals)
-  @ApiProperty({ type: () => UserBaseDto })
+  @ApiProperty({ type: () => User })
   owner: User;
 }

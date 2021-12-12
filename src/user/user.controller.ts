@@ -22,6 +22,7 @@ export class UserController {
   @ApiOperation({ summary: 'Get user' })
   @ApiResponse({ status: 200, type: User })
   async findOne(@Param('id') id: string) {
+    // views increment if auth && user.id !=== db.user.id
     // favorite: boolean
     // role: Role
     return this.service.getById(id);

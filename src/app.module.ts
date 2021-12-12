@@ -13,7 +13,7 @@ import { Unique } from './validators/unique';
 @Module({
   imports: [
     ConfigModule.forRoot({ isGlobal: true }),
-    MulterModule.register({ dest: './temp' }),
+    MulterModule.register(),
     ServeStaticModule.forRoot({
       exclude: ['/api*'],
     }),

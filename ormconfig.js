@@ -11,7 +11,7 @@ module.exports = {
   password,
   database: process.env.POSTGRES_DB,
   synchronize: true,
-  dropSchema: true,
+  dropSchema: false,
   logging: true,
   entities: [
     __dirname + '/src/**/*.entity.ts',

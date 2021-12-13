@@ -11,7 +11,7 @@ export class CreateUserDto {
     example: 'maximir',
     description: 'nickname',
   })
-  readonly id: string;
+  readonly nickname: string;
 
   @IsString()
   @Length(3, 100)

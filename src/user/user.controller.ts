@@ -18,11 +18,11 @@ import { User } from './user.entity';
 export class UserController {
   constructor(public service: UserService) {}
 
-  @Get(':id')
-  @ApiOperation({ summary: 'Get user' })
+  @Get(':nickname')
+  @ApiOperation({ summary: 'Get user by nickname' })
   @ApiResponse({ status: 200, type: User })
-  async findById(@Param('id') id: string) {
-    return this.service.findById(id);
+  async findOne(@Param('nickname') nickname: string) {
+    return this.service.findOne(nickname);
   }
 
   @Post()

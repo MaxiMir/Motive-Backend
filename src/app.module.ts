@@ -9,6 +9,7 @@ import { GoalModule } from './goal/goal.module';
 import { CharacteristicModule } from './characteristic/characteristic.module';
 import { FilesModule } from './file/files.module';
 import { Unique } from './validators/unique';
+import { PreferencesModule } from './preferences/preferences.module';
 
 @Module({
   imports: [
@@ -26,12 +27,12 @@ import { Unique } from './validators/unique';
       database: process.env.POSTGRES_DB,
       entities: [__dirname + '/**/*.entity{.ts,.js}'],
       synchronize: true, // TODO shouldn't be used in production - otherwise you can lose production data
-      dropSchema: true,
     }),
     UserModule,
     CharacteristicModule,
     GoalModule,
     FilesModule,
+    PreferencesModule,
   ],
   controllers: [],
   providers: [Unique],

@@ -2,22 +2,31 @@ import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
 import {
   Column,
   Entity,
-  JoinColumn,
+  Index,
   OneToMany,
   OneToOne,
-  PrimaryColumn,
+  PrimaryGeneratedColumn,
 } from 'typeorm';
 import { Goal } from 'src/goal/goal.entity';
 import { Characteristic } from 'src/characteristic/characteristic.entity';
+import { Preferences } from 'src/preferences/preferences.entity';
 
 @Entity('users')
 export class User {
-  @PrimaryColumn('varchar', { unique: true, length: 100 })
+  @PrimaryGeneratedColumn()
+  @ApiProperty({
+    example: 1,
+    description: 'unique identifier',
+  })
+  id: number;
+
+  @Index({ unique: true })
+  @Column()
   @ApiProperty({
     example: 'maximir',
     description: 'nickname',
   })
-  id: string;
+  nickname: string;
 
   @Column({ length: 100 })
   @ApiProperty({
@@ -26,7 +35,7 @@ export class User {
   })
   name: string;
 
-  @Column({ unique: true })
+  @Column()
   @ApiProperty({
     example: '/avatars/15058de3-3950-4d29-a380-7d3813aab1bc.webp',
     description: 'the path to the avatar',
@@ -40,17 +49,15 @@ export class User {
   })
   view: number;
 
-  @OneToOne(() => Characteristic, { cascade: ['insert'] }) // cascade
-  @JoinColumn()
+  @OneToOne(() => Characteristic, (characteristic) => characteristic.user)
   @ApiPropertyOptional({ type: () => Characteristic })
-  characteristic: Characteristic;
+  characteristic: Promise<Characteristic>;
 
-  @OneToMany(() => Goal, (goal) => goal.owner)
+  @OneToMany(() => Goal, (goal) => goal.user)
   @ApiPropertyOptional({ type: () => Goal, isArray: true })
-  goals: Goal[];
+  goals: Promise<Goal[]>;
 
-  @OneToMany(() => User, (user) => user.id)
-  @JoinColumn()
-  @ApiPropertyOptional({ type: () => User, isArray: true })
-  favorites: User[];
+  @OneToOne(() => Preferences, (preferences) => preferences.user)
+  @ApiPropertyOptional({ type: () => Preferences })
+  preferences: Promise<Preferences>;
 }

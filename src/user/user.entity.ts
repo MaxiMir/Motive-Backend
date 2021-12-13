@@ -3,14 +3,12 @@ import {
   Column,
   Entity,
   JoinColumn,
-  ManyToOne,
   OneToMany,
   OneToOne,
   PrimaryColumn,
 } from 'typeorm';
 import { Goal } from 'src/goal/goal.entity';
 import { Characteristic } from 'src/characteristic/characteristic.entity';
-import { Page } from '../page/page.entity';
 
 @Entity('users')
 export class User {
@@ -35,6 +33,13 @@ export class User {
   })
   avatar: string;
 
+  @Column({ default: 0 })
+  @ApiProperty({
+    example: 1433,
+    description: 'page views',
+  })
+  view: number;
+
   @OneToOne(() => Characteristic, { cascade: ['insert'] }) // cascade
   @JoinColumn()
   @ApiPropertyOptional({ type: () => Characteristic })
@@ -44,7 +49,8 @@ export class User {
   @ApiPropertyOptional({ type: () => Goal, isArray: true })
   goals: Goal[];
 
-  @ManyToOne(() => Page, (page) => page.favorites)
-  @ApiPropertyOptional({ type: () => Page })
-  page: Page;
+  @OneToMany(() => User, (user) => user.id)
+  @JoinColumn()
+  @ApiPropertyOptional({ type: () => User, isArray: true })
+  favorites: User[];
 }

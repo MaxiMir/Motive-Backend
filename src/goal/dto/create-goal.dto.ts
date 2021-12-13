@@ -1,5 +1,5 @@
 import { CreateTaskDto } from 'src/task/dto/create-task.dto';
-import { IsArray, IsString, Length } from 'class-validator';
+import { ArrayMinSize, IsArray, IsString, Length } from 'class-validator';
 import { ApiProperty } from '@nestjs/swagger';
 
 export class CreateGoalDto {
@@ -20,6 +20,7 @@ export class CreateGoalDto {
   readonly hashtags: string;
 
   @IsArray()
+  @ArrayMinSize(1)
   @ApiProperty({ type: CreateTaskDto, isArray: true })
   readonly tasks: CreateTaskDto[];
 }

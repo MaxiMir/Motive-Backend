@@ -6,10 +6,13 @@ import { Module } from '@nestjs/common';
 import { MulterModule } from '@nestjs/platform-express';
 import { UserModule } from './user/user.module';
 import { GoalModule } from './goal/goal.module';
-import { CharacteristicModule } from './characteristic/characteristic.module';
+import { UserCharacteristicModule } from './user-characteristic/user-characteristic.module';
 import { FilesModule } from './file/files.module';
 import { Unique } from './validators/unique';
 import { PreferencesModule } from './preferences/preferences.module';
+import { DayModule } from './day/day.module';
+import { HashtagModule } from './hashtag/hashtag.module';
+import { GoalCharacteristicModule } from './goal-characteristic/goal-characteristic.module';
 
 @Module({
   imports: [
@@ -27,12 +30,16 @@ import { PreferencesModule } from './preferences/preferences.module';
       database: process.env.POSTGRES_DB,
       entities: [__dirname + '/**/*.entity{.ts,.js}'],
       synchronize: true, // TODO shouldn't be used in production - otherwise you can lose production data
+      cache: true, // TODO enable caching
     }),
     UserModule,
-    CharacteristicModule,
+    UserCharacteristicModule,
     GoalModule,
     FilesModule,
     PreferencesModule,
+    DayModule,
+    HashtagModule,
+    GoalCharacteristicModule,
   ],
   controllers: [],
   providers: [Unique],

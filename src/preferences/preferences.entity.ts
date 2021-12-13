@@ -19,13 +19,13 @@ export class Preferences {
 
   @Column('simple-array')
   @ApiProperty({
-    example: ['maximir', 'yulifleur'],
+    example: [23, 33],
     description: 'list id for favorites',
   })
-  favorites: string[];
+  favorites: number[];
 
   @OneToOne(() => User)
   @JoinColumn()
   @ApiProperty({ type: () => User })
-  user: User;
+  user: Promise<User>;
 }

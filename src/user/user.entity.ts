@@ -8,7 +8,7 @@ import {
   PrimaryGeneratedColumn,
 } from 'typeorm';
 import { Goal } from 'src/goal/goal.entity';
-import { Characteristic } from 'src/characteristic/characteristic.entity';
+import { UserCharacteristic } from 'src/user-characteristic/user-characteristic.entity';
 import { Preferences } from 'src/preferences/preferences.entity';
 
 @Entity('users')
@@ -49,11 +49,11 @@ export class User {
   })
   view: number;
 
-  @OneToOne(() => Characteristic, (characteristic) => characteristic.user)
-  @ApiPropertyOptional({ type: () => Characteristic })
-  characteristic: Promise<Characteristic>;
+  @OneToOne(() => UserCharacteristic, (characteristic) => characteristic.user)
+  @ApiPropertyOptional({ type: () => UserCharacteristic })
+  characteristic: Promise<UserCharacteristic>;
 
-  @OneToMany(() => Goal, (goal) => goal.user)
+  @OneToMany(() => Goal, (goal) => goal.owner)
   @ApiPropertyOptional({ type: () => Goal, isArray: true })
   goals: Promise<Goal[]>;
 

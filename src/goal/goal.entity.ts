@@ -1,12 +1,17 @@
-import { ApiProperty } from '@nestjs/swagger';
+import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
 import {
   Column,
   Entity,
   JoinColumn,
   ManyToOne,
+  OneToMany,
+  OneToOne,
   PrimaryGeneratedColumn,
 } from 'typeorm';
 import { User } from 'src/user/user.entity';
+import { Day } from 'src/day/day.entity';
+import { Hashtag } from 'src/hashtag/hashtag.entity';
+import { GoalCharacteristic } from 'src/goal-characteristic/goal-characteristic.entity';
 
 @Entity('goals')
 export class Goal {
@@ -24,28 +29,35 @@ export class Goal {
   })
   name: string;
 
-  @Column({ type: 'timestamp', default: () => 'CURRENT_TIMESTAMP' })
+  @Column({
+    type: 'timestamp with time zone',
+    default: () => 'CURRENT_TIMESTAMP',
+  })
   @ApiProperty({
     example: '2021-08-15 21:05:15.723336+07',
     description: 'created date',
   })
   started: string;
 
-  @Column('simple-array')
-  @ApiProperty({
-    example: [
-      'foreignLanguage',
-      'knowledge',
-      'learnFrench',
-      'immigration',
-      'recommendation',
-    ],
-    description: 'hashtags',
+  @OneToMany(() => Hashtag, (hashtag) => hashtag.goal, {
+    eager: true,
+    cascade: true,
   })
-  hashtags: string[];
+  @JoinColumn()
+  @ApiProperty({ type: () => Hashtag, isArray: true })
+  hashtags: Hashtag[];
+
+  @OneToOne(() => GoalCharacteristic, (characteristic) => characteristic.goal, {
+    eager: true,
+  })
+  @ApiPropertyOptional({ type: () => GoalCharacteristic })
+  characteristic: GoalCharacteristic;
+
+  @OneToMany(() => Day, (day) => day.goal, { cascade: true })
+  @ApiProperty({ type: () => Day, isArray: true })
+  days: Day[];
 
   @ManyToOne(() => User, (user) => user.goals)
-  @JoinColumn()
-  @ApiProperty({ type: () => User })
-  user: User;
+  @ApiPropertyOptional({ type: () => User })
+  owner: User;
 }

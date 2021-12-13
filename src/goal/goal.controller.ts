@@ -9,9 +9,9 @@ import {
 import { ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
 import { getRepository } from 'typeorm';
 import { CreateGoalDto } from './dto/create-goal.dto';
+import { User } from 'src/user/user.entity';
 import { GoalService } from './goal.service';
 import { Goal } from './goal.entity';
-import { User } from 'src/user/user.entity';
 
 @Controller('goals')
 @ApiTags('Goals')
@@ -31,17 +31,27 @@ export class GoalController {
   async create(@Body() dto: CreateGoalDto) {
     const userRepository = getRepository(User); // Временно
     const goalRepository = getRepository(Goal); // Временно
-    const user = await userRepository.findOne('maximir');
+    const owner = await userRepository.findOne(1);
+    console.log(
+      dto.hashtags
+        .replaceAll('#', '')
+        .split(' ')
+        .filter(Boolean)
+        .map((s) => s.trim()),
+    );
+
     return goalRepository.save({
-      ...dto,
-      hashtags: [
-        'foreignLanguage',
-        'knowledge',
-        'learnFrench',
-        'immigration',
-        'recommendation',
+      name: dto.name,
+      // hashtags: [],
+      day: [
+        {
+          // date: '',
+          tasks: dto.tasks,
+        },
       ],
-      owner: user,
+      owner,
     });
   }
+
+  // TODO datesMAP
 }

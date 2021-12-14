@@ -5,10 +5,16 @@ import * as sharp from 'sharp';
 
 @Injectable()
 export class FileService {
-  async create(file: Express.Multer.File): Promise<string> {
+  async uploadImage(
+    file: Express.Multer.File,
+    options: { width?: number; height?: number },
+  ): Promise<string> {
     try {
-      const filePath = join(process.env.AVATAR_STORAGE, `${uuid.v4()}.webp`);
-      await sharp(file.buffer).resize({ width: 500 }).webp().toFile(filePath);
+      const filePath = join(
+        process.env.AVATAR_STORAGE as string,
+        `${uuid.v4()}.webp`,
+      );
+      await sharp(file.buffer).resize(options).webp().toFile(filePath);
 
       return filePath;
     } catch (e) {

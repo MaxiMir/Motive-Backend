@@ -32,6 +32,7 @@ export class GoalController {
     const userRepository = getRepository(User); // Временно
     const goalRepository = getRepository(Goal); // Временно
     const owner = await userRepository.findOne(1);
+    // TODO
     console.log(
       dto.hashtags
         .replaceAll('#', '')
@@ -49,9 +50,7 @@ export class GoalController {
           tasks: dto.tasks,
         },
       ],
-      owner,
+      // owner,
     });
   }
-
-  // TODO datesMAP
 }

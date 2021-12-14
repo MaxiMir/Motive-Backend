@@ -1,6 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
+import { FindConditions } from 'typeorm/find-options/FindConditions';
 import { Task } from './task.entity';
 
 @Injectable()
@@ -10,7 +11,7 @@ export class TaskService {
     private taskRepository: Repository<Task>,
   ) {}
 
-  async findOne(id: number) {
-    return await this.taskRepository.find({ id });
+  async findOne(conditions: FindConditions<Task>) {
+    return await this.taskRepository.findOne(conditions);
   }
 }

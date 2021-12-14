@@ -14,6 +14,7 @@ import { DayModule } from './day/day.module';
 import { HashtagModule } from './hashtag/hashtag.module';
 import { GoalCharacteristicModule } from './goal-characteristic/goal-characteristic.module';
 import { TaskModule } from './task/task.module';
+import { PageModule } from './page/page.module';
 
 @Module({
   imports: [
@@ -42,6 +43,7 @@ import { TaskModule } from './task/task.module';
     DayModule,
     TaskModule,
     FilesModule,
+    PageModule,
   ],
   controllers: [],
   providers: [Unique],

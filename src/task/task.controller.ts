@@ -12,6 +12,6 @@ export class TaskController {
   @ApiOperation({ summary: 'Get task' })
   @ApiResponse({ status: 200, type: Task })
   async findOne(@Param('id', ParseIntPipe) id: number) {
-    return this.hashtagService.findOne(id);
+    return this.hashtagService.findOne({ id });
   }
 }

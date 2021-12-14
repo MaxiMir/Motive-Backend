@@ -1,6 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
+import { FindConditions } from 'typeorm/find-options/FindConditions';
 import { Hashtag } from './hashtag.entity';
 
 @Injectable()
@@ -10,7 +11,7 @@ export class HashtagService {
     private goalRepository: Repository<Hashtag>,
   ) {}
 
-  async findOne(id: number) {
-    return await this.goalRepository.find({ id });
+  async findOne(conditions: FindConditions<Hashtag>) {
+    return await this.goalRepository.findOneOrFail(conditions);
   }
 }

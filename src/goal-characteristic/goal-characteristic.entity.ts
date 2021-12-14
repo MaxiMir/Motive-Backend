@@ -10,7 +10,7 @@ export class GoalCharacteristic extends MainCharacteristics {
     description: 'members',
   })
   @Column({ default: 0 })
-  completed: number;
+  members: number;
 
   @OneToOne(() => Goal)
   @JoinColumn()

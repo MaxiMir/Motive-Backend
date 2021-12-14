@@ -12,6 +12,6 @@ export class DayController {
   @ApiOperation({ summary: 'Get day' })
   @ApiResponse({ status: 200, type: Day })
   async findOne(@Param('id', ParseIntPipe) id: number) {
-    return this.dayService.findOne(id);
+    return this.dayService.findOne({ id });
   }
 }

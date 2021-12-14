@@ -27,7 +27,7 @@ export class Day {
 
   @OneToMany(() => Task, (task) => task.day)
   @ApiPropertyOptional({ type: () => Task, isArray: true })
-  tasks: Promise<Task[]>;
+  tasks: Task[];
 
   // discussion: string;
 

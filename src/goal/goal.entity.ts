@@ -43,7 +43,6 @@ export class Goal {
     eager: true,
     cascade: true,
   })
-  @JoinColumn()
   @ApiProperty({ type: () => Hashtag, isArray: true })
   hashtags: Hashtag[];
 
@@ -59,5 +58,5 @@ export class Goal {
 
   @ManyToOne(() => User, (user) => user.goals)
   @ApiPropertyOptional({ type: () => User })
-  owner: User;
+  owner: Promise<User>;
 }

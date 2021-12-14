@@ -22,7 +22,7 @@ export class UserController {
   @ApiOperation({ summary: 'Get user by nickname' })
   @ApiResponse({ status: 200, type: User })
   async findOne(@Param('nickname') nickname: string) {
-    return this.userService.findOne(nickname);
+    return this.userService.findOne({ nickname });
   }
 
   @Post()

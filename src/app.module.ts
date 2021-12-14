@@ -13,6 +13,7 @@ import { PreferencesModule } from './preferences/preferences.module';
 import { DayModule } from './day/day.module';
 import { HashtagModule } from './hashtag/hashtag.module';
 import { GoalCharacteristicModule } from './goal-characteristic/goal-characteristic.module';
+import { TaskModule } from './task/task.module';
 
 @Module({
   imports: [
@@ -34,12 +35,13 @@ import { GoalCharacteristicModule } from './goal-characteristic/goal-characteris
     }),
     UserModule,
     UserCharacteristicModule,
-    GoalModule,
-    FilesModule,
     PreferencesModule,
-    DayModule,
+    GoalModule,
     HashtagModule,
     GoalCharacteristicModule,
+    DayModule,
+    TaskModule,
+    FilesModule,
   ],
   controllers: [],
   providers: [Unique],

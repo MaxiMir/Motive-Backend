@@ -1,5 +1,6 @@
-import { ApiProperty } from '@nestjs/swagger';
-import { Column, Entity, PrimaryGeneratedColumn } from 'typeorm';
+import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
+import { Column, Entity, ManyToOne, PrimaryGeneratedColumn } from 'typeorm';
+import { Day } from 'src/day/day.entity';
 
 @Entity('tasks')
 export class Task {
@@ -31,5 +32,9 @@ export class Task {
     example: [23, 33],
     description: 'list id users who completed task',
   })
-  completed: number[];
+  completedBy: number[];
+
+  @ManyToOne(() => Day, (day) => day.tasks)
+  @ApiPropertyOptional({ type: () => Day })
+  day: Promise<Day>;
 }

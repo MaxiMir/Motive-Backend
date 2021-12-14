@@ -9,4 +9,8 @@ export class DayService {
     @InjectRepository(Day)
     private dayRepository: Repository<Day>,
   ) {}
+
+  async findOne(id: number) {
+    return await this.dayRepository.find({ id });
+  }
 }

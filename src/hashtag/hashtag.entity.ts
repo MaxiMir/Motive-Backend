@@ -5,7 +5,7 @@ import {
   ManyToOne,
   PrimaryGeneratedColumn,
 } from 'typeorm';
-import { ApiProperty } from '@nestjs/swagger';
+import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
 import { Goal } from 'src/goal/goal.entity';
 
 @Entity('hashtags')
@@ -33,6 +33,6 @@ export class Hashtag {
   views: number;
 
   @ManyToOne(() => Goal, (goal) => goal.hashtags)
-  @ApiProperty({ type: () => Goal })
+  @ApiPropertyOptional({ type: () => Goal })
   goal: Promise<Goal>;
 }

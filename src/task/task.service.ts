@@ -1,16 +1,16 @@
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
-import { Hashtag } from './hashtag.entity';
+import { Task } from './task.entity';
 
 @Injectable()
-export class HashtagService {
+export class TaskService {
   constructor(
-    @InjectRepository(Hashtag)
-    private goalRepository: Repository<Hashtag>,
+    @InjectRepository(Task)
+    private taskRepository: Repository<Task>,
   ) {}
 
   async findOne(id: number) {
-    return await this.goalRepository.find({ id });
+    return await this.taskRepository.find({ id });
   }
 }

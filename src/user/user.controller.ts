@@ -16,13 +16,13 @@ import { User } from './user.entity';
 @Controller('users')
 @ApiTags('Users')
 export class UserController {
-  constructor(public service: UserService) {}
+  constructor(public userService: UserService) {}
 
   @Get(':nickname')
   @ApiOperation({ summary: 'Get user by nickname' })
   @ApiResponse({ status: 200, type: User })
   async findOne(@Param('nickname') nickname: string) {
-    return this.service.findOne(nickname);
+    return this.userService.findOne(nickname);
   }
 
   @Post()
@@ -33,6 +33,6 @@ export class UserController {
     @Query() dto: CreateUserDto,
     @UploadedFile(ParseFile) file: Express.Multer.File,
   ) {
-    return this.service.create(dto, file);
+    return this.userService.create(dto, file);
   }
 }

@@ -42,13 +42,6 @@ export class User {
   })
   avatar: string;
 
-  @Column({ default: 0 })
-  @ApiProperty({
-    example: 1433,
-    description: 'page views',
-  })
-  view: number;
-
   @OneToOne(() => UserCharacteristic, (characteristic) => characteristic.user)
   @ApiPropertyOptional({ type: () => UserCharacteristic })
   characteristic: Promise<UserCharacteristic>;

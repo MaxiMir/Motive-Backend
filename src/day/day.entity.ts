@@ -1,5 +1,6 @@
 import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
 import {
+  AfterLoad,
   Column,
   Entity,
   ManyToOne,
@@ -28,6 +29,18 @@ export class Day {
   @OneToMany(() => Task, (task) => task.day)
   @ApiPropertyOptional({ type: () => Task, isArray: true })
   tasks: Task[];
+
+  @Column({ default: 0 })
+  @ApiProperty({
+    example: 1433,
+    description: 'day views',
+  })
+  views: number;
+
+  @AfterLoad()
+  updateCounters() {
+    this.views += 1;
+  }
 
   // discussion: string;
 

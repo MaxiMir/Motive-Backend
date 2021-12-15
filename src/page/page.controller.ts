@@ -23,6 +23,6 @@ export class PageController {
     @Param('nickname') nickname: string,
     @Query('d', ParseStringPipe, ObjectToNumbersArrayPipe) goalsMap,
   ) {
-    return this.pageService.findUserPage(nickname, goalsMap);
+    return await this.pageService.findUserPage(nickname, goalsMap);
   }
 }

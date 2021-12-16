@@ -1,12 +1,5 @@
 import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
-import {
-  Column,
-  Entity,
-  Index,
-  OneToMany,
-  OneToOne,
-  PrimaryGeneratedColumn,
-} from 'typeorm';
+import { Column, Entity, Index, OneToMany, OneToOne, PrimaryGeneratedColumn } from 'typeorm';
 import { Goal } from 'src/goal/goal.entity';
 import { UserCharacteristic } from 'src/user-characteristic/user-characteristic.entity';
 import { Preferences } from 'src/preferences/preferences.entity';
@@ -42,15 +35,15 @@ export class User {
   })
   avatar: string;
 
-  @OneToOne(() => UserCharacteristic, (characteristic) => characteristic.user)
+  @OneToOne(() => UserCharacteristic, (characteristic) => characteristic.user, { cascade: true })
   @ApiPropertyOptional({ type: () => UserCharacteristic })
-  characteristic: Promise<UserCharacteristic>;
+  characteristic: UserCharacteristic;
 
   @OneToMany(() => Goal, (goal) => goal.owner)
   @ApiPropertyOptional({ type: () => Goal, isArray: true })
-  goals: Promise<Goal[]>;
+  goals: Goal[];
 
   @OneToOne(() => Preferences, (preferences) => preferences.user)
   @ApiPropertyOptional({ type: () => Preferences })
-  preferences: Promise<Preferences>;
+  preferences: Preferences;
 }

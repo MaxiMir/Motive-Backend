@@ -8,7 +8,7 @@ import { Hashtag } from './hashtag.entity';
 export class HashtagService {
   constructor(
     @InjectRepository(Hashtag)
-    private goalRepository: Repository<Hashtag>,
+    private readonly goalRepository: Repository<Hashtag>,
   ) {}
 
   async findOne(conditions: FindConditions<Hashtag>) {

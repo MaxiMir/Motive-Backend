@@ -3,7 +3,5 @@ import { GoalCharacteristicService } from './goal-characteristic.service';
 
 @Controller('goal-characteristic')
 export class GoalCharacteristicController {
-  constructor(
-    private readonly goalCharacteristicService: GoalCharacteristicService,
-  ) {}
+  constructor(private readonly goalCharacteristicService: GoalCharacteristicService) {}
 }

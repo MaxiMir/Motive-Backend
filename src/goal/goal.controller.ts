@@ -1,11 +1,4 @@
-import {
-  Body,
-  Controller,
-  Get,
-  Param,
-  ParseIntPipe,
-  Post,
-} from '@nestjs/common';
+import { Body, Controller, Get, Param, ParseIntPipe, Post } from '@nestjs/common';
 import { ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
 import { getRepository } from 'typeorm';
 import { CreateGoalDto } from './dto/create-goal.dto';
@@ -16,13 +9,13 @@ import { Goal } from './goal.entity';
 @Controller('goals')
 @ApiTags('Goals')
 export class GoalController {
-  constructor(public service: GoalService) {}
+  constructor(private readonly goalService: GoalService) {}
 
   @Get(':id')
   @ApiOperation({ summary: 'Get goal' })
   @ApiResponse({ status: 200, type: Goal })
   findOne(@Param('id', ParseIntPipe) id: number) {
-    return this.service.findOne(id);
+    return this.goalService.findOne(id);
   }
 
   @Post()
@@ -43,14 +36,13 @@ export class GoalController {
 
     return goalRepository.save({
       name: dto.name,
-      // hashtags: [],
+      hashtags: [],
       day: [
         {
-          // date: '',
           tasks: dto.tasks,
         },
       ],
-      // owner,
+      owner,
     });
   }
 }

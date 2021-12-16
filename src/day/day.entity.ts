@@ -1,12 +1,5 @@
 import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
-import {
-  AfterLoad,
-  Column,
-  Entity,
-  ManyToOne,
-  OneToMany,
-  PrimaryGeneratedColumn,
-} from 'typeorm';
+import { AfterLoad, Column, Entity, ManyToOne, OneToMany, PrimaryGeneratedColumn } from 'typeorm';
 import { Goal } from 'src/goal/goal.entity';
 import { Task } from 'src/task/task.entity';
 
@@ -26,7 +19,10 @@ export class Day {
   })
   date: string;
 
-  @OneToMany(() => Task, (task) => task.day)
+  @OneToMany(() => Task, (task) => task.day, {
+    eager: true,
+    cascade: true,
+  })
   @ApiPropertyOptional({ type: () => Task, isArray: true })
   tasks: Task[];
 
@@ -50,5 +46,5 @@ export class Day {
 
   @ManyToOne(() => Goal, (goal) => goal.days)
   @ApiProperty({ type: () => Goal })
-  goal: Promise<Goal>;
+  goal: Goal;
 }

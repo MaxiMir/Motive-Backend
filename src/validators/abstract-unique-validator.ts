@@ -1,7 +1,4 @@
-import {
-  ValidationArguments,
-  ValidatorConstraintInterface,
-} from 'class-validator';
+import { ValidationArguments, ValidatorConstraintInterface } from 'class-validator';
 import { Connection, EntitySchema, FindConditions, ObjectType } from 'typeorm';
 
 interface UniqueValidationArguments<E> extends ValidationArguments {
@@ -25,7 +22,7 @@ export abstract class UniqueValidator implements ValidatorConstraintInterface {
             : {
                 [findCondition || args.property]: value,
               },
-      })) <= 0
+      })) === 0
     );
   }
 

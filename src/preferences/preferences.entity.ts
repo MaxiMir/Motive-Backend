@@ -1,10 +1,4 @@
-import {
-  Column,
-  Entity,
-  JoinColumn,
-  OneToOne,
-  PrimaryGeneratedColumn,
-} from 'typeorm';
+import { Column, Entity, JoinColumn, OneToOne, PrimaryGeneratedColumn } from 'typeorm';
 import { ApiProperty } from '@nestjs/swagger';
 import { User } from 'src/user/user.entity';
 
@@ -20,12 +14,12 @@ export class Preferences {
   @Column('simple-array')
   @ApiProperty({
     example: [23, 33],
-    description: 'list id for favorites',
+    description: 'list user id for favorites',
   })
   favorites: number[];
 
   @OneToOne(() => User)
   @JoinColumn()
   @ApiProperty({ type: () => User })
-  user: Promise<User>;
+  user: User;
 }

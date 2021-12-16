@@ -7,6 +7,6 @@ import { Preferences } from './preferences.entity';
 export class PreferencesService {
   constructor(
     @InjectRepository(Preferences)
-    private preferencesRepository: Repository<Preferences>,
+    private readonly preferencesRepository: Repository<Preferences>,
   ) {}
 }

@@ -29,5 +29,5 @@ export class UserCharacteristic extends MainCharacteristics {
   @OneToOne(() => User)
   @JoinColumn()
   @ApiPropertyOptional({ type: () => User })
-  user: Promise<User>;
+  user: User;
 }

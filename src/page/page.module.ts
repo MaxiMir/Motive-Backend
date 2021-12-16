@@ -1,12 +1,10 @@
 import { Module } from '@nestjs/common';
 import { UserModule } from 'src/user/user.module';
-import { GoalModule } from 'src/goal/goal.module';
-import { PageService } from './page.service';
+import { DayModule } from 'src/day/day.module';
 import { PageController } from './page.controller';
 
 @Module({
-  providers: [PageService],
+  imports: [UserModule, DayModule],
   controllers: [PageController],
-  imports: [UserModule, GoalModule],
 })
 export class PageModule {}

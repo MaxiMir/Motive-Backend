@@ -1,10 +1,4 @@
-import {
-  Column,
-  Entity,
-  Index,
-  ManyToOne,
-  PrimaryGeneratedColumn,
-} from 'typeorm';
+import { Column, Entity, Index, JoinTable, ManyToMany, PrimaryGeneratedColumn } from 'typeorm';
 import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
 import { Goal } from 'src/goal/goal.entity';
 
@@ -32,7 +26,8 @@ export class Hashtag {
   })
   views: number;
 
-  @ManyToOne(() => Goal, (goal) => goal.hashtags)
+  @ManyToMany(() => Goal, (goal) => goal.hashtags)
+  @JoinTable()
   @ApiPropertyOptional({ type: () => Goal })
-  goal: Promise<Goal>;
+  goal: Goal;
 }

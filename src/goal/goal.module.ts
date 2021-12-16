@@ -8,6 +8,5 @@ import { Goal } from './goal.entity';
   imports: [TypeOrmModule.forFeature([Goal])],
   providers: [GoalService],
   controllers: [GoalController],
-  exports: [GoalService],
 })
 export class GoalModule {}

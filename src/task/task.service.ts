@@ -8,7 +8,7 @@ import { Task } from './task.entity';
 export class TaskService {
   constructor(
     @InjectRepository(Task)
-    private taskRepository: Repository<Task>,
+    private readonly taskRepository: Repository<Task>,
   ) {}
 
   async findOne(conditions: FindConditions<Task>) {

@@ -7,6 +7,10 @@ import { UserCharacteristic } from './user-characteristic.entity';
 export class UserCharacteristicService {
   constructor(
     @InjectRepository(UserCharacteristic)
-    private characteristicRepository: Repository<UserCharacteristic>,
+    private readonly characteristicRepository: Repository<UserCharacteristic>,
   ) {}
+
+  async save(characteristic: UserCharacteristic) {
+    return await this.characteristicRepository.save(characteristic);
+  }
 }

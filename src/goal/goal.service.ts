@@ -1,15 +1,16 @@
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { TypeOrmCrudService } from '@nestjsx/crud-typeorm';
 import { Goal } from './goal.entity';
 import { Repository } from 'typeorm';
 
 @Injectable()
-export class GoalService extends TypeOrmCrudService<Goal> {
+export class GoalService {
   constructor(
     @InjectRepository(Goal)
-    private goalRepository: Repository<Goal>,
-  ) {
-    super(goalRepository);
+    private readonly goalRepository: Repository<Goal>,
+  ) {}
+
+  async findOne(id: number) {
+    return await this.goalRepository.findOneOrFail({ id });
   }
 }

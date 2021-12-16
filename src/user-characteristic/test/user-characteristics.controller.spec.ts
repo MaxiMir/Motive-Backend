@@ -9,9 +9,7 @@ describe('UserCharacteristicController', () => {
       controllers: [UserCharacteristicController],
     }).compile();
 
-    controller = module.get<UserCharacteristicController>(
-      UserCharacteristicController,
-    );
+    controller = module.get<UserCharacteristicController>(UserCharacteristicController);
   });
 
   it('should be defined', () => {

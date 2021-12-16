@@ -11,9 +11,7 @@ describe('GoalCharacteristicController', () => {
       providers: [GoalCharacteristicService],
     }).compile();
 
-    controller = module.get<GoalCharacteristicController>(
-      GoalCharacteristicController,
-    );
+    controller = module.get<GoalCharacteristicController>(GoalCharacteristicController);
   });
 
   it('should be defined', () => {

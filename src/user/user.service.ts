@@ -1,26 +1,21 @@
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
-import { FindConditions } from 'typeorm/find-options/FindConditions';
-import { FileService } from 'src/file/file.service';
-import { CreateUserDto } from './dto/create-user-dto';
+import { FindOneOptions } from 'typeorm/find-options/FindOneOptions';
 import { User } from './user.entity';
 
 @Injectable()
 export class UserService {
   constructor(
     @InjectRepository(User)
-    private userRepository: Repository<User>,
-    private fileService: FileService,
+    private readonly userRepository: Repository<User>,
   ) {}
 
-  async findOne(conditions: FindConditions<User>) {
-    return await this.userRepository.findOneOrFail(conditions);
+  async findOne(nickname: string, options?: FindOneOptions<User>) {
+    return await this.userRepository.findOneOrFail({ nickname }, options);
   }
 
-  async create(dto: CreateUserDto, file: Express.Multer.File) {
-    const avatar = await this.fileService.uploadImage(file, { width: 500 });
-
-    return await this.userRepository.save({ ...dto, avatar });
+  async save(user: User) {
+    return await this.userRepository.save(user);
   }
 }

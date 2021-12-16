@@ -36,5 +36,5 @@ export class Task {
 
   @ManyToOne(() => Day, (day) => day.tasks)
   @ApiPropertyOptional({ type: () => Day })
-  day: Promise<Day>;
+  day: Day;
 }

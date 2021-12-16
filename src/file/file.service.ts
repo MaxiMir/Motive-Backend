@@ -10,10 +10,7 @@ export class FileService {
     options: { width?: number; height?: number },
   ): Promise<string> {
     try {
-      const filePath = join(
-        process.env.AVATAR_STORAGE as string,
-        `${uuid.v4()}.webp`,
-      );
+      const filePath = join(process.env.AVATAR_STORAGE as string, `${uuid.v4()}.webp`);
       await sharp(file.buffer).resize(options).webp().toFile(filePath);
 
       return filePath;

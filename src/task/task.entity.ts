@@ -14,20 +14,20 @@ export class Task {
   @Column()
   @ApiProperty({
     example: 'read 20 pages Harry Potter',
-    description: 'name',
   })
   name: string;
 
   @Column({
     type: 'timestamp with time zone',
+    nullable: true,
   })
-  @ApiProperty({
+  @ApiPropertyOptional({
     example: '2021-08-15 21:05:15.723336+07',
     description: 'reminder date',
   })
   date: string;
 
-  @Column('simple-array')
+  @Column('simple-array', { default: () => [] })
   @ApiProperty({
     example: [23, 33],
     description: 'list id users who completed task',

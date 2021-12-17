@@ -29,7 +29,6 @@ export class Day {
   @Column({ default: 0 })
   @ApiProperty({
     example: 1433,
-    description: 'day views',
   })
   views: number;
 
@@ -40,7 +39,11 @@ export class Day {
 
   // discussion: string;
 
-  // discussionCount: number;
+  @Column({ default: 0 })
+  @ApiProperty({
+    example: 251,
+  })
+  discussionCount: number;
 
   // feedback: string;
 

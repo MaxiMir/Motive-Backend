@@ -7,21 +7,18 @@ import { User } from 'src/user/user.entity';
 export class UserCharacteristic extends MainCharacteristics {
   @ApiProperty({
     example: 1,
-    description: 'completed',
   })
   @Column({ default: 0 })
   completed: number;
 
   @ApiProperty({
     example: 5,
-    description: 'abandoned',
   })
   @Column({ default: 0 })
   abandoned: number;
 
   @ApiProperty({
     example: 0,
-    description: 'awards',
   })
   @Column({ default: 0 })
   awards: number;

@@ -17,8 +17,8 @@ export class UserController {
   @ApiOperation({ summary: 'Get user by nickname' })
   @ApiParam({ name: 'nickname', example: 'maximir' })
   @ApiResponse({ status: 200, type: User })
-  async findByNickname(@Param('nickname') nickname: string) {
-    return this.userService.findOne(nickname);
+  async getByNickname(@Param('nickname') nickname: string) {
+    return await this.userService.findByNickname(nickname);
   }
 
   @Post()

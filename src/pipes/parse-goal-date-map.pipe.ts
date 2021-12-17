@@ -1,7 +1,7 @@
 import { Injectable, PipeTransform, BadRequestException, ArgumentMetadata } from '@nestjs/common';
 
 @Injectable()
-export class GoalDateMapPipe implements PipeTransform {
+export class ParseGoalDateMapPipe implements PipeTransform {
   transform(
     value: string[] | undefined,
     metadata: ArgumentMetadata,

@@ -7,17 +7,14 @@ export class CreateGoalDto {
   @Length(5, 32)
   @ApiProperty({
     example: 'learn French',
-    description: 'name',
   })
   readonly name: string;
 
-  @IsString()
-  @Length(0, 255)
+  @IsArray()
   @ApiProperty({
-    example: '#foreignLanguage #knowledge #learnFrench #immigration',
-    description: 'hashtags',
+    example: ['foreignLanguage', 'knowledge', 'learnFrench', 'immigration'],
   })
-  readonly hashtags: string;
+  readonly hashtags: string[];
 
   @IsArray()
   @ArrayMinSize(1)

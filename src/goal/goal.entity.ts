@@ -17,7 +17,6 @@ export class Goal {
   @Column()
   @ApiProperty({
     example: 'Learn English',
-    description: 'name',
   })
   name: string;
 

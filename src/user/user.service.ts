@@ -11,7 +11,7 @@ export class UserService {
     private readonly userRepository: Repository<User>,
   ) {}
 
-  async findOne(nickname: string, options?: FindOneOptions<User>) {
+  async findByNickname(nickname: string, options?: FindOneOptions<User>) {
     return await this.userRepository.findOneOrFail({ nickname }, options);
   }
 

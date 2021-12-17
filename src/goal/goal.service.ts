@@ -10,7 +10,11 @@ export class GoalService {
     private readonly goalRepository: Repository<Goal>,
   ) {}
 
-  async findOne(id: number) {
+  async findByPK(id: number) {
     return await this.goalRepository.findOneOrFail({ id });
+  }
+
+  async save(goal: Goal) {
+    return await this.goalRepository.save(goal);
   }
 }

@@ -15,14 +15,12 @@ export class Hashtag {
   @Column()
   @ApiProperty({
     example: 'knowledge',
-    description: 'name',
   })
   name: string;
 
   @Column({ default: 0 })
   @ApiProperty({
     example: 13242,
-    description: 'views',
   })
   views: number;
 

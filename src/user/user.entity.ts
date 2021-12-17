@@ -17,14 +17,12 @@ export class User {
   @Column()
   @ApiProperty({
     example: 'maximir',
-    description: 'nickname',
   })
   nickname: string;
 
   @Column({ length: 100 })
   @ApiProperty({
     example: 'Maxim Minchenko',
-    description: 'name',
   })
   name: string;
 

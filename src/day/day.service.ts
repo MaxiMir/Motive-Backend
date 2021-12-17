@@ -1,8 +1,9 @@
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { Repository } from 'typeorm';
-import { Day } from './day.entity';
+import { ObjectLiteral, Repository } from 'typeorm';
 import { FindOneOptions } from 'typeorm/find-options/FindOneOptions';
+import { FindConditions } from 'typeorm/find-options/FindConditions';
+import { Day } from './day.entity';
 
 @Injectable()
 export class DayService {
@@ -11,13 +12,13 @@ export class DayService {
     private readonly dayRepository: Repository<Day>,
   ) {}
 
-  async findOne(id: number, options?: FindOneOptions<Day>) {
+  async findByPK(id: number, options?: FindOneOptions<Day>) {
     return await this.dayRepository.findOneOrFail({ id }, options);
   }
 
-  async findLast(goalId: number) {
+  async findLastAdd(where?: FindConditions<Day> | ObjectLiteral) {
     const [day] = await this.dayRepository.find({
-      where: { goal: goalId },
+      where,
       order: {
         id: 'DESC',
       },

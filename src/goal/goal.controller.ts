@@ -3,7 +3,6 @@ import { ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
 import { getRepository } from 'typeorm';
 import { CreateGoalDto } from './dto/create-goal.dto';
 import { GoalCharacteristic } from 'src/goal-characteristic/goal-characteristic.entity';
-import { ParseHashtagPipe } from 'src/pipes/parse-hashtag.pipe';
 import { User } from 'src/user/user.entity';
 import { Day } from 'src/day/day.entity';
 import { Hashtag } from 'src/hashtag/hashtag.entity';
@@ -26,7 +25,7 @@ export class GoalController {
   @Post()
   @ApiOperation({ summary: 'Create goal' })
   @ApiResponse({ status: 201, type: Goal })
-  async create(@Body(ParseHashtagPipe) dto: CreateGoalDto) {
+  async create(@Body() dto: CreateGoalDto) {
     const goal = new Goal();
     const day = new Day();
 

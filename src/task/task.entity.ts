@@ -27,7 +27,7 @@ export class Task {
   })
   date: string;
 
-  @Column('simple-array', { default: () => [] })
+  @Column('simple-array', { nullable: true })
   @ApiProperty({
     example: [23, 33],
     description: 'list id users who completed task',

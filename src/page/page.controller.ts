@@ -22,7 +22,7 @@ export class PageController {
   @ApiResponse({ status: 200, type: UserPageDto })
   async getUser(
     @Param('nickname') nickname: string,
-    @Query('d', new ParseArrayPipe({ items: String, separator: ',' }), ParseGoalDateMapPipe)
+    @Query('d', new ParseArrayPipe({ items: String, separator: ',', optional: true }), ParseGoalDateMapPipe)
     goalDatesMap,
   ): Promise<UserPageDto> {
     const user = await this.userService.findByNickname(nickname, {

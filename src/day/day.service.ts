@@ -27,4 +27,11 @@ export class DayService {
 
     return day;
   }
+
+  async incrementViews(id: number) {
+    const day = await this.findByPK(id);
+    day.views += 1;
+
+    await this.dayRepository.save(day);
+  }
 }

@@ -15,6 +15,7 @@ import { HashtagModule } from './hashtag/hashtag.module';
 import { GoalCharacteristicModule } from './goal-characteristic/goal-characteristic.module';
 import { TaskModule } from './task/task.module';
 import { PageModule } from './page/page.module';
+import { DayCharacteristicModule } from './day-characteristic/day-characteristic.module';
 
 @Module({
   imports: [
@@ -32,7 +33,9 @@ import { PageModule } from './page/page.module';
       database: process.env.POSTGRES_DB,
       entities: [__dirname + '/**/*.entity{.ts,.js}'],
       synchronize: true, // TODO shouldn't be used in production - otherwise you can lose production data
-      cache: true, // TODO enable caching
+      cache: {
+        duration: 30000,
+      },
     }),
     UserModule,
     UserCharacteristicModule,
@@ -44,6 +47,7 @@ import { PageModule } from './page/page.module';
     TaskModule,
     FilesModule,
     PageModule,
+    DayCharacteristicModule,
   ],
   controllers: [],
   providers: [Unique],

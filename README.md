@@ -40,7 +40,7 @@ yarn start # запуск проекта
 
 nest g module user # создание модуля user
 nest g controller user # создание контроллера user
-nest g service user # создание сервиса user
+nest g user # создание сервиса user
 # или:
 nest g resource user # генерирует все разом 
 
@@ -75,4 +75,11 @@ app.useGlobalPipes(new ValidationPipe()); # устанавливаем pipe на
 
 ```shell
 yarn add -D @types/multer # Nest uses multer for handling file uploads using the multipart/form-data format.
+```
+
+
+### HELMET
+
+```shell
+yarn add helmet # для защиты приложения - передает специальные HTTP заголовки
 ```

@@ -10,10 +10,10 @@ export class FileService {
     options: { width?: number; height?: number },
   ): Promise<string> {
     try {
-      const filePath = join(process.env.AVATAR_STORAGE as string, `${uuid.v4()}.webp`);
-      await sharp(file.buffer).resize(options).webp().toFile(filePath);
+      const fileName = `${uuid.v4()}.webp`;
+      await sharp(file.buffer).resize(options).webp().toFile(join('client', 'avatars', fileName));
 
-      return filePath;
+      return join('/', 'avatars', fileName);
     } catch (e) {
       throw new HttpException(e.message, HttpStatus.INTERNAL_SERVER_ERROR);
     }

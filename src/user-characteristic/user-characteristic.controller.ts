@@ -1,7 +1,7 @@
 import { Controller, Get, Param, ParseIntPipe } from '@nestjs/common';
 import { ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
+import { Goal } from 'src/goal/goal.entity';
 import { UserCharacteristicService } from './user-characteristic.service';
-import { Goal } from '../goal/goal.entity';
 
 @Controller('user-characteristics')
 @ApiTags('User Characteristics')

@@ -11,7 +11,7 @@ export class Preferences {
   })
   id: number;
 
-  @Column('simple-array')
+  @Column('simple-array', { nullable: true })
   @ApiProperty({
     example: [23, 33],
     description: 'list user id for favorites',

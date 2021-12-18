@@ -1,14 +1,21 @@
 import { Controller, Get, Param, ParseArrayPipe, Query } from '@nestjs/common';
 import { ApiOperation, ApiParam, ApiQuery, ApiResponse, ApiTags } from '@nestjs/swagger';
 import { ParseGoalDateMapPipe } from 'src/pipes/parse-goal-date-map.pipe';
-import { UserService } from 'src/user/user.service';
-import { DayService } from 'src/day/day.service';
-import { UserPageDto } from './dto/user.page.dto';
+import { UserPageDto } from './dto/UserPageDto';
+import { GoalDateDto } from './dto/goal-date.dto';
+import { PageService } from './page.service';
 
 @Controller('pages')
 @ApiTags('Pages')
 export class PageController {
-  constructor(private readonly userService: UserService, private readonly dayService: DayService) {}
+  constructor(private readonly pageService: PageService) {}
+
+  @Get('main')
+  @ApiOperation({ summary: 'Get main page' })
+  @ApiResponse({ status: 200 })
+  async getMain() {
+    return {}; // TODO
+  }
 
   @Get('/users/:nickname')
   @ApiOperation({ summary: 'Get user page' })
@@ -20,35 +27,11 @@ export class PageController {
     allowEmptyValue: true,
   })
   @ApiResponse({ status: 200, type: UserPageDto })
-  async getUser(
+  getUser(
     @Param('nickname') nickname: string,
     @Query('d', new ParseArrayPipe({ items: String, separator: ',', optional: true }), ParseGoalDateMapPipe)
-    goalDatesMap,
-  ): Promise<UserPageDto> {
-    const user = await this.userService.findByNickname(nickname, {
-      relations: ['characteristic', 'preferences', 'goals'],
-    });
-    const goals = await Promise.all(
-      user.goals.map(async (goal) => ({
-        ...goal,
-        day: await (goalDatesMap[goal.id]
-          ? this.dayService.findByPK(goalDatesMap[goal.id])
-          : this.dayService.findLastAdd({ goal: goal.id })),
-      })),
-    );
-
-    return {
-      client: user, // TODO replace
-      meta: {
-        title: user.name,
-        description: `See how ${user.name} (@${user.nickname}) accomplishes his goals`,
-        url: `${process.env.HOST}/${user.nickname}`,
-        type: 'profile',
-      },
-      content: {
-        ...user,
-        goals,
-      },
-    };
+    goalDatesMap?: GoalDateDto[],
+  ) {
+    return this.pageService.findUser(nickname, goalDatesMap);
   }
 }

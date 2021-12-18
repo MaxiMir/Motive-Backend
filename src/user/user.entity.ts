@@ -41,7 +41,7 @@ export class User {
   @ApiPropertyOptional({ type: () => Goal, isArray: true })
   goals: Goal[];
 
-  @OneToOne(() => Preferences, (preferences) => preferences.user)
+  @OneToOne(() => Preferences, (preferences) => preferences.user, { cascade: true })
   @ApiPropertyOptional({ type: () => Preferences })
   preferences: Preferences;
 }

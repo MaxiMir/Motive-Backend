@@ -1,7 +1,8 @@
-import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
-import { AfterLoad, Column, Entity, ManyToOne, OneToMany, PrimaryGeneratedColumn } from 'typeorm';
+import { ApiProperty } from '@nestjs/swagger';
+import { Column, Entity, ManyToOne, OneToMany, OneToOne, PrimaryGeneratedColumn } from 'typeorm';
 import { Goal } from 'src/goal/goal.entity';
 import { Task } from 'src/task/task.entity';
+import { DayCharacteristic } from 'src/day-characteristic/day-characteristic.entity';
 
 @Entity('days')
 export class Day {
@@ -19,11 +20,17 @@ export class Day {
   })
   date: string;
 
+  @OneToOne(() => DayCharacteristic, (characteristic) => characteristic.day, {
+    eager: true,
+  })
+  @ApiProperty({ type: () => DayCharacteristic })
+  characteristic: DayCharacteristic;
+
   @OneToMany(() => Task, (task) => task.day, {
     eager: true,
     cascade: true,
   })
-  @ApiPropertyOptional({ type: () => Task, isArray: true })
+  @ApiProperty({ type: () => Task, isArray: true })
   tasks: Task[];
 
   @Column({ default: 0 })
@@ -31,11 +38,6 @@ export class Day {
     example: 1433,
   })
   views: number;
-
-  @AfterLoad()
-  updateCounters() {
-    this.views += 1;
-  }
 
   // discussion: string;
 

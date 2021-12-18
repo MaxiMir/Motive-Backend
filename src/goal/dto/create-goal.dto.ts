@@ -1,6 +1,6 @@
-import { CreateTaskDto } from 'src/task/dto/create-task.dto';
-import { ArrayMinSize, IsArray, IsString, Length } from 'class-validator';
 import { ApiProperty } from '@nestjs/swagger';
+import { ArrayMinSize, IsArray, IsString, Length } from 'class-validator';
+import { CreateTaskDto } from 'src/task/dto/create-task.dto';
 
 export class CreateGoalDto {
   @IsString()

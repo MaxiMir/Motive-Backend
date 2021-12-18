@@ -11,7 +11,7 @@ export class HashtagController {
   @Get(':id')
   @ApiOperation({ summary: 'Get hashtag' })
   @ApiResponse({ status: 200, type: Hashtag })
-  async findOne(@Param('id', ParseIntPipe) id: number) {
+  findOne(@Param('id', ParseIntPipe) id: number) {
     return this.hashtagService.findOne({ id });
   }
 }

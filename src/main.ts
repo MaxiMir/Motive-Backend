@@ -1,6 +1,7 @@
 import { NestFactory } from '@nestjs/core';
 import { ValidationPipe } from '@nestjs/common';
 import { SwaggerModule, DocumentBuilder } from '@nestjs/swagger';
+import * as helmet from 'helmet';
 import { useContainer } from 'class-validator';
 import { AppModule } from './app.module';
 import { EntityNotFoundExceptionFilter } from './filters/entity-not-found-exception.filter';
@@ -14,6 +15,7 @@ async function bootstrap() {
   app.useGlobalPipes(new ValidationPipe()); // validation for all endpoints
   app.useGlobalFilters(new EntityNotFoundExceptionFilter());
   useContainer(app.select(AppModule), { fallbackOnErrors: true });
+  app.use(helmet());
   app.enableCors();
 
   const config = new DocumentBuilder()

@@ -4,7 +4,6 @@ import { Repository } from 'typeorm';
 import { FindOneOptions } from 'typeorm/find-options/FindOneOptions';
 import { FileService } from 'src/file/file.service';
 import { UserCharacteristic } from 'src/user-characteristic/user-characteristic.entity';
-import { Preferences } from 'src/preferences/preferences.entity';
 import { CreateUserDto } from './dto/create-user.dto';
 import { User } from './user.entity';
 
@@ -26,8 +25,6 @@ export class UserService {
     user.nickname = dto.nickname;
     user.avatar = await this.fileService.uploadImage(file, { width: 500 });
     user.characteristic = new UserCharacteristic();
-    user.preferences = new Preferences();
-    user.goals = [];
 
     return await this.userRepository.save(user);
   }

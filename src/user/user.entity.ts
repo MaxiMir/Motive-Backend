@@ -1,8 +1,16 @@
 import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
-import { Column, Entity, Index, OneToMany, OneToOne, PrimaryGeneratedColumn } from 'typeorm';
+import {
+  Column,
+  Entity,
+  Index,
+  JoinTable,
+  ManyToMany,
+  OneToMany,
+  OneToOne,
+  PrimaryGeneratedColumn,
+} from 'typeorm';
 import { Goal } from 'src/goal/goal.entity';
 import { UserCharacteristic } from 'src/user-characteristic/user-characteristic.entity';
-import { Preferences } from 'src/preferences/preferences.entity';
 
 @Entity('users')
 export class User {
@@ -41,7 +49,13 @@ export class User {
   @ApiPropertyOptional({ type: () => Goal, isArray: true })
   goals: Goal[];
 
-  @OneToOne(() => Preferences, (preferences) => preferences.user, { cascade: true })
-  @ApiPropertyOptional({ type: () => Preferences })
-  preferences: Preferences;
+  @ManyToMany(() => Goal)
+  @JoinTable()
+  @ApiProperty({ type: () => Goal, isArray: true })
+  member: Goal[];
+
+  @ManyToMany(() => User)
+  @JoinTable()
+  @ApiProperty({ type: () => User, isArray: true })
+  favorites: User[];
 }

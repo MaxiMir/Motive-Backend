@@ -9,7 +9,6 @@ import { GoalModule } from './goal/goal.module';
 import { UserCharacteristicModule } from './user-characteristic/user-characteristic.module';
 import { FilesModule } from './file/files.module';
 import { Unique } from './validators/unique';
-import { PreferencesModule } from './preferences/preferences.module';
 import { DayModule } from './day/day.module';
 import { HashtagModule } from './hashtag/hashtag.module';
 import { GoalCharacteristicModule } from './goal-characteristic/goal-characteristic.module';
@@ -39,7 +38,6 @@ import { DayCharacteristicModule } from './day-characteristic/day-characteristic
     }),
     UserModule,
     UserCharacteristicModule,
-    PreferencesModule,
     GoalModule,
     HashtagModule,
     GoalCharacteristicModule,
@@ -49,7 +47,6 @@ import { DayCharacteristicModule } from './day-characteristic/day-characteristic
     PageModule,
     DayCharacteristicModule,
   ],
-  controllers: [],
   providers: [Unique],
 })
 export class AppModule {}

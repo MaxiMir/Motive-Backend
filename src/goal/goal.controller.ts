@@ -22,4 +22,11 @@ export class GoalController {
   create(@Body() dto: CreateGoalDto) {
     return this.goalService.save(dto);
   }
+
+  @Get(':id/dates')
+  @ApiOperation({ summary: 'Get goal dates' })
+  @ApiResponse({ status: 200, type: Goal })
+  getDates(@Param('id', ParseIntPipe) id: number) {
+    return this.goalService.findDates(id);
+  }
 }

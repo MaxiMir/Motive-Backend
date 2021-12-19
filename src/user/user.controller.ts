@@ -1,8 +1,9 @@
-import { Controller, UploadedFile, Query, Param, Get, Post } from '@nestjs/common';
+import { Controller, UploadedFile, Query, Param, Get, Post, Patch, Body } from '@nestjs/common';
 import { ApiOperation, ApiParam, ApiResponse, ApiTags } from '@nestjs/swagger';
 import { ApiImageFile } from 'src/decorators/api-image.decorator';
 import { ParseFile } from 'src/pipes/parse-file.pipe';
 import { CreateUserDto } from './dto/create-user.dto';
+import { UpdateFavoriteDto } from './dto/update-favorite.dto';
 import { User } from './user.entity';
 import { UserService } from './user.service';
 
@@ -25,5 +26,13 @@ export class UserController {
   @ApiResponse({ status: 201, type: User })
   create(@Query() dto: CreateUserDto, @UploadedFile(ParseFile) file: Express.Multer.File) {
     return this.userService.save(dto, file);
+  }
+
+  @Patch(':id/favorites')
+  @ApiOperation({ summary: 'Change user favorite' })
+  @ApiResponse({ status: 204 })
+  setFavorite(@Body() dto: UpdateFavoriteDto) {
+    console.log(dto);
+    return '';
   }
 }

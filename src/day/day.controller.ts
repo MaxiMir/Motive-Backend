@@ -1,4 +1,4 @@
-import { Controller, Param, ParseIntPipe, Get, Patch, HttpCode } from '@nestjs/common';
+import { Controller, Param, ParseIntPipe, Get } from '@nestjs/common';
 import { ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
 import { DayService } from './day.service';
 import { Day } from './day.entity';
@@ -11,15 +11,7 @@ export class DayController {
   @Get(':id')
   @ApiOperation({ summary: 'Get day' })
   @ApiResponse({ status: 200, type: Day })
-  findOne(@Param('id', ParseIntPipe) id: number) {
+  getByPK(@Param('id', ParseIntPipe) id: number) {
     return this.dayService.findByPK(id);
-  }
-
-  @Patch(':id/views')
-  @HttpCode(204)
-  @ApiOperation({ summary: 'Update day views' })
-  @ApiResponse({ status: 204 })
-  incrementViews(@Param('id', ParseIntPipe) id: number) {
-    return this.dayService.incrementViews(id);
   }
 }

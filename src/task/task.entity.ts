@@ -30,7 +30,14 @@ export class Task {
   @Column('simple-array', { nullable: true })
   @ApiProperty({
     example: [23, 33],
-    description: 'list id users who completed task',
+    description: 'completed by owner',
+  })
+  completed: number[];
+
+  @Column('simple-array', { nullable: true })
+  @ApiProperty({
+    example: [23, 33],
+    description: 'completed by others (user id list)',
   })
   completedBy: number[];
 

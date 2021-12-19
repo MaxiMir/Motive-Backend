@@ -11,22 +11,22 @@ export class DayCharacteristic {
   })
   id: number;
 
+  @Column('simple-array')
   @ApiProperty({
     example: [13],
   })
-  @Column('simple-array')
   motivation: number[];
 
+  @Column('simple-array')
   @ApiProperty({
     example: [26],
   })
-  @Column('simple-array')
   creativity: number[];
 
+  @Column('simple-array')
   @ApiProperty({
     example: [3],
   })
-  @Column('simple-array')
   support: number;
 
   @OneToOne(() => Day)

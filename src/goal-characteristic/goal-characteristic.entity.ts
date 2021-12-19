@@ -7,6 +7,7 @@ import { Goal } from 'src/goal/goal.entity';
 export class GoalCharacteristic extends MainCharacteristics {
   @ApiProperty({
     example: 1,
+    description: 'members',
   })
   @Column({ default: 0 })
   members: number;

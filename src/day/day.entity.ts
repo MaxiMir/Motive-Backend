@@ -1,5 +1,5 @@
 import { ApiProperty } from '@nestjs/swagger';
-import { Column, Entity, ManyToOne, OneToMany, OneToOne, PrimaryGeneratedColumn } from 'typeorm';
+import { AfterLoad, Column, Entity, ManyToOne, OneToMany, OneToOne, PrimaryGeneratedColumn } from 'typeorm';
 import { Goal } from 'src/goal/goal.entity';
 import { Task } from 'src/task/task.entity';
 import { DayCharacteristic } from 'src/day-characteristic/day-characteristic.entity';
@@ -38,6 +38,11 @@ export class Day {
     example: 1433,
   })
   views: number;
+
+  @AfterLoad()
+  updateCounters() {
+    this.views += 1; // TODO if auth & not owner
+  }
 
   // discussion: string;
 

@@ -15,6 +15,10 @@ export class UserService {
     private readonly fileService: FileService,
   ) {}
 
+  async findByPK(id: number, options?: FindOneOptions<User>) {
+    return this.userRepository.findOneOrFail({ id }, options);
+  }
+
   async findByNickname(nickname: string, options?: FindOneOptions<User>) {
     return await this.userRepository.findOneOrFail({ nickname }, options);
   }
@@ -27,5 +31,20 @@ export class UserService {
     user.characteristic = new UserCharacteristic();
 
     return await this.userRepository.save(user);
+  }
+
+  async addFollowing(id: number, followingId: number) {
+    const user = await this.findByPK(id);
+    const following = await this.findByPK(followingId);
+    user.following.push(following);
+
+    return this.userRepository.save(user);
+  }
+
+  async removeFollowing(id: number, followingId: number) {
+    const user = await this.findByPK(id);
+    user.following = user.following.filter((f) => f.id !== followingId);
+
+    return this.userRepository.save(user);
   }
 }

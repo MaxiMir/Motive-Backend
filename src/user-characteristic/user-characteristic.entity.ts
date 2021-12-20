@@ -1,10 +1,10 @@
 import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
 import { Column, Entity, JoinColumn, OneToOne } from 'typeorm';
-import { MainCharacteristics } from 'src/abstract/main-characteristics';
+import { MainCharacteristicsDto } from 'src/abstract/main-characteristics.dto';
 import { User } from 'src/user/user.entity';
 
 @Entity('user-characteristics')
-export class UserCharacteristic extends MainCharacteristics {
+export class UserCharacteristic extends MainCharacteristicsDto {
   @ApiProperty({
     example: 1,
   })
@@ -21,7 +21,7 @@ export class UserCharacteristic extends MainCharacteristics {
     example: 0,
   })
   @Column({ default: 0 })
-  awards: number;
+  followers: number;
 
   @OneToOne(() => User)
   @JoinColumn()

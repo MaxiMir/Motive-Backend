@@ -1,7 +1,7 @@
 import { ApiProperty } from '@nestjs/swagger';
 import { Column, PrimaryGeneratedColumn } from 'typeorm';
 
-export abstract class MainCharacteristics {
+export abstract class MainCharacteristicsDto {
   @PrimaryGeneratedColumn()
   @ApiProperty({
     example: 1,

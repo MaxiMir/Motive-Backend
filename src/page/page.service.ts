@@ -8,7 +8,7 @@ export class PageService {
 
   async findUser(nickname: string, goalDatesMap) {
     const user = await this.userService.findByNickname(nickname, {
-      relations: ['characteristic', 'favorites', 'goals', 'member'],
+      relations: ['characteristic', 'following', 'goals', 'member'],
     });
     const goals = await Promise.all(
       user.goals.map(async (goal) => {
@@ -24,12 +24,12 @@ export class PageService {
     return { content: { ...user, goals } };
   }
 
-  async findFavorites() {
+  async findFollowing() {
     // TODO временно
-    const { favorites } = await this.userService.findByNickname('maximir', {
-      relations: ['favorites', 'favorites.characteristic'],
+    const { following } = await this.userService.findByNickname('maximir', {
+      relations: ['following', 'following.characteristic'],
     });
 
-    return { content: favorites };
+    return { content: following };
   }
 }

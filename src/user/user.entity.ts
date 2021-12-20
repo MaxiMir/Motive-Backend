@@ -54,8 +54,13 @@ export class User {
   @ApiProperty({ type: () => Goal, isArray: true })
   member: Goal[];
 
-  @ManyToMany(() => User)
+  @ManyToMany(() => User, { cascade: true })
   @JoinTable()
   @ApiProperty({ type: () => User, isArray: true })
-  favorites: User[];
+  following: User[];
+
+  @ManyToMany(() => User, { cascade: true })
+  @JoinTable()
+  @ApiProperty({ type: () => User, isArray: true })
+  followers: User[];
 }

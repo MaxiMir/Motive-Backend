@@ -35,10 +35,10 @@ export class PageController {
     return this.pageService.findUser(nickname, goalDatesMap);
   }
 
-  @Get('favorites')
-  @ApiOperation({ summary: 'Get favorites page' })
+  @Get('following')
+  @ApiOperation({ summary: 'Get following page' })
   @ApiResponse({ status: 200, type: FavoritesPageDto })
-  getFavorites() {
-    return this.pageService.findFavorites();
+  getFollowing() {
+    return this.pageService.findFollowing();
   }
 }

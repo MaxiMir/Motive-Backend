@@ -1,10 +1,10 @@
 import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
 import { Column, Entity, JoinColumn, OneToOne } from 'typeorm';
-import { MainCharacteristics } from 'src/abstract/main-characteristics';
+import { MainCharacteristicsDto } from 'src/abstract/main-characteristics.dto';
 import { Goal } from 'src/goal/goal.entity';
 
 @Entity('goal-characteristics')
-export class GoalCharacteristic extends MainCharacteristics {
+export class GoalCharacteristic extends MainCharacteristicsDto {
   @ApiProperty({
     example: 1,
     description: 'members',

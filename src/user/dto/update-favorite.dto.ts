@@ -1,16 +1,10 @@
-import { IsBoolean, IsNumber } from 'class-validator';
+import { IsNumber } from 'class-validator';
 import { ApiProperty } from '@nestjs/swagger';
 
-export class UpdateFavoriteDto {
+export class UpdateFollowingDto {
   @IsNumber()
   @ApiProperty({
-    example: '2',
+    example: 2,
   })
-  readonly userId: number;
-
-  @IsBoolean()
-  @ApiProperty({
-    example: true,
-  })
-  readonly favorite: boolean;
+  readonly following: number;
 }

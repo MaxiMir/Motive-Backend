@@ -6,7 +6,7 @@ import { GoalCharacteristic } from 'src/goal-characteristic/goal-characteristic.
 import { Day } from 'src/day/day.entity';
 import { Task } from 'src/task/task.entity';
 import { Hashtag } from 'src/hashtag/hashtag.entity';
-import { User } from 'src/user/user.entity';
+import { UserService } from 'src/user/user.service';
 import { CreateGoalDto } from './dto/create-goal.dto';
 import { Goal } from './goal.entity';
 
@@ -15,6 +15,7 @@ export class GoalService {
   constructor(
     @InjectRepository(Goal)
     private readonly goalRepository: Repository<Goal>,
+    private readonly userService: UserService,
   ) {}
 
   async findByPK(id: number, options?: FindOneOptions<Goal>) {
@@ -41,9 +42,7 @@ export class GoalService {
 
       return hashtag;
     });
-
-    const userRepository = getRepository(User); // !!! TODO Временно
-    goal.owner = (await userRepository.findOne(2)) as User;
+    goal.owner = await this.userService.findByPK(1); // Todo
 
     return await this.goalRepository.save(goal);
   }

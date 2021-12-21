@@ -5,6 +5,7 @@ import { FindOneOptions } from 'typeorm/find-options/FindOneOptions';
 import { FileService } from 'src/file/file.service';
 import { UserCharacteristic } from 'src/user-characteristic/user-characteristic.entity';
 import { CreateUserDto } from './dto/create-user.dto';
+import { UpdateFollowingDto } from './dto/update-favorite.dto';
 import { User } from './user.entity';
 
 @Injectable()
@@ -15,12 +16,16 @@ export class UserService {
     private readonly fileService: FileService,
   ) {}
 
+  async findAll(options?: FindOneOptions<User>) {
+    return this.userRepository.find(options);
+  }
+
   async findByPK(id: number, options?: FindOneOptions<User>) {
     return this.userRepository.findOneOrFail({ id }, options);
   }
 
   async findByNickname(nickname: string, options?: FindOneOptions<User>) {
-    return await this.userRepository.findOneOrFail({ nickname }, options);
+    return this.userRepository.findOneOrFail({ nickname }, options);
   }
 
   async save(dto: CreateUserDto, file: Express.Multer.File) {
@@ -30,21 +35,25 @@ export class UserService {
     user.avatar = await this.fileService.uploadImage(file, { width: 500 });
     user.characteristic = new UserCharacteristic();
 
-    return await this.userRepository.save(user);
-  }
-
-  async addFollowing(id: number, followingId: number) {
-    const user = await this.findByPK(id);
-    const following = await this.findByPK(followingId);
-    user.following.push(following);
-
     return this.userRepository.save(user);
   }
 
-  async removeFollowing(id: number, followingId: number) {
-    const user = await this.findByPK(id);
-    user.following = user.following.filter((f) => f.id !== followingId);
+  async updateFollowing(id: number, dto: UpdateFollowingDto) {
+    const user = await this.findByPK(id, { relations: ['following'] });
+    const following = await this.findByPK(dto.following, { relations: ['characteristic'] });
 
-    return this.userRepository.save(user);
+    switch (dto.op) {
+      case 'add':
+        user.following.push(following);
+        following.characteristic.followers += 1;
+        break;
+      case 'remove':
+        user.following = user.following.filter((f) => f.id !== dto.following);
+        following.characteristic.followers -= 1;
+        break;
+    }
+
+    await this.userRepository.save(following);
+    await this.userRepository.save(user);
   }
 }

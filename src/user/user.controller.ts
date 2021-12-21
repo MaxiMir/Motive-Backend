@@ -1,4 +1,15 @@
-import { Controller, UploadedFile, Query, Param, Get, Post, Patch, Body, ParseIntPipe } from '@nestjs/common';
+import {
+  Controller,
+  UploadedFile,
+  Query,
+  Param,
+  Get,
+  Post,
+  Patch,
+  Body,
+  ParseIntPipe,
+  HttpCode,
+} from '@nestjs/common';
 import { ApiOperation, ApiParam, ApiResponse, ApiTags } from '@nestjs/swagger';
 import { ApiImageFile } from 'src/decorators/api-image.decorator';
 import { ParseFile } from 'src/pipes/parse-file.pipe';
@@ -11,6 +22,13 @@ import { UserService } from './user.service';
 @ApiTags('Users')
 export class UserController {
   constructor(private readonly userService: UserService) {}
+
+  @Get()
+  @ApiOperation({ summary: 'Get users' })
+  @ApiResponse({ status: 200, type: [User] })
+  getAll() {
+    return this.userService.findAll({ relations: ['following'] });
+  }
 
   @Get(':nickname')
   @ApiOperation({ summary: 'Get user by nickname' })
@@ -28,10 +46,11 @@ export class UserController {
     return this.userService.save(dto, file);
   }
 
-  @Patch(':id/following/add')
+  @Patch(':id/following')
+  @HttpCode(204)
   @ApiOperation({ summary: 'update following' })
   @ApiResponse({ status: 204 })
-  addFollowing(@Param('id', ParseIntPipe) id: number, @Body() dto: UpdateFollowingDto) {
-    return this.userService.addFollowing(id, dto.following);
+  updateFollowing(@Param('id', ParseIntPipe) id: number, @Body() dto: UpdateFollowingDto) {
+    return this.userService.updateFollowing(id, dto);
   }
 }

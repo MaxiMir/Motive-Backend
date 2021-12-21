@@ -7,9 +7,13 @@ export class PageService {
   constructor(private readonly userService: UserService, private readonly dayService: DayService) {}
 
   async findUser(nickname: string, goalDatesMap) {
+    // TODO временно
+    const client = await this.userService.findByNickname('maximir', { relations: ['following'] });
+
     const user = await this.userService.findByNickname(nickname, {
-      relations: ['characteristic', 'following', 'goals', 'member'],
+      relations: ['characteristic', 'goals', 'member'],
     });
+
     const goals = await Promise.all(
       user.goals.map(async (goal) => {
         const { dayId } = goalDatesMap?.find(({ goalId }) => goalId === goal.id) || {};
@@ -21,12 +25,21 @@ export class PageService {
       }),
     );
 
-    return { content: { ...user, goals } };
+    return {
+      content: {
+        favorite: client?.following.some((f) => f.id === user.id),
+        user: { ...user, goals },
+      },
+    };
   }
 
-  async findFollowing() {
-    // TODO временно
-    const { following } = await this.userService.findByNickname('maximir', {
+  async findFollowers(nickname: string) {
+    // todo
+    return { content: [] };
+  }
+
+  async findFollowing(id: number) {
+    const { following } = await this.userService.findByPK(id, {
       relations: ['following', 'following.characteristic'],
     });
 

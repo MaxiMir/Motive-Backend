@@ -46,6 +46,9 @@ export class Day {
 
   // discussion: string;
 
+  // @Column({ nullable: false })
+  // discussionId!: Discussion["id"]
+
   @Column({ default: 0 })
   @ApiProperty({
     example: 251,
@@ -53,6 +56,9 @@ export class Day {
   discussionCount: number;
 
   // feedback: string;
+
+  // @Column({ nullable: false })
+  // feedbackId!: Feedback["id"]
 
   @ManyToOne(() => Goal, (goal) => goal.days)
   @ApiProperty({ type: () => Goal })

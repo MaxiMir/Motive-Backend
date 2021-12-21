@@ -32,6 +32,7 @@ import { DayCharacteristicModule } from './day-characteristic/day-characteristic
       database: process.env.POSTGRES_DB,
       entities: [__dirname + '/**/*.entity{.ts,.js}'],
       synchronize: true, // TODO shouldn't be used in production - otherwise you can lose production data
+      dropSchema: false,
       cache: {
         duration: 30000,
       },

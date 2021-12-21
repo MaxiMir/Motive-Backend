@@ -55,12 +55,16 @@ export class User {
   member: Goal[];
 
   @ManyToMany(() => User, { cascade: true })
-  @JoinTable()
+  @JoinTable({
+    joinColumn: {
+      name: 'user',
+      referencedColumnName: 'id',
+    },
+    inverseJoinColumn: {
+      name: 'followingId',
+      referencedColumnName: 'id',
+    },
+  })
   @ApiProperty({ type: () => User, isArray: true })
   following: User[];
-
-  @ManyToMany(() => User, { cascade: true })
-  @JoinTable()
-  @ApiProperty({ type: () => User, isArray: true })
-  followers: User[];
 }

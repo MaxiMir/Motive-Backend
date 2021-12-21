@@ -3,8 +3,9 @@ import { ApiOperation, ApiParam, ApiQuery, ApiResponse, ApiTags } from '@nestjs/
 import { ParseGoalDateMapPipe } from 'src/pipes/parse-goal-date-map.pipe';
 import { GoalDateDto } from 'src/goal/dto/goal-date.dto';
 import { UserPageDto } from './dto/user-page.dto';
-import { FavoritesPageDto } from './dto/favorites-page.dto';
+import { FavoritesDto } from './dto/favorites.dto';
 import { PageService } from './page.service';
+import { UserFollowersDto } from './dto/user-followers.dto';
 
 @Controller('pages')
 @ApiTags('Pages')
@@ -35,10 +36,19 @@ export class PageController {
     return this.pageService.findUser(nickname, goalDatesMap);
   }
 
+  @Get('users/:nickname/followers')
+  @ApiOperation({ summary: 'Get followers' })
+  @ApiParam({ name: 'nickname', example: 'maximir' })
+  @ApiResponse({ status: 200, type: UserFollowersDto })
+  getUserFollowers(@Param('nickname') nickname: string) {
+    return this.pageService.findFollowers(nickname);
+  }
+
   @Get('following')
   @ApiOperation({ summary: 'Get following page' })
-  @ApiResponse({ status: 200, type: FavoritesPageDto })
+  @ApiResponse({ status: 200, type: FavoritesDto })
   getFollowing() {
-    return this.pageService.findFollowing();
+    const id = 1; // TODO временно
+    return this.pageService.findFollowing(id);
   }
 }

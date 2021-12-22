@@ -35,13 +35,13 @@ export class GoalService {
 
       return task;
     });
-    goal.days = [day];
     goal.hashtags = dto.hashtags.map((name) => {
       const hashtag = new Hashtag();
       hashtag.name = name;
 
       return hashtag;
     });
+    goal.days = [day];
     goal.owner = await this.userService.findByPK(1); // Todo
 
     return await this.goalRepository.save(goal);

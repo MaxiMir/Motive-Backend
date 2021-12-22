@@ -1,10 +1,34 @@
 import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
-import { Column, Entity, JoinColumn, OneToOne } from 'typeorm';
-import { MainCharacteristicsDto } from 'src/abstract/main-characteristics.dto';
+import { Column, Entity, JoinColumn, OneToOne, PrimaryGeneratedColumn } from 'typeorm';
 import { User } from 'src/user/user.entity';
 
 @Entity('user-characteristics')
-export class UserCharacteristic extends MainCharacteristicsDto {
+export class UserCharacteristic {
+  @PrimaryGeneratedColumn()
+  @ApiProperty({
+    example: 1,
+    description: 'unique identifier',
+  })
+  id: number;
+
+  @ApiProperty({
+    example: 13,
+  })
+  @Column({ default: 1 })
+  motivation: number;
+
+  @ApiProperty({
+    example: 26,
+  })
+  @Column({ default: 1 })
+  creativity: number;
+
+  @ApiProperty({
+    example: 3,
+  })
+  @Column({ default: 1 })
+  support: number;
+
   @ApiProperty({
     example: 1,
   })

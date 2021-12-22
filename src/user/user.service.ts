@@ -2,6 +2,7 @@ import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { FindOneOptions } from 'typeorm/find-options/FindOneOptions';
+import { FindManyOptions } from 'typeorm/find-options/FindManyOptions';
 import { FileService } from 'src/file/file.service';
 import { UserCharacteristic } from 'src/user-characteristic/user-characteristic.entity';
 import { CreateUserDto } from './dto/create-user.dto';
@@ -16,7 +17,11 @@ export class UserService {
     private readonly fileService: FileService,
   ) {}
 
-  async findAll(options?: FindOneOptions<User>) {
+  getRepository() {
+    return this.userRepository;
+  }
+
+  async findAll(options?: FindManyOptions<User>) {
     return this.userRepository.find(options);
   }
 

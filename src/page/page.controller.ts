@@ -4,8 +4,9 @@ import { ParseGoalDateMapPipe } from 'src/pipes/parse-goal-date-map.pipe';
 import { GoalDateDto } from 'src/goal/dto/goal-date.dto';
 import { UserPageDto } from './dto/user-page.dto';
 import { FavoritesDto } from './dto/favorites.dto';
-import { PageService } from './page.service';
 import { UserFollowersDto } from './dto/user-followers.dto';
+import { RatingDto } from './dto/rating.dto';
+import { PageService } from './page.service';
 
 @Controller('pages')
 @ApiTags('Pages')
@@ -50,5 +51,12 @@ export class PageController {
   getFollowing() {
     const id = 1; // TODO временно
     return this.pageService.findFollowing(id);
+  }
+
+  @Get('rating')
+  @ApiOperation({ summary: 'Get rating page' })
+  @ApiResponse({ status: 200, type: RatingDto })
+  getRating() {
+    return this.pageService.findRating();
   }
 }

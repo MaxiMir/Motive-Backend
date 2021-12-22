@@ -14,6 +14,7 @@ export class PageService {
       relations: ['characteristic', 'goals', 'member'],
     });
 
+    // todo member goals
     const goals = await Promise.all(
       user.goals.map(async (goal) => {
         const { dayId } = goalDatesMap?.find(({ goalId }) => goalId === goal.id) || {};
@@ -21,7 +22,7 @@ export class PageService {
           ? await this.dayService.findByPK(dayId)
           : await this.dayService.findLastAdd({ goal: goal.id });
 
-        return { ...goal, day };
+        return { ...goal, days: [day] };
       }),
     );
 
@@ -34,15 +35,46 @@ export class PageService {
   }
 
   async findFollowers(nickname: string) {
-    // todo
-    return { content: [] };
+    const { id } = await this.userService.findByNickname(nickname);
+    const content = await this.userService
+      .getRepository()
+      .createQueryBuilder('user')
+      .innerJoinAndSelect('user.following', 'following')
+      .where('following.followingId = :id', { id })
+      .getMany();
+
+    return { content };
   }
 
   async findFollowing(id: number) {
-    const { following } = await this.userService.findByPK(id, {
+    const users = await this.userService.findByPK(id, {
       relations: ['following', 'following.characteristic'],
     });
 
-    return { content: following };
+    return { content: users.following };
+  }
+
+  async findRatingByCharacteristic(characteristic: 'motivation' | 'creativity' | 'support', take: number) {
+    return await this.userService
+      .getRepository()
+      .createQueryBuilder('user')
+      .leftJoinAndSelect('user.characteristic', 'characteristic')
+      .orderBy(`characteristic.${characteristic}`, 'DESC')
+      .take(take)
+      .getMany();
+  }
+
+  async findRating() {
+    const motivation = await this.findRatingByCharacteristic('motivation', 100);
+    const creativity = await this.findRatingByCharacteristic('creativity', 100);
+    const support = await this.findRatingByCharacteristic('support', 100);
+
+    return {
+      content: {
+        motivation,
+        creativity,
+        support,
+      },
+    };
   }
 }

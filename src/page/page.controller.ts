@@ -6,6 +6,7 @@ import { UserPageDto } from './dto/user-page.dto';
 import { FavoritesDto } from './dto/favorites.dto';
 import { UserFollowersDto } from './dto/user-followers.dto';
 import { RatingDto } from './dto/rating.dto';
+import { MainDto } from './dto/main.dto';
 import { PageService } from './page.service';
 
 @Controller('pages')
@@ -15,9 +16,11 @@ export class PageController {
 
   @Get('main')
   @ApiOperation({ summary: 'Get main page' })
-  @ApiResponse({ status: 200 })
+  @ApiResponse({ status: 200, type: MainDto })
   async getMain() {
-    return {}; // TODO
+    return {
+      client: {},
+    };
   }
 
   @Get('users/:nickname')

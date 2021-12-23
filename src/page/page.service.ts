@@ -27,6 +27,7 @@ export class PageService {
     );
 
     return {
+      client,
       content: {
         favorite: client?.following.some((f) => f.id === user.id),
         user: { ...user, goals },
@@ -54,7 +55,7 @@ export class PageService {
     return { content: users.following };
   }
 
-  async findRatingByCharacteristic(characteristic: 'motivation' | 'creativity' | 'support', take: number) {
+  async findRatingByCharacteristic(characteristic: string, take: number) {
     return await this.userService
       .getRepository()
       .createQueryBuilder('user')

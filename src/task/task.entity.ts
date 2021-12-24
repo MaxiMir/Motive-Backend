@@ -27,19 +27,19 @@ export class Task {
   })
   date: string;
 
-  @Column('simple-array', { nullable: true })
+  @Column('boolean')
   @ApiProperty({
-    example: [23, 33],
+    example: true,
     description: 'completed by owner',
   })
-  completed: number[];
+  completed = false;
 
-  @Column('simple-array', { nullable: true })
+  @Column('int', { array: true })
   @ApiProperty({
     example: [23, 33],
-    description: 'completed by others (user id list)',
+    description: 'user id list',
   })
-  completedBy: number[];
+  completedBy: number[] = [];
 
   @ManyToOne(() => Day, (day) => day.tasks)
   @ApiPropertyOptional({ type: () => Day })

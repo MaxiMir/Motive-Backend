@@ -15,6 +15,7 @@ import { GoalCharacteristicModule } from './goal-characteristic/goal-characteris
 import { TaskModule } from './task/task.module';
 import { PageModule } from './page/page.module';
 import { DayCharacteristicModule } from './day-characteristic/day-characteristic.module';
+import { SubscriptionModule } from './subscription/subscription.module';
 
 @Module({
   imports: [
@@ -47,6 +48,7 @@ import { DayCharacteristicModule } from './day-characteristic/day-characteristic
     FilesModule,
     PageModule,
     DayCharacteristicModule,
+    SubscriptionModule,
   ],
   providers: [Unique],
 })

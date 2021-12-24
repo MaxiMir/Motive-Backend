@@ -40,7 +40,7 @@ yarn start # запуск проекта
 
 nest g module user # создание модуля user
 nest g controller user # создание контроллера user
-nest g user # создание сервиса user
+nest g service user # создание сервиса user
 # или:
 nest g resource user # генерирует все разом 
 

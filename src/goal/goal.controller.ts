@@ -16,17 +16,17 @@ export class GoalController {
     return this.goalService.findByPK(id);
   }
 
-  @Post()
-  @ApiOperation({ summary: 'Create goal' })
-  @ApiResponse({ status: 201, type: Goal })
-  create(@Body() dto: CreateGoalDto) {
-    return this.goalService.save(dto);
-  }
-
   @Get(':id/dates')
   @ApiOperation({ summary: 'Get goal dates' })
   @ApiResponse({ status: 200, type: Goal })
   getDates(@Param('id', ParseIntPipe) id: number) {
     return this.goalService.findDates(id);
+  }
+
+  @Post()
+  @ApiOperation({ summary: 'Create goal' })
+  @ApiResponse({ status: 201, type: Goal })
+  create(@Body() dto: CreateGoalDto) {
+    return this.goalService.save(dto);
   }
 }

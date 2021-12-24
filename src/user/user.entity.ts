@@ -11,6 +11,7 @@ import {
 } from 'typeorm';
 import { Goal } from 'src/goal/goal.entity';
 import { UserCharacteristic } from 'src/user-characteristic/user-characteristic.entity';
+import { Subscription } from 'src/subscription/subscription.entity';
 
 @Entity('users')
 export class User {
@@ -54,17 +55,7 @@ export class User {
   @ApiProperty({ type: () => Goal, isArray: true })
   member: Goal[];
 
-  @ManyToMany(() => User, { cascade: true })
-  @JoinTable({
-    joinColumn: {
-      name: 'user',
-      referencedColumnName: 'id',
-    },
-    inverseJoinColumn: {
-      name: 'followingId',
-      referencedColumnName: 'id',
-    },
-  })
-  @ApiProperty({ type: () => User, isArray: true })
-  following: User[];
+  @OneToOne(() => Subscription, (subscription) => subscription.user, { cascade: true })
+  @ApiPropertyOptional({ type: () => Subscription })
+  subscription: Subscription;
 }

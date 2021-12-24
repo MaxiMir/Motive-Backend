@@ -1,4 +1,4 @@
-import { Controller, Get, Param, Query } from '@nestjs/common';
+import { Controller, Get, Param, ParseIntPipe, Query } from '@nestjs/common';
 import { ApiOperation, ApiParam, ApiQuery, ApiResponse, ApiTags } from '@nestjs/swagger';
 import { ParseGoalDateMapPipe } from 'src/pipes/parse-goal-date-map.pipe';
 import { GoalDateDto } from 'src/goal/dto/goal-date.dto';
@@ -40,12 +40,12 @@ export class PageController {
     return this.pageService.findUser(nickname, goalDatesMap);
   }
 
-  @Get('users/:nickname/followers')
+  @Get('users/:id/followers')
   @ApiOperation({ summary: 'Get followers' })
-  @ApiParam({ name: 'nickname', example: 'maximir' })
+  @ApiParam({ name: 'id', example: 23 })
   @ApiResponse({ status: 200, type: UserFollowersDto })
-  getUserFollowers(@Param('nickname') nickname: string) {
-    return this.pageService.findFollowers(nickname);
+  getFollowers(@Param('id', ParseIntPipe) id: number) {
+    return this.pageService.findFollowers(id);
   }
 
   @Get('following')

@@ -22,6 +22,16 @@ export class GoalService {
     return await this.goalRepository.findOneOrFail({ id }, options);
   }
 
+  async findDates(id: number) {
+    const a = await getRepository(Day)
+      .createQueryBuilder('day')
+      .select(['day.id', 'day.date'])
+      .where('day.goalId = :id', { id })
+      .getMany();
+
+    return a.reduce((acc, { id, date }) => ({ ...acc, [date]: id }), {});
+  }
+
   async save(dto: CreateGoalDto) {
     const goal = new Goal();
     const day = new Day();
@@ -45,15 +55,5 @@ export class GoalService {
     goal.owner = await this.userService.findByPK(1); // Todo
 
     return await this.goalRepository.save(goal);
-  }
-
-  async findDates(id: number) {
-    const a = await getRepository(Day)
-      .createQueryBuilder('day')
-      .select(['day.id', 'day.date'])
-      .where('day.goalId = :id', { id })
-      .getMany();
-
-    return a.reduce((acc, { id, date }) => ({ ...acc, [date]: id }), {});
   }
 }

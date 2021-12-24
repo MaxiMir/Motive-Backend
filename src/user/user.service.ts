@@ -5,8 +5,9 @@ import { FindOneOptions } from 'typeorm/find-options/FindOneOptions';
 import { FindManyOptions } from 'typeorm/find-options/FindManyOptions';
 import { FileService } from 'src/file/file.service';
 import { UserCharacteristic } from 'src/user-characteristic/user-characteristic.entity';
+import { Subscription } from 'src/subscription/subscription.entity';
 import { CreateUserDto } from './dto/create-user.dto';
-import { UpdateFollowingDto } from './dto/update-favorite.dto';
+import { AddFollowingDto } from './dto/add-following.dto';
 import { User } from './user.entity';
 
 @Injectable()
@@ -33,32 +34,38 @@ export class UserService {
     return this.userRepository.findOneOrFail({ nickname }, options);
   }
 
+  async addFollowing(id: number, dto: AddFollowingDto) {
+    const user = await this.findByPK(id, { relations: ['subscription'] });
+    const following = await this.findByPK(dto.following, { relations: ['subscription', 'characteristic'] });
+
+    user.subscription.following.push(dto.following);
+    following.subscription.followers.push(user.id);
+    following.characteristic.followers += 1;
+
+    await this.userRepository.save(user);
+    await this.userRepository.save(following);
+  }
+
+  async deleteFollowing(id: number, followingId: number) {
+    const user = await this.findByPK(id, { relations: ['subscription'] });
+    const following = await this.findByPK(followingId, { relations: ['subscription', 'characteristic'] });
+
+    user.subscription.following = user.subscription.following.filter((f) => f !== followingId);
+    following.subscription.followers = user.subscription.followers.filter((f) => f !== user.id);
+    following.characteristic.followers -= 1;
+
+    await this.userRepository.save(user);
+    await this.userRepository.save(following);
+  }
+
   async save(dto: CreateUserDto, file: Express.Multer.File) {
     const user = new User();
     user.name = dto.name;
     user.nickname = dto.nickname;
     user.avatar = await this.fileService.uploadImage(file, { width: 500 });
     user.characteristic = new UserCharacteristic();
+    user.subscription = new Subscription();
 
     return this.userRepository.save(user);
-  }
-
-  async updateFollowing(id: number, dto: UpdateFollowingDto) {
-    const user = await this.findByPK(id, { relations: ['following'] });
-    const following = await this.findByPK(dto.following, { relations: ['characteristic'] });
-
-    switch (dto.op) {
-      case 'add':
-        user.following.push(following);
-        following.characteristic.followers += 1;
-        break;
-      case 'remove':
-        user.following = user.following.filter((f) => f.id !== dto.following);
-        following.characteristic.followers -= 1;
-        break;
-    }
-
-    await this.userRepository.save(following);
-    await this.userRepository.save(user);
   }
 }

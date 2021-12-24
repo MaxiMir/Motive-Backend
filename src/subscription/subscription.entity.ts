@@ -1,9 +1,9 @@
 import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
 import { Column, Entity, JoinColumn, OneToOne, PrimaryGeneratedColumn } from 'typeorm';
-import { Day } from 'src/day/day.entity';
+import { User } from 'src/user/user.entity';
 
-@Entity('day-characteristics')
-export class DayCharacteristic {
+@Entity('subscriptions')
+export class Subscription {
   @PrimaryGeneratedColumn()
   @ApiProperty({
     example: 1,
@@ -16,24 +16,17 @@ export class DayCharacteristic {
     example: [23, 33],
     description: 'user id list',
   })
-  motivation: number[] = [];
+  following: number[] = [];
 
   @Column('int', { array: true })
   @ApiProperty({
     example: [23, 33],
     description: 'user id list',
   })
-  creativity: number[] = [];
+  followers: number[] = [];
 
-  @Column('int', { array: true })
-  @ApiProperty({
-    example: [23, 33],
-    description: 'user id list',
-  })
-  support: number[] = [];
-
-  @OneToOne(() => Day)
+  @OneToOne(() => User)
   @JoinColumn()
-  @ApiPropertyOptional({ type: () => Day })
-  day: Day;
+  @ApiPropertyOptional({ type: () => User })
+  user: User;
 }

@@ -5,16 +5,16 @@ import {
   Param,
   Get,
   Post,
-  Patch,
-  Body,
-  ParseIntPipe,
   HttpCode,
+  Body,
+  Delete,
+  ParseIntPipe,
 } from '@nestjs/common';
 import { ApiOperation, ApiParam, ApiResponse, ApiTags } from '@nestjs/swagger';
 import { ApiImageFile } from 'src/decorators/api-image.decorator';
 import { ParseFile } from 'src/pipes/parse-file.pipe';
 import { CreateUserDto } from './dto/create-user.dto';
-import { UpdateFollowingDto } from './dto/update-favorite.dto';
+import { AddFollowingDto } from './dto/add-following.dto';
 import { User } from './user.entity';
 import { UserService } from './user.service';
 
@@ -27,7 +27,7 @@ export class UserController {
   @ApiOperation({ summary: 'Get users' })
   @ApiResponse({ status: 200, type: [User] })
   getAll() {
-    return this.userService.findAll({ relations: ['following'] });
+    return this.userService.findAll();
   }
 
   @Get(':nickname')
@@ -46,11 +46,24 @@ export class UserController {
     return this.userService.save(dto, file);
   }
 
-  @Patch(':id/following')
+  // FOLLOWING:
+
+  @Post(':id/following')
   @HttpCode(204)
-  @ApiOperation({ summary: 'update following' })
+  @ApiOperation({ summary: 'add following' })
   @ApiResponse({ status: 204 })
-  updateFollowing(@Param('id', ParseIntPipe) id: number, @Body() dto: UpdateFollowingDto) {
-    return this.userService.updateFollowing(id, dto);
+  addFollowing(@Param('id', ParseIntPipe) id: number, @Body() dto: AddFollowingDto) {
+    return this.userService.addFollowing(id, dto);
+  }
+
+  @Delete(':id/following/:following')
+  @HttpCode(204)
+  @ApiOperation({ summary: 'delete following' })
+  @ApiResponse({ status: 204 })
+  deleteFollowing(
+    @Param('id', ParseIntPipe) id: number,
+    @Param('following', ParseIntPipe) following: number,
+  ) {
+    return this.userService.deleteFollowing(id, following);
   }
 }

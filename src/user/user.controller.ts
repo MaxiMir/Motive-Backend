@@ -27,7 +27,7 @@ export class UserController {
   @ApiOperation({ summary: 'Get users' })
   @ApiResponse({ status: 200, type: [User] })
   getAll() {
-    return this.userService.findAll();
+    return this.userService.find();
   }
 
   @Get(':nickname')

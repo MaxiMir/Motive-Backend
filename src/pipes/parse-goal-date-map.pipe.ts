@@ -1,9 +1,9 @@
 import { Injectable, PipeTransform, BadRequestException, ArgumentMetadata } from '@nestjs/common';
-import { GoalDateDto } from 'src/goal/dto/goal-date.dto';
+import { GoalDayDto } from 'src/goal/dto/goal-day.dto';
 
 @Injectable()
 export class ParseGoalDateMapPipe implements PipeTransform {
-  transform(value: string | undefined, metadata: ArgumentMetadata): GoalDateDto[] | undefined {
+  transform(value: string | undefined, metadata: ArgumentMetadata): GoalDayDto[] | undefined {
     if (!value) {
       return;
     }

@@ -1,6 +1,7 @@
 import { Body, Controller, Get, Param, ParseIntPipe, Post } from '@nestjs/common';
 import { ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
 import { CreateGoalDto } from './dto/create-goal.dto';
+import { CalendarDto } from './dto/calendar.dto';
 import { GoalService } from './goal.service';
 import { Goal } from './goal.entity';
 
@@ -16,10 +17,10 @@ export class GoalController {
     return this.goalService.findByPK(id);
   }
 
-  @Get(':id/dates')
-  @ApiOperation({ summary: 'Get goal dates' })
-  @ApiResponse({ status: 200, type: Goal })
-  getDates(@Param('id', ParseIntPipe) id: number) {
+  @Get(':id/calendar')
+  @ApiOperation({ summary: 'Get calendar' })
+  @ApiResponse({ status: 200, type: CalendarDto })
+  getCalendar(@Param('id', ParseIntPipe) id: number) {
     return this.goalService.findDates(id);
   }
 

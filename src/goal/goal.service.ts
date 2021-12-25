@@ -1,12 +1,13 @@
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { getRepository, Repository } from 'typeorm';
+import { Repository } from 'typeorm';
 import { FindOneOptions } from 'typeorm/find-options/FindOneOptions';
 import { GoalCharacteristic } from 'src/goal-characteristic/goal-characteristic.entity';
 import { Day } from 'src/day/day.entity';
 import { Task } from 'src/task/task.entity';
 import { Hashtag } from 'src/hashtag/hashtag.entity';
 import { UserService } from 'src/user/user.service';
+import { DayService } from 'src/day/day.service';
 import { CreateGoalDto } from './dto/create-goal.dto';
 import { Goal } from './goal.entity';
 
@@ -16,6 +17,7 @@ export class GoalService {
     @InjectRepository(Goal)
     private readonly goalRepository: Repository<Goal>,
     private readonly userService: UserService,
+    private readonly dayService: DayService,
   ) {}
 
   async findByPK(id: number, options?: FindOneOptions<Goal>) {
@@ -23,13 +25,12 @@ export class GoalService {
   }
 
   async findDates(id: number) {
-    const a = await getRepository(Day)
-      .createQueryBuilder('day')
-      .select(['day.id', 'day.date'])
-      .where('day.goalId = :id', { id })
-      .getMany();
-
-    return a.reduce((acc, { id, date }) => ({ ...acc, [date]: id }), {});
+    return await this.dayService.find({
+      select: ['id', 'date'],
+      where: {
+        goal: id,
+      },
+    });
   }
 
   async save(dto: CreateGoalDto) {

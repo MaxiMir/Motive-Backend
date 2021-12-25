@@ -45,9 +45,12 @@ export class PageService {
       return [];
     }
 
-    return await this.userService.findAll({
+    return await this.userService.find({
       where: {
         id: In(user.subscription[type]),
+      },
+      order: {
+        name: 'ASC',
       },
       relations: ['characteristic'],
     });

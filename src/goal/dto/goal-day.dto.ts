@@ -1,6 +1,6 @@
 import { ApiProperty } from '@nestjs/swagger';
 
-export class GoalDateDto {
+export class GoalDayDto {
   @ApiProperty({
     example: 32,
     description: 'goal id',

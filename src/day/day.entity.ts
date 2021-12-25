@@ -18,7 +18,7 @@ export class Day {
     example: '2021-08-15 00:00:00.000000+07',
     description: 'day date',
   })
-  date: string;
+  date: Date;
 
   @OneToOne(() => DayCharacteristic, (characteristic) => characteristic.day, {
     eager: true,

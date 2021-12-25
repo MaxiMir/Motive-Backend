@@ -3,9 +3,10 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { ObjectLiteral, Repository } from 'typeorm';
 import { FindOneOptions } from 'typeorm/find-options/FindOneOptions';
 import { FindConditions } from 'typeorm/find-options/FindConditions';
+import { FindManyOptions } from 'typeorm/find-options/FindManyOptions';
 import { Task } from 'src/task/task.entity';
-import { Day } from './day.entity';
 import { CreateDayDto } from './dto/create.day.dto';
+import { Day } from './day.entity';
 
 @Injectable()
 export class DayService {
@@ -13,6 +14,10 @@ export class DayService {
     @InjectRepository(Day)
     private readonly dayRepository: Repository<Day>,
   ) {}
+
+  async find(options?: FindManyOptions<Day>) {
+    return await this.dayRepository.find(options);
+  }
 
   async findByPK(id: number, options?: FindOneOptions<Day>) {
     return await this.dayRepository.findOneOrFail({ id }, options);

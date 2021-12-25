@@ -22,7 +22,7 @@ export class UserService {
     return this.userRepository;
   }
 
-  async findAll(options?: FindManyOptions<User>) {
+  async find(options?: FindManyOptions<User>) {
     return this.userRepository.find(options);
   }
 

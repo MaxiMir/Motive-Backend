@@ -1,7 +1,7 @@
 import { Controller, Get, Param, ParseIntPipe, Query } from '@nestjs/common';
 import { ApiOperation, ApiParam, ApiQuery, ApiResponse, ApiTags } from '@nestjs/swagger';
 import { ParseGoalDateMapPipe } from 'src/pipes/parse-goal-date-map.pipe';
-import { GoalDateDto } from 'src/goal/dto/goal-date.dto';
+import { GoalDayDto } from 'src/goal/dto/goal-day.dto';
 import { UserPageDto } from './dto/user-page.dto';
 import { FavoritesDto } from './dto/favorites.dto';
 import { UserFollowersDto } from './dto/user-followers.dto';
@@ -35,7 +35,7 @@ export class PageController {
   @ApiResponse({ status: 200, type: UserPageDto })
   getUser(
     @Param('nickname') nickname: string,
-    @Query('d', ParseGoalDateMapPipe) goalDatesMap?: GoalDateDto[],
+    @Query('d', ParseGoalDateMapPipe) goalDatesMap?: GoalDayDto[],
   ) {
     return this.pageService.findUser(nickname, goalDatesMap);
   }

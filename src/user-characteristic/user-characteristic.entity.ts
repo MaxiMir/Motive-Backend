@@ -14,19 +14,19 @@ export class UserCharacteristic {
   @ApiProperty({
     example: 13,
   })
-  @Column({ default: 1 })
+  @Column({ type: 'float', scale: 2, default: 1.0 })
   motivation: number;
 
   @ApiProperty({
     example: 26,
   })
-  @Column({ default: 1 })
+  @Column({ type: 'float', scale: 2, default: 1.0 })
   creativity: number;
 
   @ApiProperty({
     example: 3,
   })
-  @Column({ default: 1 })
+  @Column({ type: 'float', scale: 2, default: 1.0 })
   support: number;
 
   @ApiProperty({

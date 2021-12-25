@@ -6,5 +6,5 @@ export class AddFollowingDto {
   @ApiProperty({
     example: 2,
   })
-  readonly following: number;
+  readonly followingId: number;
 }

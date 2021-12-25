@@ -19,7 +19,7 @@ async function bootstrap() {
   app.enableCors();
 
   const config = new DocumentBuilder()
-    .setTitle('Motive Backend')
+    .setTitle('Motiv Backend')
     .setDescription('The app API')
     .setVersion('1.0')
     .build();

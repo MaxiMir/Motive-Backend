@@ -5,8 +5,8 @@ import { PageController } from './page.controller';
 import { PageService } from './page.service';
 
 @Module({
-  imports: [UserModule, DayModule],
-  providers: [PageService],
   controllers: [PageController],
+  providers: [PageService],
+  imports: [UserModule, DayModule],
 })
 export class PageModule {}

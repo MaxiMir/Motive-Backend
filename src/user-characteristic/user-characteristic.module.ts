@@ -5,8 +5,8 @@ import { UserCharacteristicService } from './user-characteristic.service';
 import { UserCharacteristic } from './user-characteristic.entity';
 
 @Module({
-  imports: [TypeOrmModule.forFeature([UserCharacteristic])],
-  providers: [UserCharacteristicService],
   controllers: [UserCharacteristicController],
+  providers: [UserCharacteristicService],
+  imports: [TypeOrmModule.forFeature([UserCharacteristic])],
 })
 export class UserCharacteristicModule {}

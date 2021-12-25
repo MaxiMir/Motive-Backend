@@ -5,9 +5,9 @@ import { DayController } from './day.controller';
 import { Day } from './day.entity';
 
 @Module({
-  imports: [TypeOrmModule.forFeature([Day])],
-  providers: [DayService],
   controllers: [DayController],
+  providers: [DayService],
+  imports: [TypeOrmModule.forFeature([Day])],
   exports: [DayService],
 })
 export class DayModule {}

@@ -5,8 +5,8 @@ import { DayCharacteristicService } from './day-characteristic.service';
 import { DayCharacteristic } from './day-characteristic.entity';
 
 @Module({
-  imports: [TypeOrmModule.forFeature([DayCharacteristic])],
-  providers: [DayCharacteristicService],
   controllers: [DayCharacteristicController],
+  providers: [DayCharacteristicService],
+  imports: [TypeOrmModule.forFeature([DayCharacteristic])],
 })
 export class DayCharacteristicModule {}

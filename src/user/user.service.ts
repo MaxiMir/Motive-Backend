@@ -36,9 +36,9 @@ export class UserService {
 
   async addFollowing(id: number, dto: AddFollowingDto) {
     const user = await this.findByPK(id, { relations: ['subscription'] });
-    const following = await this.findByPK(dto.following, { relations: ['subscription', 'characteristic'] });
+    const following = await this.findByPK(dto.followingId, { relations: ['subscription', 'characteristic'] });
 
-    user.subscription.following.push(dto.following);
+    user.subscription.following.push(dto.followingId);
     following.subscription.followers.push(user.id);
     following.characteristic.followers += 1;
 

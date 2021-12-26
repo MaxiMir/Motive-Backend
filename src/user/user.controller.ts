@@ -56,14 +56,14 @@ export class UserController {
     return this.userService.addFollowing(id, dto);
   }
 
-  @Delete(':id/following/:following')
+  @Delete(':id/following/:followingId')
   @HttpCode(204)
   @ApiOperation({ summary: 'delete following' })
   @ApiResponse({ status: 204 })
   deleteFollowing(
     @Param('id', ParseIntPipe) id: number,
-    @Param('following', ParseIntPipe) following: number,
+    @Param('followingId', ParseIntPipe) followingId: number,
   ) {
-    return this.userService.deleteFollowing(id, following);
+    return this.userService.deleteFollowing(id, followingId);
   }
 }

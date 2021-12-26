@@ -5,7 +5,7 @@ import { FindOneOptions } from 'typeorm/find-options/FindOneOptions';
 import { GoalCharacteristic } from 'src/goal-characteristic/goal-characteristic.entity';
 import { Day } from 'src/day/day.entity';
 import { Task } from 'src/task/task.entity';
-import { Hashtag } from 'src/hashtag/hashtag.entity';
+import { HashtagService } from 'src/hashtag/hashtag.service';
 import { UserService } from 'src/user/user.service';
 import { DayService } from 'src/day/day.service';
 import { CreateGoalDto } from './dto/create-goal.dto';
@@ -18,6 +18,7 @@ export class GoalService {
     private readonly goalRepository: Repository<Goal>,
     private readonly userService: UserService,
     private readonly dayService: DayService,
+    private readonly hashtagService: HashtagService,
   ) {}
 
   async findByPK(id: number, options?: FindOneOptions<Goal>) {
@@ -33,12 +34,13 @@ export class GoalService {
     });
   }
 
-  async save(dto: CreateGoalDto) {
+  async save(userId: number, dto: CreateGoalDto) {
     const goal = new Goal();
     const day = new Day();
 
     goal.name = dto.name;
     goal.characteristic = new GoalCharacteristic();
+    goal.hashtags = await this.hashtagService.upsert(dto.hashtags);
     day.tasks = dto.tasks.map(({ name, date }) => {
       const task = new Task();
       task.name = name;
@@ -46,14 +48,8 @@ export class GoalService {
 
       return task;
     });
-    goal.hashtags = dto.hashtags.map((name) => {
-      const hashtag = new Hashtag();
-      hashtag.name = name;
-
-      return hashtag;
-    });
     goal.days = [day];
-    goal.owner = await this.userService.findByPK(1); // Todo
+    goal.owner = await this.userService.findByPK(userId);
 
     return await this.goalRepository.save(goal);
   }

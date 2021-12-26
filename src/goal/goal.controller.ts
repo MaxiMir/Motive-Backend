@@ -28,6 +28,8 @@ export class GoalController {
   @ApiOperation({ summary: 'Create goal' })
   @ApiResponse({ status: 201, type: Goal })
   create(@Body() dto: CreateGoalDto) {
-    return this.goalService.save(dto);
+    const userId = 1; // TODO временно
+
+    return this.goalService.save(userId, dto);
   }
 }

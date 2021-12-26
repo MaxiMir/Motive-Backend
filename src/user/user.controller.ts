@@ -3,10 +3,10 @@ import {
   UploadedFile,
   Query,
   Param,
-  Get,
-  Post,
   HttpCode,
   Body,
+  Get,
+  Post,
   Delete,
   ParseIntPipe,
 } from '@nestjs/common';
@@ -46,8 +46,6 @@ export class UserController {
   create(@Query() dto: CreateUserDto, @UploadedFile(ParseFile) file: Express.Multer.File) {
     return this.userService.save(dto, file);
   }
-
-  // FOLLOWING:
 
   @Post(':id/following')
   @HttpCode(204)

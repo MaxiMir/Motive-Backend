@@ -36,8 +36,8 @@ export class PageService {
     };
   }
 
-  async findSubscription(id: number, type: 'following' | 'followers') {
-    const user = await this.userService.findByPK(id, {
+  async findSubscription(userId: number, type: 'following' | 'followers') {
+    const user = await this.userService.findByPK(userId, {
       relations: ['subscription'],
     });
 
@@ -56,14 +56,14 @@ export class PageService {
     });
   }
 
-  async findFollowers(id: number) {
-    const followers = await this.findSubscription(id, 'followers');
+  async findFollowers(userId: number) {
+    const followers = await this.findSubscription(userId, 'followers');
 
     return { content: followers };
   }
 
-  async findFollowing(id: number) {
-    const following = await this.findSubscription(id, 'following');
+  async findFollowing(userId: number) {
+    const following = await this.findSubscription(userId, 'following');
 
     return { content: following };
   }

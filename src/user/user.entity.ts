@@ -1,58 +1,18 @@
-import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
-import {
-  Column,
-  Entity,
-  Index,
-  JoinTable,
-  ManyToMany,
-  OneToMany,
-  OneToOne,
-  PrimaryGeneratedColumn,
-} from 'typeorm';
+import { ApiPropertyOptional } from '@nestjs/swagger';
+import { Entity, JoinTable, ManyToMany, OneToMany, OneToOne } from 'typeorm';
 import { Goal } from 'src/goal/goal.entity';
-import { UserCharacteristic } from 'src/user-characteristic/user-characteristic.entity';
 import { Subscription } from 'src/subscription/subscription.entity';
+import { UserWithCharacteristicDto } from './dto/user-with-characteristic.dto';
 
 @Entity('users')
-export class User {
-  @PrimaryGeneratedColumn()
-  @ApiProperty({
-    example: 1,
-    description: 'unique identifier',
-  })
-  id: number;
-
-  @Index({ unique: true })
-  @Column()
-  @ApiProperty({
-    example: 'maximir',
-  })
-  nickname: string;
-
-  @Column({ length: 100 })
-  @ApiProperty({
-    example: 'Maxim Minchenko',
-  })
-  name: string;
-
-  @Column()
-  @ApiProperty({
-    example: '/avatars/15058de3-3950-4d29-a380-7d3813aab1bc.webp',
-    description: 'the path to the avatar',
-  })
-  avatar: string;
-
-  @OneToOne(() => UserCharacteristic, (characteristic) => characteristic.user, { cascade: true })
-  @ApiPropertyOptional({ type: () => UserCharacteristic })
-  characteristic: UserCharacteristic;
-
+export class User extends UserWithCharacteristicDto {
   @OneToMany(() => Goal, (goal) => goal.owner)
   @ApiPropertyOptional({ type: () => Goal, isArray: true })
   goals: Goal[];
 
   @ManyToMany(() => Goal)
   @JoinTable()
-  @ApiProperty({ type: () => Goal, isArray: true })
+  @ApiPropertyOptional({ type: () => Goal, isArray: true })
   member: Goal[];
 
   @OneToOne(() => Subscription, (subscription) => subscription.user, { cascade: true })

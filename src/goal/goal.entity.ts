@@ -52,6 +52,5 @@ export class Goal {
     eager: true,
     cascade: true,
   })
-  @ApiProperty({ type: () => User })
   owner: User;
 }

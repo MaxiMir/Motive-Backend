@@ -1,4 +1,4 @@
-import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
+import { ApiProperty } from '@nestjs/swagger';
 import { Column, Entity, JoinColumn, OneToOne, PrimaryGeneratedColumn } from 'typeorm';
 import { Day } from 'src/day/day.entity';
 
@@ -34,6 +34,5 @@ export class DayCharacteristic {
 
   @OneToOne(() => Day)
   @JoinColumn()
-  @ApiPropertyOptional({ type: () => Day })
   day: Day;
 }

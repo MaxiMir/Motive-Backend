@@ -42,6 +42,5 @@ export class Task {
   completedBy: number[] = [];
 
   @ManyToOne(() => Day, (day) => day.tasks)
-  @ApiPropertyOptional({ type: () => Day })
   day: Day;
 }

@@ -1,5 +1,5 @@
 import { Column, Entity, Index, JoinTable, ManyToMany, PrimaryGeneratedColumn } from 'typeorm';
-import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
+import { ApiProperty } from '@nestjs/swagger';
 import { Goal } from 'src/goal/goal.entity';
 
 @Entity('hashtags')
@@ -26,6 +26,5 @@ export class Hashtag {
 
   @ManyToMany(() => Goal, (goal) => goal.hashtags)
   @JoinTable()
-  @ApiPropertyOptional({ type: () => Goal })
   goal: Goal;
 }

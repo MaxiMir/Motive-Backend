@@ -14,7 +14,7 @@ export class PageService {
     const user = await this.userService.findByNickname(nickname, {
       relations: ['characteristic', 'goals', 'member', 'subscription'],
     });
-    const favorite = client?.subscription.following.includes(user.id);
+    const isFollowing = client?.subscription.following.includes(user.id);
 
     const goals = await Promise.all(
       user.goals.map(async (goal) => {
@@ -30,7 +30,7 @@ export class PageService {
     return {
       client,
       content: {
-        favorite,
+        isFollowing,
         user: { ...user, goals },
       },
     };

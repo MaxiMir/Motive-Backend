@@ -1,12 +1,8 @@
 import { ApiProperty } from '@nestjs/swagger';
-import { User } from 'src/user/user.entity';
-import { PageDto } from 'src/abstract/page.dto';
+import { PageDto } from './page.dto';
+import { RatingContentDto } from './rating-content.dto';
 
 export class RatingDto extends PageDto {
   @ApiProperty()
-  content: {
-    motivation: User[];
-    creativity: User[];
-    support: User[];
-  };
+  content: RatingContentDto;
 }

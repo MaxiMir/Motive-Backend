@@ -18,6 +18,6 @@ export class CreateGoalDto {
 
   @IsArray()
   @ArrayMinSize(1)
-  @ApiProperty({ type: CreateTaskDto, isArray: true })
+  @ApiProperty({ type: () => CreateTaskDto, isArray: true })
   readonly tasks: CreateTaskDto[];
 }

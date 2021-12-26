@@ -61,6 +61,5 @@ export class Day {
   // feedbackId!: Feedback["id"]
 
   @ManyToOne(() => Goal, (goal) => goal.days)
-  @ApiProperty({ type: () => Goal })
   goal: Goal;
 }

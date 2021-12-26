@@ -1,4 +1,4 @@
-import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
+import { ApiProperty } from '@nestjs/swagger';
 import { Column, Entity, JoinColumn, OneToOne, PrimaryGeneratedColumn } from 'typeorm';
 import { User } from 'src/user/user.entity';
 
@@ -49,6 +49,5 @@ export class UserCharacteristic {
 
   @OneToOne(() => User)
   @JoinColumn()
-  @ApiPropertyOptional({ type: () => User })
   user: User;
 }

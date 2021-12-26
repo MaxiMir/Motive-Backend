@@ -1,3 +1,3 @@
-import { PageDto } from 'src/abstract/page.dto';
+import { PageDto } from './page.dto';
 
 export class MainDto extends PageDto {}

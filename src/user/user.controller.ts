@@ -15,6 +15,7 @@ import { ApiImageFile } from 'src/decorators/api-image.decorator';
 import { ParseFile } from 'src/pipes/parse-file.pipe';
 import { CreateUserDto } from './dto/create-user.dto';
 import { AddFollowingDto } from './dto/add-following.dto';
+import { UserBaseDto } from './dto/user-base.dto';
 import { User } from './user.entity';
 import { UserService } from './user.service';
 
@@ -25,7 +26,7 @@ export class UserController {
 
   @Get()
   @ApiOperation({ summary: 'Get users' })
-  @ApiResponse({ status: 200, type: [User] })
+  @ApiResponse({ status: 200, type: [UserBaseDto] })
   getAll() {
     return this.userService.find();
   }
@@ -33,7 +34,7 @@ export class UserController {
   @Get(':nickname')
   @ApiOperation({ summary: 'Get user by nickname' })
   @ApiParam({ name: 'nickname', example: 'maximir' })
-  @ApiResponse({ status: 200, type: User })
+  @ApiResponse({ status: 200, type: UserBaseDto })
   getByNickname(@Param('nickname') nickname: string) {
     return this.userService.findByNickname(nickname);
   }

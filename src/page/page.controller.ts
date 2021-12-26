@@ -2,9 +2,9 @@ import { Controller, Get, Param, ParseIntPipe, Query } from '@nestjs/common';
 import { ApiOperation, ApiParam, ApiQuery, ApiResponse, ApiTags } from '@nestjs/swagger';
 import { ParseGoalDateMapPipe } from 'src/pipes/parse-goal-date-map.pipe';
 import { GoalDayDto } from 'src/goal/dto/goal-day.dto';
-import { UserPageDto } from './dto/user-page.dto';
+import { UserDto } from './dto/user.dto';
 import { FavoritesDto } from './dto/favorites.dto';
-import { UserFollowersDto } from './dto/user-followers.dto';
+import { FollowersDto } from './dto/followers.dto';
 import { RatingDto } from './dto/rating.dto';
 import { MainDto } from './dto/main.dto';
 import { PageService } from './page.service';
@@ -32,7 +32,7 @@ export class PageController {
     description: 'dates for goals [goal.id]:[day.id]',
     allowEmptyValue: true,
   })
-  @ApiResponse({ status: 200, type: UserPageDto })
+  @ApiResponse({ status: 200, type: UserDto })
   getUser(
     @Param('nickname') nickname: string,
     @Query('d', ParseGoalDateMapPipe) goalDatesMap?: GoalDayDto[],
@@ -43,7 +43,7 @@ export class PageController {
   @Get('users/:id/followers')
   @ApiOperation({ summary: 'Get followers' })
   @ApiParam({ name: 'id', example: 23 })
-  @ApiResponse({ status: 200, type: UserFollowersDto })
+  @ApiResponse({ status: 200, type: FollowersDto })
   getFollowers(@Param('id', ParseIntPipe) id: number) {
     return this.pageService.findFollowers(id);
   }

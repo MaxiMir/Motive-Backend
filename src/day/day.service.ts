@@ -23,7 +23,7 @@ export class DayService {
     return await this.dayRepository.findOneOrFail({ id }, options);
   }
 
-  async findLastAdd(where?: FindConditions<Day> | ObjectLiteral) {
+  async findLast(where?: FindConditions<Day> | ObjectLiteral) {
     const [day] = await this.dayRepository.find({
       where,
       order: {
@@ -33,14 +33,6 @@ export class DayService {
     });
 
     return day;
-  }
-
-  // todo
-  async incrementViews(id: number) {
-    const day = await this.findByPK(id);
-    day.views += 1;
-
-    await this.dayRepository.save(day);
   }
 
   async save(dto: CreateDayDto) {
@@ -53,5 +45,12 @@ export class DayService {
 
       return task;
     });
+  }
+
+  async incrementViews(id: number) {
+    const day = await this.findByPK(id);
+    day.views += 1;
+
+    await this.dayRepository.save(day);
   }
 }

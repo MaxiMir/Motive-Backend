@@ -1,4 +1,4 @@
-import { Controller, Param, ParseIntPipe, Get, Post, Query } from '@nestjs/common';
+import { Controller, Param, Query, ParseIntPipe, Get, Post, Patch } from '@nestjs/common';
 import { ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
 import { CreateDayDto } from './dto/create.day.dto';
 import { DayService } from './day.service';
@@ -21,5 +21,13 @@ export class DayController {
   @ApiResponse({ status: 201, type: Day })
   create(@Query() dto: CreateDayDto) {
     return this.dayService.save(dto);
+  }
+
+  @Patch(':id/views')
+  @ApiOperation({ summary: 'Update day views' })
+  @ApiResponse({ status: 204 })
+  incrementViews(@Param('id', ParseIntPipe) id: number) {
+    // todo only auth
+    return this.dayService.incrementViews(id);
   }
 }

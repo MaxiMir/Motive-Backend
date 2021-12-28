@@ -1,5 +1,5 @@
-import { Body, Controller, HttpCode, Param, Post } from '@nestjs/common';
-import { ApiOperation, ApiParam, ApiResponse, ApiTags } from '@nestjs/swagger';
+import { Body, Controller, HttpCode, Query, Post } from '@nestjs/common';
+import { ApiOperation, ApiQuery, ApiResponse, ApiTags } from '@nestjs/swagger';
 import { Operation, OPERATIONS } from 'src/abstracts/operation';
 import { ParseOperationPipe } from 'src/pipes/parse-operation.pipe';
 import { SubscriptionService } from './subscription.service';
@@ -10,13 +10,13 @@ import { UpdateFollowingDto } from './dto/update-following.dto';
 export class SubscriptionController {
   constructor(private readonly subscriptionService: SubscriptionService) {}
 
-  @Post(':operation')
+  @Post()
   @HttpCode(204)
   @ApiOperation({ summary: 'update following' })
-  @ApiParam({ name: 'operation', enum: OPERATIONS })
+  @ApiQuery({ name: 'operation', enum: OPERATIONS })
   @ApiResponse({ status: 204 })
   updateFollowing(
-    @Param('operation', ParseOperationPipe) operation: Operation,
+    @Query('operation', ParseOperationPipe) operation: Operation,
     @Body() dto: UpdateFollowingDto,
   ) {
     const clientId = 1; // TODO временно

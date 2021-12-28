@@ -12,6 +12,14 @@ import { UserService } from './user.service';
 export class UserController {
   constructor(private readonly userService: UserService) {}
 
+  @Post()
+  @ApiOperation({ summary: 'Create user' })
+  @ApiImageFile('avatar', true)
+  @ApiResponse({ status: 201, type: User })
+  create(@Query() dto: CreateUserDto, @UploadedFile(ParseFile) file: Express.Multer.File) {
+    return this.userService.save(dto, file);
+  }
+
   @Get()
   @ApiOperation({ summary: 'Get users' })
   @ApiResponse({ status: 200, type: [UserBaseDto] })
@@ -25,13 +33,5 @@ export class UserController {
   @ApiResponse({ status: 200, type: UserBaseDto })
   getByNickname(@Param('nickname') nickname: string) {
     return this.userService.findByNickname(nickname);
-  }
-
-  @Post()
-  @ApiOperation({ summary: 'Create user' })
-  @ApiImageFile('avatar', true)
-  @ApiResponse({ status: 201, type: User })
-  create(@Query() dto: CreateUserDto, @UploadedFile(ParseFile) file: Express.Multer.File) {
-    return this.userService.save(dto, file);
   }
 }

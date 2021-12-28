@@ -1,5 +1,5 @@
-import { Body, Controller, Get, HttpCode, Param, ParseIntPipe, Post } from '@nestjs/common';
-import { ApiOperation, ApiParam, ApiResponse, ApiTags } from '@nestjs/swagger';
+import { Body, Controller, HttpCode, Param, Query, ParseIntPipe, Get, Post } from '@nestjs/common';
+import { ApiOperation, ApiQuery, ApiResponse, ApiTags } from '@nestjs/swagger';
 import { Operation, OPERATIONS } from 'src/abstracts/operation';
 import { Characteristic } from 'src/abstracts/characteristic';
 import { ParseCharacteristicPipe } from 'src/pipes/parse-characteristic.pipe';
@@ -13,6 +13,15 @@ import { Goal } from './goal.entity';
 @ApiTags('Goals')
 export class GoalController {
   constructor(private readonly goalService: GoalService) {}
+
+  @Post()
+  @ApiOperation({ summary: 'Create goal' })
+  @ApiResponse({ status: 201, type: Goal })
+  create(@Body() dto: CreateGoalDto) {
+    const clientId = 1; // TODO временно
+
+    return this.goalService.save(clientId, dto);
+  }
 
   @Get(':id')
   @ApiOperation({ summary: 'Get goal' })
@@ -28,28 +37,19 @@ export class GoalController {
     return this.goalService.findDates(id);
   }
 
-  @Post()
-  @ApiOperation({ summary: 'Create goal' })
-  @ApiResponse({ status: 201, type: Goal })
-  create(@Body() dto: CreateGoalDto) {
-    const clientId = 1; // TODO временно
-
-    return this.goalService.save(clientId, dto);
-  }
-
-  @Post(':goalId/:dayId/:characteristic/:operation')
+  @Post(':id/:dayId/:characteristic')
   @HttpCode(204)
   @ApiOperation({ summary: 'update day characteristic' })
-  @ApiParam({ name: 'operation', enum: OPERATIONS })
+  @ApiQuery({ name: 'operation', enum: OPERATIONS })
   @ApiResponse({ status: 204 })
   updateCharacteristic(
-    @Param('goalId', ParseIntPipe) goalId: number,
+    @Param('id', ParseIntPipe) id: number,
     @Param('dayId', ParseIntPipe) dayId: number,
     @Param('characteristic', ParseCharacteristicPipe) characteristic: Characteristic,
-    @Param('operation', ParseOperationPipe) operation: Operation,
+    @Query('operation', ParseOperationPipe) operation: Operation,
   ) {
     const clientId = 1; // TODO временно
 
-    return this.goalService.updateCharacteristic(clientId, goalId, dayId, characteristic, operation);
+    return this.goalService.updateCharacteristic(clientId, id, dayId, characteristic, operation);
   }
 }

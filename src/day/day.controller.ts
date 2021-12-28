@@ -1,4 +1,4 @@
-import { Controller, Param, Query, ParseIntPipe, Get, Post, Patch } from '@nestjs/common';
+import { Controller, Param, Query, ParseIntPipe, Get, Post } from '@nestjs/common';
 import { ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
 import { CreateDayDto } from './dto/create.day.dto';
 import { DayService } from './day.service';
@@ -9,13 +9,6 @@ import { Day } from './day.entity';
 export class DayController {
   constructor(private readonly dayService: DayService) {}
 
-  @Get(':id')
-  @ApiOperation({ summary: 'Get day' })
-  @ApiResponse({ status: 200, type: Day })
-  getByPK(@Param('id', ParseIntPipe) id: number) {
-    return this.dayService.findByPK(id);
-  }
-
   @Post()
   @ApiOperation({ summary: 'Create day' })
   @ApiResponse({ status: 201, type: Day })
@@ -23,7 +16,14 @@ export class DayController {
     return this.dayService.save(dto);
   }
 
-  @Patch(':id/views')
+  @Get(':id')
+  @ApiOperation({ summary: 'Get day' })
+  @ApiResponse({ status: 200, type: Day })
+  getByPK(@Param('id', ParseIntPipe) id: number) {
+    return this.dayService.findByPK(id);
+  }
+
+  @Post(':id/views')
   @ApiResponse({ status: 204 })
   @ApiOperation({ summary: 'Increase day views' })
   increaseViews(@Param('id', ParseIntPipe) id: number) {

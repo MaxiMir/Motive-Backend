@@ -21,6 +21,17 @@ export class UserService {
     return this.userRepository;
   }
 
+  async save(dto: CreateUserDto, file: Express.Multer.File) {
+    const user = new User();
+    user.name = dto.name;
+    user.nickname = dto.nickname;
+    user.avatar = await this.fileService.uploadImage(file, { width: 500 });
+    user.characteristic = new UserCharacteristic();
+    user.subscription = new Subscription();
+
+    return this.userRepository.save(user);
+  }
+
   async find(options?: FindManyOptions<User>) {
     return this.userRepository.find(options);
   }
@@ -31,16 +42,5 @@ export class UserService {
 
   async findByNickname(nickname: string, options?: FindOneOptions<User>) {
     return this.userRepository.findOneOrFail({ nickname }, options);
-  }
-
-  async save(dto: CreateUserDto, file: Express.Multer.File) {
-    const user = new User();
-    user.name = dto.name;
-    user.nickname = dto.nickname;
-    user.avatar = await this.fileService.uploadImage(file, { width: 500 });
-    user.characteristic = new UserCharacteristic();
-    user.subscription = new Subscription();
-
-    return this.userRepository.save(user);
   }
 }

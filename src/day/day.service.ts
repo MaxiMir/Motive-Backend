@@ -19,6 +19,26 @@ export class DayService {
     return this.dayRepository;
   }
 
+  create(dto: CreateDayDto) {
+    const day = new Day();
+
+    day.tasks = dto.tasks.map(({ name, date }) => {
+      const task = new Task();
+      task.name = name;
+      task.date = date;
+
+      return task;
+    });
+
+    return day;
+  }
+
+  async save(dto: CreateDayDto) {
+    const day = this.create(dto);
+
+    return await this.dayRepository.save(day);
+  }
+
   async find(options?: FindManyOptions<Day>) {
     return await this.dayRepository.find(options);
   }
@@ -37,18 +57,6 @@ export class DayService {
     });
 
     return day;
-  }
-
-  async save(dto: CreateDayDto) {
-    const day = new Day();
-
-    day.tasks = dto.tasks.map(({ name, date }) => {
-      const task = new Task();
-      task.name = name;
-      task.date = date;
-
-      return task;
-    });
   }
 
   async increaseViews(id: number) {

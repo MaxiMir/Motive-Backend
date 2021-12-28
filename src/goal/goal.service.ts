@@ -6,8 +6,6 @@ import { Operation } from 'src/abstracts/operation';
 import { Characteristic } from 'src/abstracts/characteristic';
 import { DayCharacteristic } from 'src/day-characteristic/day-characteristic.entity';
 import { GoalCharacteristic } from 'src/goal-characteristic/goal-characteristic.entity';
-import { Day } from 'src/day/day.entity';
-import { Task } from 'src/task/task.entity';
 import { HashtagService } from 'src/hashtag/hashtag.service';
 import { UserService } from 'src/user/user.service';
 import { DayService } from 'src/day/day.service';
@@ -24,6 +22,19 @@ export class GoalService {
     private readonly hashtagService: HashtagService,
   ) {}
 
+  async save(userId: number, dto: CreateGoalDto) {
+    const goal = new Goal();
+    const day = this.dayService.create({ tasks: dto.tasks });
+
+    goal.name = dto.name;
+    goal.characteristic = new GoalCharacteristic();
+    goal.hashtags = await this.hashtagService.upsert(dto.hashtags);
+    goal.days = [day];
+    goal.owner = await this.userService.findByPK(userId);
+
+    return await this.goalRepository.save(goal);
+  }
+
   async findByPK(id: number, options?: FindOneOptions<Goal>) {
     return await this.goalRepository.findOneOrFail({ id }, options);
   }
@@ -37,36 +48,16 @@ export class GoalService {
     });
   }
 
-  async save(userId: number, dto: CreateGoalDto) {
-    const goal = new Goal();
-    const day = new Day();
-
-    goal.name = dto.name;
-    goal.characteristic = new GoalCharacteristic();
-    goal.hashtags = await this.hashtagService.upsert(dto.hashtags);
-    day.tasks = dto.tasks.map(({ name, date }) => {
-      const task = new Task();
-      task.name = name;
-      task.date = date;
-
-      return task;
-    });
-    goal.days = [day];
-    goal.owner = await this.userService.findByPK(userId);
-
-    return await this.goalRepository.save(goal);
-  }
-
   async updateCharacteristic(
     userId: number,
-    goalId: number,
+    id: number,
     dayId: number,
     characteristic: Characteristic,
     operation: Operation,
   ) {
     const dayRepository = this.dayService.getRepository();
     const day = await this.dayService.findByPK(dayId, { relations: ['characteristic'] });
-    const goal = await this.findByPK(goalId, { relations: ['characteristic'] });
+    const goal = await this.findByPK(id, { relations: ['characteristic'] });
 
     if (!day.characteristic) {
       day.characteristic = new DayCharacteristic();

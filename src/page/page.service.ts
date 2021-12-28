@@ -23,7 +23,7 @@ export class PageService {
           ? await this.dayService.findByPK(dayId)
           : await this.dayService.findLast({ goal: goal.id });
 
-        return { ...goal, days: [day] };
+        return { ...goal, days: [{ ...day }] };
       }),
     );
     // todo member goals

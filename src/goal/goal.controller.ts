@@ -1,5 +1,9 @@
-import { Body, Controller, Get, Param, ParseIntPipe, Post } from '@nestjs/common';
-import { ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
+import { Body, Controller, Get, HttpCode, Param, ParseIntPipe, Post } from '@nestjs/common';
+import { ApiOperation, ApiParam, ApiResponse, ApiTags } from '@nestjs/swagger';
+import { Operation, OPERATIONS } from 'src/abstracts/operation';
+import { Characteristic } from 'src/abstracts/characteristic';
+import { ParseCharacteristicPipe } from 'src/pipes/parse-characteristic.pipe';
+import { ParseOperationPipe } from 'src/pipes/parse-operation.pipe';
 import { CreateGoalDto } from './dto/create-goal.dto';
 import { CalendarDto } from './dto/calendar.dto';
 import { GoalService } from './goal.service';
@@ -28,8 +32,24 @@ export class GoalController {
   @ApiOperation({ summary: 'Create goal' })
   @ApiResponse({ status: 201, type: Goal })
   create(@Body() dto: CreateGoalDto) {
-    const userId = 1; // TODO временно
+    const clientId = 1; // TODO временно
 
-    return this.goalService.save(userId, dto);
+    return this.goalService.save(clientId, dto);
+  }
+
+  @Post(':goalId/:dayId/:characteristic/:operation')
+  @HttpCode(204)
+  @ApiOperation({ summary: 'update day characteristic' })
+  @ApiParam({ name: 'operation', enum: OPERATIONS })
+  @ApiResponse({ status: 204 })
+  updateCharacteristic(
+    @Param('goalId', ParseIntPipe) goalId: number,
+    @Param('dayId', ParseIntPipe) dayId: number,
+    @Param('characteristic', ParseCharacteristicPipe) characteristic: Characteristic,
+    @Param('operation', ParseOperationPipe) operation: Operation,
+  ) {
+    const clientId = 1; // TODO временно
+
+    return this.goalService.updateCharacteristic(clientId, goalId, dayId, characteristic, operation);
   }
 }

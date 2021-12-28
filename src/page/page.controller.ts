@@ -52,8 +52,9 @@ export class PageController {
   @ApiOperation({ summary: 'Get following page' })
   @ApiResponse({ status: 200, type: FavoritesDto })
   getFollowing() {
-    const userId = 1; // TODO временно
-    return this.pageService.findFollowing(userId);
+    const clientId = 1; // TODO временно
+
+    return this.pageService.findFollowing(clientId);
   }
 
   @Get('rating')

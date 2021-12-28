@@ -24,10 +24,10 @@ export class DayController {
   }
 
   @Patch(':id/views')
-  @ApiOperation({ summary: 'Update day views' })
   @ApiResponse({ status: 204 })
-  incrementViews(@Param('id', ParseIntPipe) id: number) {
+  @ApiOperation({ summary: 'Increase day views' })
+  increaseViews(@Param('id', ParseIntPipe) id: number) {
     // todo only auth
-    return this.dayService.incrementViews(id);
+    return this.dayService.increaseViews(id);
   }
 }

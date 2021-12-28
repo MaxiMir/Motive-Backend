@@ -7,7 +7,6 @@ import { FileService } from 'src/file/file.service';
 import { UserCharacteristic } from 'src/user-characteristic/user-characteristic.entity';
 import { Subscription } from 'src/subscription/subscription.entity';
 import { CreateUserDto } from './dto/create-user.dto';
-import { AddFollowingDto } from './dto/add-following.dto';
 import { User } from './user.entity';
 
 @Injectable()
@@ -32,30 +31,6 @@ export class UserService {
 
   async findByNickname(nickname: string, options?: FindOneOptions<User>) {
     return this.userRepository.findOneOrFail({ nickname }, options);
-  }
-
-  async addFollowing(id: number, dto: AddFollowingDto) {
-    const user = await this.findByPK(id, { relations: ['subscription'] });
-    const following = await this.findByPK(dto.followingId, { relations: ['subscription', 'characteristic'] });
-
-    user.subscription.following.push(dto.followingId);
-    following.subscription.followers.push(user.id);
-    following.characteristic.followers += 1;
-
-    await this.userRepository.save(user);
-    await this.userRepository.save(following);
-  }
-
-  async deleteFollowing(id: number, followingId: number) {
-    const user = await this.findByPK(id, { relations: ['subscription'] });
-    const following = await this.findByPK(followingId, { relations: ['subscription', 'characteristic'] });
-
-    user.subscription.following = user.subscription.following.filter((f) => f !== followingId);
-    following.subscription.followers = user.subscription.followers.filter((f) => f !== user.id);
-    following.characteristic.followers -= 1;
-
-    await this.userRepository.save(user);
-    await this.userRepository.save(following);
   }
 
   async save(dto: CreateUserDto, file: Express.Multer.File) {

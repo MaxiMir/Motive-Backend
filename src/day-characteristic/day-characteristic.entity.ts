@@ -25,12 +25,11 @@ export class DayCharacteristic {
   })
   creativity: number[] = [];
 
-  @Column('int', { array: true })
   @ApiProperty({
-    example: [23, 33],
-    description: 'user id list',
+    example: 13,
   })
-  support: number[] = [];
+  @Column({ default: 0 })
+  support: number;
 
   @OneToOne(() => Day)
   @JoinColumn()

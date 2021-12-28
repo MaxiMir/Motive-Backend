@@ -15,6 +15,10 @@ export class DayService {
     private readonly dayRepository: Repository<Day>,
   ) {}
 
+  getRepository() {
+    return this.dayRepository;
+  }
+
   async find(options?: FindManyOptions<Day>) {
     return await this.dayRepository.find(options);
   }
@@ -47,7 +51,7 @@ export class DayService {
     });
   }
 
-  async incrementViews(id: number) {
+  async increaseViews(id: number) {
     const day = await this.findByPK(id);
     day.views += 1;
 

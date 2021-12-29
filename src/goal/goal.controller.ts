@@ -1,7 +1,7 @@
 import { Body, Controller, HttpCode, Param, Query, ParseIntPipe, Get, Post } from '@nestjs/common';
-import { ApiOperation, ApiQuery, ApiResponse, ApiTags } from '@nestjs/swagger';
+import { ApiOperation, ApiParam, ApiQuery, ApiResponse, ApiTags } from '@nestjs/swagger';
 import { Operation, OPERATIONS } from 'src/abstracts/operation';
-import { Characteristic } from 'src/abstracts/characteristic';
+import { Characteristic, CHARACTERISTICS } from 'src/abstracts/characteristic';
 import { ParseCharacteristicPipe } from 'src/pipes/parse-characteristic.pipe';
 import { ParseOperationPipe } from 'src/pipes/parse-operation.pipe';
 import { CreateGoalDto } from './dto/create-goal.dto';
@@ -40,6 +40,7 @@ export class GoalController {
   @Post(':id/:dayId/:characteristic')
   @HttpCode(204)
   @ApiOperation({ summary: 'update day characteristic' })
+  @ApiParam({ name: 'characteristic', enum: CHARACTERISTICS })
   @ApiQuery({ name: 'operation', enum: OPERATIONS })
   @ApiResponse({ status: 204 })
   updateCharacteristic(

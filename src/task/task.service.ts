@@ -1,7 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
-import { FindConditions } from 'typeorm/find-options/FindConditions';
+import { FindOneOptions } from 'typeorm/find-options/FindOneOptions';
 import { Task } from './task.entity';
 
 @Injectable()
@@ -11,7 +11,16 @@ export class TaskService {
     private readonly taskRepository: Repository<Task>,
   ) {}
 
-  async findOne(conditions: FindConditions<Task>) {
-    return await this.taskRepository.findOne(conditions);
+  async findByPK(id: number, options?: FindOneOptions<Task>) {
+    return this.taskRepository.findOneOrFail({ id }, options);
+  }
+
+  async setCompleted(userId: number, id: number) {
+    const task = await this.findByPK(id);
+
+    // todo completed | completedBy
+    task.completed = true;
+
+    return await this.taskRepository.save(task);
   }
 }

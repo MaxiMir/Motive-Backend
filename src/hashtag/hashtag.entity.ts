@@ -1,6 +1,5 @@
-import { Column, Entity, Index, JoinTable, ManyToMany, PrimaryGeneratedColumn } from 'typeorm';
+import { Column, Entity, Index, PrimaryGeneratedColumn } from 'typeorm';
 import { ApiProperty } from '@nestjs/swagger';
-import { Goal } from 'src/goal/goal.entity';
 
 @Entity('hashtags')
 export class Hashtag {
@@ -23,8 +22,4 @@ export class Hashtag {
     example: 13242,
   })
   views: number;
-
-  @ManyToMany(() => Goal, (goal) => goal.hashtags)
-  @JoinTable()
-  goal: Goal;
 }

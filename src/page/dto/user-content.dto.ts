@@ -1,10 +1,17 @@
 import { ApiProperty } from '@nestjs/swagger';
-import { User } from 'src/user/user.entity';
+import { UserCharacteristic } from 'src/user-characteristic/user-characteristic.entity';
+import { Day } from 'src/day/day.entity';
 
-export class UserPageContent {
+export class UserContentDto {
   @ApiProperty({ type: 'boolean' })
   isFollowing: boolean;
 
-  @ApiProperty({ type: () => User })
-  user: User;
+  @ApiProperty({ type: () => UserCharacteristic })
+  characteristic: UserCharacteristic;
+
+  @ApiProperty({ type: () => Day, isArray: true })
+  goals: Day[];
+
+  @ApiProperty({ type: () => Day, isArray: true })
+  goalsMember: Day[];
 }

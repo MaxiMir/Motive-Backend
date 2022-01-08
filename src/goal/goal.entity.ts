@@ -1,8 +1,7 @@
 import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
-import { Column, Entity, ManyToMany, ManyToOne, OneToMany, OneToOne, PrimaryGeneratedColumn } from 'typeorm';
+import { Column, Entity, ManyToOne, OneToMany, OneToOne, PrimaryGeneratedColumn } from 'typeorm';
 import { User } from 'src/user/user.entity';
 import { Day } from 'src/day/day.entity';
-import { Hashtag } from 'src/hashtag/hashtag.entity';
 import { GoalCharacteristic } from 'src/goal-characteristic/goal-characteristic.entity';
 
 @Entity('goals')
@@ -30,12 +29,12 @@ export class Goal {
   })
   started: string;
 
-  @ManyToMany(() => Hashtag, (hashtag) => hashtag.goal, {
-    eager: true,
-    cascade: true,
+  @ApiProperty({
+    example: ['knowledge', 'education'],
+    description: 'hashtags array',
   })
-  @ApiProperty({ type: () => Hashtag, isArray: true })
-  hashtags: Hashtag[];
+  @Column('simple-array')
+  hashtags: string[];
 
   @OneToOne(() => GoalCharacteristic, (characteristic) => characteristic.goal, {
     eager: true,
@@ -45,7 +44,7 @@ export class Goal {
   characteristic: GoalCharacteristic;
 
   @OneToMany(() => Day, (day) => day.goal, { cascade: true })
-  @ApiProperty({ type: () => Day, isArray: true })
+  @ApiPropertyOptional({ type: () => Day, isArray: true })
   days: Day[];
 
   @ManyToOne(() => User, (user) => user.goals, {

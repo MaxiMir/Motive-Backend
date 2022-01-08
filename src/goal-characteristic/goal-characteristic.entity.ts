@@ -36,7 +36,9 @@ export class GoalCharacteristic {
   @Column({ default: 0 })
   members: number;
 
-  @OneToOne(() => Goal)
+  @OneToOne(() => Goal, {
+    onDelete: 'CASCADE',
+  })
   @JoinColumn()
   goal: Goal;
 }

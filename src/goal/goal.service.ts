@@ -6,7 +6,6 @@ import { Operation } from 'src/abstracts/operation';
 import { Characteristic } from 'src/abstracts/characteristic';
 import { DayCharacteristic } from 'src/day-characteristic/day-characteristic.entity';
 import { GoalCharacteristic } from 'src/goal-characteristic/goal-characteristic.entity';
-import { HashtagService } from 'src/hashtag/hashtag.service';
 import { UserService } from 'src/user/user.service';
 import { DayService } from 'src/day/day.service';
 import { CreateGoalDto } from './dto/create-goal.dto';
@@ -19,7 +18,6 @@ export class GoalService {
     private readonly goalRepository: Repository<Goal>,
     private readonly userService: UserService,
     private readonly dayService: DayService,
-    private readonly hashtagService: HashtagService,
   ) {}
 
   async save(userId: number, dto: CreateGoalDto) {
@@ -28,7 +26,7 @@ export class GoalService {
 
     goal.name = dto.name;
     goal.characteristic = new GoalCharacteristic();
-    goal.hashtags = await this.hashtagService.upsert(dto.hashtags);
+    goal.hashtags = dto.hashtags;
     goal.days = [day];
     goal.owner = await this.userService.findByPK(userId);
 

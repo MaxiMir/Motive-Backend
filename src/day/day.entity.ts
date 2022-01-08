@@ -56,6 +56,8 @@ export class Day {
   // @Column({ nullable: false })
   // feedbackId!: Feedback["id"]
 
-  @ManyToOne(() => Goal, (goal) => goal.days)
+  @ManyToOne(() => Goal, (goal) => goal.days, {
+    onDelete: 'CASCADE',
+  })
   goal: Goal;
 }

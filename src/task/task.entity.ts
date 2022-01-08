@@ -41,6 +41,8 @@ export class Task {
   })
   completedBy: number[] = [];
 
-  @ManyToOne(() => Day, (day) => day.tasks)
+  @ManyToOne(() => Day, (day) => day.tasks, {
+    onDelete: 'CASCADE',
+  })
   day: Day;
 }

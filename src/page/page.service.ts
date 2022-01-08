@@ -2,36 +2,48 @@ import { Injectable } from '@nestjs/common';
 import { In } from 'typeorm';
 import { UserService } from 'src/user/user.service';
 import { DayService } from 'src/day/day.service';
+import { Goal } from 'src/goal/goal.entity';
+import { GoalDayDto } from 'src/goal/dto/goal-day.dto';
 
 @Injectable()
 export class PageService {
   constructor(private readonly userService: UserService, private readonly dayService: DayService) {}
 
-  async findUser(nickname: string, goalDatesMap) {
-    // TODO временно
-    const client = await this.userService.findByNickname('maximir', { relations: ['subscription'] });
-
-    const user = await this.userService.findByNickname(nickname, {
-      relations: ['characteristic', 'goals', 'member', 'subscription'],
-    });
-    const isFollowing = client?.subscription.following.includes(user.id);
-
-    const goals = await Promise.all(
-      user.goals.map(async (goal) => {
+  async findGoalsWithDay(goals: Goal[], goalDatesMap?: GoalDayDto[]) {
+    return await Promise.all(
+      goals.map(async (goal) => {
         const { dayId } = goalDatesMap?.find(({ goalId }) => goalId === goal.id) || {};
         const day = dayId
           ? await this.dayService.findByPK(dayId)
           : await this.dayService.findLast({ goal: goal.id });
+        const tasks = day.tasks.sort((a, b) => a.id - b.id);
 
-        return { ...goal, days: [{ ...day }] };
+        return { ...goal, days: [{ ...day, tasks }] };
       }),
     );
-    // todo member goals
+  }
+
+  async findUser(nickname: string, goalDatesMap?: GoalDayDto[]) {
+    // TODO временно
+    const client = await this.userService.findByNickname('maximir', { relations: ['subscription'] });
+    const user = await this.userService.findByNickname(nickname, {
+      relations: ['characteristic', 'goals', 'member', 'subscription'],
+    });
+    const isFollowing = client?.subscription.following.includes(user.id);
+    const goals = await this.findGoalsWithDay(user.goals, goalDatesMap);
+    const goalsMember = this.findGoalsWithDay(user.member, goalDatesMap);
+
     return {
       client,
       content: {
+        id: user.id,
+        nickname: user.nickname,
+        name: user.name,
+        avatar: user.avatar,
         isFollowing,
-        user: { ...user, goals },
+        characteristic: user.characteristic,
+        goals,
+        goalsMember,
       },
     };
   }

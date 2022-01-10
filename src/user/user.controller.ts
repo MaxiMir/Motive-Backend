@@ -1,5 +1,5 @@
-import { Controller, UploadedFile, Query, Param, Get, Post } from '@nestjs/common';
-import { ApiOperation, ApiParam, ApiResponse, ApiTags } from '@nestjs/swagger';
+import { Controller, UploadedFile, Body, Param, Get, Post } from '@nestjs/common';
+import { ApiBody, ApiOperation, ApiParam, ApiResponse, ApiTags } from '@nestjs/swagger';
 import { ApiImageFile } from 'src/decorators/api-image.decorator';
 import { ParseFile } from 'src/pipes/parse-file.pipe';
 import { CreateUserDto } from './dto/create-user.dto';
@@ -14,9 +14,23 @@ export class UserController {
 
   @Post()
   @ApiOperation({ summary: 'Create user' })
-  @ApiImageFile('avatar', true)
+  @ApiBody({
+    schema: {
+      type: 'object',
+      required: ['name', 'nickname', 'avatar'],
+      properties: {
+        name: { type: 'string', example: 'Maxim Minchenko' },
+        nickname: { type: 'string', example: 'maximir' },
+        avatar: {
+          type: 'string',
+          format: 'binary',
+        },
+      },
+    },
+  })
+  @ApiImageFile('avatar')
   @ApiResponse({ status: 201, type: User })
-  create(@Query() dto: CreateUserDto, @UploadedFile(ParseFile) file: Express.Multer.File) {
+  create(@Body() dto: CreateUserDto, @UploadedFile(ParseFile) file: Express.Multer.File) {
     return this.userService.save(dto, file);
   }
 

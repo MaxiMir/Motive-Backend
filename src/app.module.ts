@@ -16,6 +16,7 @@ import { TaskModule } from './task/task.module';
 import { PageModule } from './page/page.module';
 import { DayCharacteristicModule } from './day-characteristic/day-characteristic.module';
 import { SubscriptionModule } from './subscription/subscription.module';
+import { FeedbackModule } from './feedback/feedback.module';
 
 @Module({
   imports: [
@@ -49,6 +50,7 @@ import { SubscriptionModule } from './subscription/subscription.module';
     PageModule,
     DayCharacteristicModule,
     SubscriptionModule,
+    FeedbackModule,
   ],
   providers: [Unique],
 })

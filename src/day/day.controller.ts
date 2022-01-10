@@ -1,6 +1,8 @@
-import { Controller, Param, Query, ParseIntPipe, Get, Post } from '@nestjs/common';
-import { ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
-import { CreateDayDto } from './dto/create.day.dto';
+import { Controller, Param, Query, ParseIntPipe, Get, Post, Body, UploadedFiles } from '@nestjs/common';
+import { ApiBody, ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
+import { ApiImageFiles } from 'src/decorators/api-images.decorator';
+import { CreateDayDto } from './dto/create-day.dto';
+import { CreateFeedbackDto } from './dto/create-feedback.dto';
 import { DayService } from './day.service';
 import { Day } from './day.entity';
 
@@ -29,5 +31,34 @@ export class DayController {
   increaseViews(@Param('id', ParseIntPipe) id: number) {
     // todo only auth
     return this.dayService.increaseViews(id);
+  }
+
+  @Post(':id/feedback')
+  @ApiBody({
+    schema: {
+      type: 'object',
+      required: [],
+      properties: {
+        text: { type: 'string' },
+        photos: {
+          type: 'array',
+          items: {
+            type: 'string',
+            format: 'binary',
+          },
+        },
+      },
+    },
+  })
+  @ApiImageFiles('photos')
+  @ApiResponse({ status: 200 })
+  @ApiOperation({ summary: 'Create day feedback' })
+  createFeedback(
+    @Param('id', ParseIntPipe) id: number,
+    @Body() dto: CreateFeedbackDto,
+    @UploadedFiles() files: Express.Multer.File[],
+  ) {
+    // todo only auth + check user
+    return this.dayService.createFeedback(id, dto, files);
   }
 }

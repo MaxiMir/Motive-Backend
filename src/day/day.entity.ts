@@ -3,6 +3,7 @@ import { Column, Entity, ManyToOne, OneToMany, OneToOne, PrimaryGeneratedColumn 
 import { Goal } from 'src/goal/goal.entity';
 import { Task } from 'src/task/task.entity';
 import { DayCharacteristic } from 'src/day-characteristic/day-characteristic.entity';
+import { Feedback } from 'src/feedback/feedback.entity';
 
 @Entity('days')
 export class Day {
@@ -40,21 +41,25 @@ export class Day {
   })
   views: number;
 
-  // discussion: string;
+  @OneToOne(() => Feedback, (feedback) => feedback.day, {
+    cascade: true,
+    eager: true,
+  })
+  @ApiProperty({ type: () => Feedback })
+  feedback: Feedback;
 
-  // @Column({ nullable: false })
-  // discussionId!: Discussion["id"]
+  // discussion: Discussion;
+
+  // discussionCount: number
+
+  // @RelationId((discussion: Discussion) => discussion.day)
+  // discussionId: number
 
   @Column({ default: 0 })
   @ApiProperty({
     example: 251,
   })
   discussionCount: number;
-
-  // feedback: string;
-
-  // @Column({ nullable: false })
-  // feedbackId!: Feedback["id"]
 
   @ManyToOne(() => Goal, (goal) => goal.days, {
     onDelete: 'CASCADE',

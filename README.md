@@ -77,6 +77,7 @@ app.useGlobalPipes(new ValidationPipe()); # устанавливаем pipe на
 yarn add -D @types/multer # Nest uses multer for handling file uploads using the multipart/form-data format.
 ```
 
+[Type-safe File Uploads](https://notiz.dev/blog/type-safe-file-uploads)
 
 ### HELMET
 

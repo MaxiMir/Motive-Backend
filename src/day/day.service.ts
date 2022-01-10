@@ -5,8 +5,9 @@ import { FindOneOptions } from 'typeorm/find-options/FindOneOptions';
 import { FindConditions } from 'typeorm/find-options/FindConditions';
 import { FindManyOptions } from 'typeorm/find-options/FindManyOptions';
 import { Task } from 'src/task/task.entity';
-import { CreateDayDto } from './dto/create.day.dto';
+import { CreateDayDto } from './dto/create-day.dto';
 import { Day } from './day.entity';
+import { CreateFeedbackDto } from './dto/create-feedback.dto';
 
 @Injectable()
 export class DayService {
@@ -64,5 +65,9 @@ export class DayService {
     day.views += 1;
 
     await this.dayRepository.save(day);
+  }
+
+  async createFeedback(id: number, dto: CreateFeedbackDto, photos: Express.Multer.File[]) {
+    console.log(id, dto, photos);
   }
 }

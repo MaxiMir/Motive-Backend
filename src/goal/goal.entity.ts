@@ -29,11 +29,11 @@ export class Goal {
   })
   started: string;
 
+  @Column('simple-array')
   @ApiProperty({
     example: ['knowledge', 'education'],
     description: 'hashtags array',
   })
-  @Column('simple-array')
   hashtags: string[];
 
   @OneToOne(() => GoalCharacteristic, (characteristic) => characteristic.goal, {

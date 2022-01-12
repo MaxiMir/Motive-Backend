@@ -22,10 +22,12 @@ export class UserService {
   }
 
   async save(dto: CreateUserDto, file: Express.Multer.File) {
+    const avatar = await this.fileService.uploadImage(file, 'avatars', { width: 500 });
+
     const user = new User();
     user.name = dto.name;
     user.nickname = dto.nickname;
-    user.avatar = await this.fileService.uploadImage(file, { width: 500 });
+    user.avatar = avatar.replace(`/${process.env.STATIC_FOLDER}`, '');
     user.characteristic = new UserCharacteristic();
     user.subscription = new Subscription();
 

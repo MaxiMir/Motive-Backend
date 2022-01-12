@@ -5,15 +5,18 @@ import { FindOneOptions } from 'typeorm/find-options/FindOneOptions';
 import { FindConditions } from 'typeorm/find-options/FindConditions';
 import { FindManyOptions } from 'typeorm/find-options/FindManyOptions';
 import { Task } from 'src/task/task.entity';
+import { Feedback } from 'src/feedback/feedback.entity';
+import { FileService } from 'src/file/file.service';
 import { CreateDayDto } from './dto/create-day.dto';
-import { Day } from './day.entity';
 import { CreateFeedbackDto } from './dto/create-feedback.dto';
+import { Day } from './day.entity';
 
 @Injectable()
 export class DayService {
   constructor(
     @InjectRepository(Day)
     private readonly dayRepository: Repository<Day>,
+    private readonly fileService: FileService,
   ) {}
 
   getRepository() {
@@ -68,6 +71,25 @@ export class DayService {
   }
 
   async createFeedback(id: number, dto: CreateFeedbackDto, photos: Express.Multer.File[]) {
-    console.log(id, dto, photos);
+    const day = await this.findByPK(id);
+    const feedback = new Feedback();
+
+    if (dto.text) {
+      feedback.text = dto.text;
+    }
+
+    if (photos.length) {
+      feedback.photos = await Promise.all(
+        photos.map(async (photo) => {
+          const [width, height] = await this.fileService.getImageRatio(photo);
+          const src = await this.fileService.uploadImage(photo, 'feedback', { width: 1280 });
+
+          return { src, width, height };
+        }),
+      );
+    }
+
+    day.feedback = feedback;
+    await this.dayRepository.save(day);
   }
 }

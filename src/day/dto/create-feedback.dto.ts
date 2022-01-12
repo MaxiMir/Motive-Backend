@@ -1,11 +1,11 @@
-import { ApiProperty } from '@nestjs/swagger';
-import { IsOptional, IsString, Length } from 'class-validator';
+import { ApiPropertyOptional } from '@nestjs/swagger';
+import { IsOptional, IsString, MaxLength } from 'class-validator';
 
 export class CreateFeedbackDto {
   @IsString()
   @IsOptional()
-  @Length(3, 256)
-  @ApiProperty({
+  @MaxLength(256)
+  @ApiPropertyOptional({
     example: 'It was a tough day...',
   })
   readonly text: string;

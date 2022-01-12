@@ -90,6 +90,6 @@ export class DayService {
     }
 
     day.feedback = feedback;
-    await this.dayRepository.save(day);
+    // await this.dayRepository.save(day);
   }
 }

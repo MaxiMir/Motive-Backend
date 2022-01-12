@@ -1,4 +1,4 @@
-import { Controller, Param, Query, ParseIntPipe, Get, Post, Body, UploadedFiles } from '@nestjs/common';
+import { Controller, Param, Query, Body, UploadedFiles, ParseIntPipe, Get, Post } from '@nestjs/common';
 import { ApiBody, ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
 import { ApiImageFiles } from 'src/decorators/api-images.decorator';
 import { CreateDayDto } from './dto/create-day.dto';

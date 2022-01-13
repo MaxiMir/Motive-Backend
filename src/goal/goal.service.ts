@@ -4,6 +4,7 @@ import { Repository } from 'typeorm';
 import { FindOneOptions } from 'typeorm/find-options/FindOneOptions';
 import { Operation } from 'src/abstracts/operation';
 import { Characteristic } from 'src/abstracts/characteristic';
+import { CreateDayDto } from 'src/day/dto/create-day.dto';
 import { DayCharacteristic } from 'src/day-characteristic/day-characteristic.entity';
 import { GoalCharacteristic } from 'src/goal-characteristic/goal-characteristic.entity';
 import { UserService } from 'src/user/user.service';
@@ -21,12 +22,13 @@ export class GoalService {
   ) {}
 
   async save(userId: number, dto: CreateGoalDto) {
+    const { name, hashtags, tasks } = dto;
     const goal = new Goal();
-    const day = this.dayService.create({ tasks: dto.tasks });
+    const day = this.dayService.create({ tasks });
 
-    goal.name = dto.name;
+    goal.name = name;
     goal.characteristic = new GoalCharacteristic();
-    goal.hashtags = dto.hashtags;
+    goal.hashtags = hashtags;
     goal.days = [day];
     goal.owner = await this.userService.findByPK(userId);
 
@@ -43,7 +45,19 @@ export class GoalService {
       where: {
         goal: id,
       },
+      order: {
+        id: 'ASC',
+      },
     });
+  }
+
+  async addDay(id: number, dto: CreateDayDto) {
+    const goal = await this.findByPK(id);
+    const day = this.dayService.create(dto);
+
+    goal.days.push(day);
+
+    return await this.goalRepository.save(goal);
   }
 
   async updateCharacteristic(
@@ -82,6 +96,6 @@ export class GoalService {
         break;
     }
 
-    await this.goalRepository.save(goal);
+    return await this.goalRepository.save(goal);
   }
 }

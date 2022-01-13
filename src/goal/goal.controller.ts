@@ -1,4 +1,4 @@
-import { Body, Controller, HttpCode, Param, Query, ParseIntPipe, Get, Post } from '@nestjs/common';
+import { Body, Controller, HttpCode, Param, Query, ParseIntPipe, Get, Post, Patch } from '@nestjs/common';
 import { ApiOperation, ApiParam, ApiQuery, ApiResponse, ApiTags } from '@nestjs/swagger';
 import { Operation, OPERATIONS } from 'src/abstracts/operation';
 import { Characteristic, CHARACTERISTICS } from 'src/abstracts/characteristic';
@@ -8,6 +8,7 @@ import { CreateGoalDto } from './dto/create-goal.dto';
 import { CalendarDto } from './dto/calendar.dto';
 import { GoalService } from './goal.service';
 import { Goal } from './goal.entity';
+import { CreateDayDto } from '../day/dto/create-day.dto';
 
 @Controller('goals')
 @ApiTags('Goals')
@@ -37,12 +38,20 @@ export class GoalController {
     return this.goalService.findDates(id);
   }
 
-  @Post(':id/:dayId/:characteristic')
+  @Post(':id/days')
+  @HttpCode(201)
+  @ApiOperation({ summary: 'Add day' })
+  @ApiResponse({ status: 200, type: Goal })
+  addDay(@Param('id', ParseIntPipe) id: number, @Body() dto: CreateDayDto) {
+    return this.goalService.addDay(id, dto);
+  }
+
+  @Patch(':id/days/:dayId/characteristic/:characteristic')
   @HttpCode(204)
-  @ApiOperation({ summary: 'update day characteristic' })
+  @ApiOperation({ summary: 'Update day characteristic' })
   @ApiParam({ name: 'characteristic', enum: CHARACTERISTICS })
   @ApiQuery({ name: 'operation', enum: OPERATIONS })
-  @ApiResponse({ status: 204 })
+  @ApiResponse({ status: 200, type: Goal })
   updateCharacteristic(
     @Param('id', ParseIntPipe) id: number,
     @Param('dayId', ParseIntPipe) dayId: number,

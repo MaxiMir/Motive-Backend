@@ -3,7 +3,7 @@ import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
 
 export class CreateTaskDto {
   @IsString()
-  @Length(5, 255)
+  @Length(5, 320)
   @ApiProperty({
     example: 'read 20 pages Harry Potter',
   })

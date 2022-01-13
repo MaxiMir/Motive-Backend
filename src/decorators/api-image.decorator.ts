@@ -1,4 +1,4 @@
-import { fileMimetypeFilter } from 'src/helpers/file-mimetype-filter';
+import { fileMimetypeFilter } from 'src/filters/file-mimetype-filter';
 import { ApiFile } from './api-file.decorator';
 
 export const ApiImageFile = (fileName = 'image') =>

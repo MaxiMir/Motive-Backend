@@ -4,7 +4,7 @@ import { IsOptional, IsString, MaxLength } from 'class-validator';
 export class CreateFeedbackDto {
   @IsString()
   @IsOptional()
-  @MaxLength(256)
+  @MaxLength(255)
   @ApiPropertyOptional({
     example: 'It was a tough day...',
   })

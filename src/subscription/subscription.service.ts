@@ -27,7 +27,7 @@ export class SubscriptionService {
         break;
     }
 
-    await repository.save(user);
     await repository.save(following);
+    await repository.save(user);
   }
 }

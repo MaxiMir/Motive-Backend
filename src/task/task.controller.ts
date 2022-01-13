@@ -17,7 +17,7 @@ export class TaskController {
 
   @Patch(':id/completed')
   @ApiOperation({ summary: 'Set a task complete' })
-  @ApiResponse({ status: 204 })
+  @ApiResponse({ status: 200, type: Task })
   setCompleted(@Param('id', ParseIntPipe) id: number) {
     const clientId = 1; // TODO временно
 

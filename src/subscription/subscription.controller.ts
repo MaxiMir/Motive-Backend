@@ -1,4 +1,4 @@
-import { Body, Controller, HttpCode, Query, Post } from '@nestjs/common';
+import { Body, Controller, HttpCode, Query, Patch } from '@nestjs/common';
 import { ApiOperation, ApiQuery, ApiResponse, ApiTags } from '@nestjs/swagger';
 import { Operation, OPERATIONS } from 'src/abstracts/operation';
 import { ParseOperationPipe } from 'src/pipes/parse-operation.pipe';
@@ -10,9 +10,9 @@ import { UpdateFollowingDto } from './dto/update-following.dto';
 export class SubscriptionController {
   constructor(private readonly subscriptionService: SubscriptionService) {}
 
-  @Post()
+  @Patch()
   @HttpCode(204)
-  @ApiOperation({ summary: 'update following' })
+  @ApiOperation({ summary: 'Update following' })
   @ApiQuery({ name: 'operation', enum: OPERATIONS })
   @ApiResponse({ status: 204 })
   updateFollowing(

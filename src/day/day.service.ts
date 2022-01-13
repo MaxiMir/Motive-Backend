@@ -4,6 +4,7 @@ import { ObjectLiteral, Repository } from 'typeorm';
 import { FindOneOptions } from 'typeorm/find-options/FindOneOptions';
 import { FindConditions } from 'typeorm/find-options/FindConditions';
 import { FindManyOptions } from 'typeorm/find-options/FindManyOptions';
+import { Markdown } from 'src/mardown';
 import { Task } from 'src/task/task.entity';
 import { Feedback } from 'src/feedback/feedback.entity';
 import { FileService } from 'src/file/file.service';
@@ -28,19 +29,13 @@ export class DayService {
 
     day.tasks = dto.tasks.map(({ name, date }) => {
       const task = new Task();
-      task.name = name;
+      task.name = Markdown.convert(name);
       task.date = date;
 
       return task;
     });
 
     return day;
-  }
-
-  async save(dto: CreateDayDto) {
-    const day = this.create(dto);
-
-    return await this.dayRepository.save(day);
   }
 
   async find(options?: FindManyOptions<Day>) {
@@ -75,7 +70,7 @@ export class DayService {
     const feedback = new Feedback();
 
     if (dto.text) {
-      feedback.text = dto.text;
+      feedback.text = Markdown.convert(dto.text);
     }
 
     if (photos.length) {

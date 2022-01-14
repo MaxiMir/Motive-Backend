@@ -4,7 +4,7 @@ import { ObjectLiteral, Repository } from 'typeorm';
 import { FindOneOptions } from 'typeorm/find-options/FindOneOptions';
 import { FindConditions } from 'typeorm/find-options/FindConditions';
 import { FindManyOptions } from 'typeorm/find-options/FindManyOptions';
-import { Markdown } from 'src/mardown';
+import { Markdown } from 'src/tools/mardown';
 import { Task } from 'src/task/task.entity';
 import { Feedback } from 'src/feedback/feedback.entity';
 import { FileService } from 'src/file/file.service';
@@ -43,6 +43,7 @@ export class DayService {
   }
 
   async findByPK(id: number, options?: FindOneOptions<Day>) {
+    await new Promise((r) => setTimeout(r, 1000));
     return await this.dayRepository.findOneOrFail({ id }, options);
   }
 

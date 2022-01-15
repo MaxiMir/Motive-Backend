@@ -3,7 +3,7 @@ import { ApiProperty } from '@nestjs/swagger';
 export class CalendarDto {
   @ApiProperty({
     example: 1,
-    description: 'unique identifier',
+    description: 'day identifier',
   })
   id: number;
 

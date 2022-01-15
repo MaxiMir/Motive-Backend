@@ -10,5 +10,6 @@ import { Goal } from './goal.entity';
   controllers: [GoalController],
   providers: [GoalService],
   imports: [UserModule, DayModule, TypeOrmModule.forFeature([Goal])],
+  exports: [GoalService],
 })
 export class GoalModule {}

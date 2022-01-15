@@ -17,6 +17,7 @@ import { PageModule } from './page/page.module';
 import { DayCharacteristicModule } from './day-characteristic/day-characteristic.module';
 import { SubscriptionModule } from './subscription/subscription.module';
 import { FeedbackModule } from './feedback/feedback.module';
+import { MarkdownModule } from './markown/markdown.module';
 
 @Module({
   imports: [
@@ -51,6 +52,7 @@ import { FeedbackModule } from './feedback/feedback.module';
     DayCharacteristicModule,
     SubscriptionModule,
     FeedbackModule,
+    MarkdownModule,
   ],
   providers: [Unique],
 })

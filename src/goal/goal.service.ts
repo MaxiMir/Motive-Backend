@@ -52,7 +52,7 @@ export class GoalService {
   }
 
   async addDay(id: number, dto: CreateDayDto) {
-    const goal = await this.findByPK(id);
+    const goal = await this.findByPK(id, { relations: ['days'] });
     const day = this.dayService.create(dto);
 
     goal.days.push(day);

@@ -1,6 +1,6 @@
 import { ApiProperty } from '@nestjs/swagger';
 import { UserCharacteristic } from 'src/user-characteristic/user-characteristic.entity';
-import { Day } from 'src/day/day.entity';
+import { GoalWithCalendarDto } from 'src/goal/dto/goal-with-calendar.dto';
 
 export class UserContentDto {
   @ApiProperty({ type: 'boolean' })
@@ -9,9 +9,9 @@ export class UserContentDto {
   @ApiProperty({ type: () => UserCharacteristic })
   characteristic: UserCharacteristic;
 
-  @ApiProperty({ type: () => Day, isArray: true })
-  goals: Day[];
+  @ApiProperty({ type: () => GoalWithCalendarDto, isArray: true })
+  goals: GoalWithCalendarDto[];
 
-  @ApiProperty({ type: () => Day, isArray: true })
-  goalsMember: Day[];
+  @ApiProperty({ type: () => GoalWithCalendarDto, isArray: true })
+  goalsMember: GoalWithCalendarDto[];
 }

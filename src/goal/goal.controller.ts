@@ -33,7 +33,7 @@ export class GoalController {
 
   @Get(':id/calendar')
   @ApiOperation({ summary: 'Get calendar' })
-  @ApiResponse({ status: 200, type: CalendarDto })
+  @ApiResponse({ status: 200, type: [CalendarDto] })
   getCalendar(@Param('id', ParseIntPipe) id: number) {
     return this.goalService.findDates(id);
   }

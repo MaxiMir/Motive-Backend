@@ -4,10 +4,10 @@ import { ObjectLiteral, Repository } from 'typeorm';
 import { FindOneOptions } from 'typeorm/find-options/FindOneOptions';
 import { FindConditions } from 'typeorm/find-options/FindConditions';
 import { FindManyOptions } from 'typeorm/find-options/FindManyOptions';
-import { Markdown } from 'src/tools/mardown';
 import { Task } from 'src/task/task.entity';
 import { Feedback } from 'src/feedback/feedback.entity';
 import { FileService } from 'src/file/file.service';
+import { MarkdownService } from 'src/markown/markdown.service';
 import { CreateDayDto } from './dto/create-day.dto';
 import { CreateFeedbackDto } from './dto/create-feedback.dto';
 import { Day } from './day.entity';
@@ -18,6 +18,7 @@ export class DayService {
     @InjectRepository(Day)
     private readonly dayRepository: Repository<Day>,
     private readonly fileService: FileService,
+    private readonly markdownService: MarkdownService,
   ) {}
 
   getRepository() {
@@ -29,7 +30,7 @@ export class DayService {
 
     day.tasks = dto.tasks.map(({ name, date }) => {
       const task = new Task();
-      task.name = Markdown.convert(name);
+      task.name = this.markdownService.convert(name);
       task.date = date;
 
       return task;
@@ -43,7 +44,6 @@ export class DayService {
   }
 
   async findByPK(id: number, options?: FindOneOptions<Day>) {
-    await new Promise((r) => setTimeout(r, 1000));
     return await this.dayRepository.findOneOrFail({ id }, options);
   }
 
@@ -71,7 +71,7 @@ export class DayService {
     const feedback = new Feedback();
 
     if (dto.text) {
-      feedback.text = Markdown.convert(dto.text);
+      feedback.text = this.markdownService.convert(dto.text);
     }
 
     if (photos.length) {

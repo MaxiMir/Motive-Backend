@@ -1,13 +1,18 @@
 import { Injectable } from '@nestjs/common';
 import { In } from 'typeorm';
+import { GoalDayDto } from 'src/goal/dto/goal-day.dto';
+import { Goal } from 'src/goal/goal.entity';
 import { UserService } from 'src/user/user.service';
 import { DayService } from 'src/day/day.service';
-import { Goal } from 'src/goal/goal.entity';
-import { GoalDayDto } from 'src/goal/dto/goal-day.dto';
+import { GoalService } from 'src/goal/goal.service';
 
 @Injectable()
 export class PageService {
-  constructor(private readonly userService: UserService, private readonly dayService: DayService) {}
+  constructor(
+    private readonly userService: UserService,
+    private readonly goalService: GoalService,
+    private readonly dayService: DayService,
+  ) {}
 
   async findGoalsWithDay(goals: Goal[], goalDatesMap?: GoalDayDto[]) {
     return await Promise.all(
@@ -17,8 +22,9 @@ export class PageService {
           ? await this.dayService.findByPK(dayId)
           : await this.dayService.findLast({ goal: goal.id });
         const tasks = day.tasks.sort((a, b) => a.id - b.id);
+        const calendar = await this.goalService.findDates(goal.id);
 
-        return { ...goal, days: [{ ...day, tasks }] };
+        return { ...goal, calendar, days: [{ ...day, tasks }] };
       }),
     );
   }

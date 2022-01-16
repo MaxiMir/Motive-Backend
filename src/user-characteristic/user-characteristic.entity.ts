@@ -1,4 +1,4 @@
-import { ApiProperty } from '@nestjs/swagger';
+import { ApiHideProperty, ApiProperty } from '@nestjs/swagger';
 import { Column, Entity, JoinColumn, OneToOne, PrimaryGeneratedColumn } from 'typeorm';
 import { User } from 'src/user/user.entity';
 
@@ -11,43 +11,44 @@ export class UserCharacteristic {
   })
   id: number;
 
+  @Column({ type: 'float', scale: 2, default: 1.0 })
   @ApiProperty({
     example: 13,
   })
-  @Column({ type: 'float', scale: 2, default: 1.0 })
   motivation: number;
 
+  @Column({ type: 'float', scale: 2, default: 1.0 })
   @ApiProperty({
     example: 26,
   })
-  @Column({ type: 'float', scale: 2, default: 1.0 })
   creativity: number;
 
+  @Column({ type: 'float', scale: 2, default: 1.0 })
   @ApiProperty({
     example: 3,
   })
-  @Column({ type: 'float', scale: 2, default: 1.0 })
   support: number;
 
+  @Column({ default: 0 })
   @ApiProperty({
     example: 1,
   })
-  @Column({ default: 0 })
   completed: number;
 
+  @Column({ default: 0 })
   @ApiProperty({
     example: 5,
   })
-  @Column({ default: 0 })
   abandoned: number;
 
+  @Column({ default: 0 })
   @ApiProperty({
     example: 0,
   })
-  @Column({ default: 0 })
   followers: number;
 
   @OneToOne(() => User)
   @JoinColumn()
+  @ApiHideProperty()
   user: User;
 }

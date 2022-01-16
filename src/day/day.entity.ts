@@ -1,4 +1,4 @@
-import { ApiProperty } from '@nestjs/swagger';
+import { ApiHideProperty, ApiProperty } from '@nestjs/swagger';
 import { Column, Entity, ManyToOne, OneToMany, OneToOne, PrimaryGeneratedColumn } from 'typeorm';
 import { Goal } from 'src/goal/goal.entity';
 import { Task } from 'src/task/task.entity';
@@ -64,5 +64,6 @@ export class Day {
   @ManyToOne(() => Goal, (goal) => goal.days, {
     onDelete: 'CASCADE',
   })
+  @ApiHideProperty()
   goal: Goal;
 }

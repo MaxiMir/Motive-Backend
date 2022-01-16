@@ -20,7 +20,8 @@ export class PageService {
         const { dayId } = goalDatesMap?.find(({ goalId }) => goalId === goal.id) || {};
         const day = dayId
           ? await this.dayService.findByPK(dayId)
-          : await this.dayService.findLast({ goal: goal.id });
+          : await this.dayService.findLastAdd({ goal: goal.id });
+
         const tasks = day.tasks.sort((a, b) => a.id - b.id);
         const calendar = await this.goalService.findDates(goal.id);
 

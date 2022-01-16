@@ -40,15 +40,14 @@ export class GoalService {
   }
 
   async findDates(id: number) {
-    return await this.dayService.find({
-      select: ['id', 'date'],
-      where: {
-        goal: id,
-      },
-      order: {
-        id: 'ASC',
-      },
-    });
+    return await this.dayService
+      .getRepository()
+      .createQueryBuilder('day')
+      .leftJoinAndSelect('day.goal', 'goal')
+      .select(['day.id', 'day.date'])
+      .where('goal.id = :id', { id })
+      .orderBy('day.id', 'ASC')
+      .getMany();
   }
 
   async addDay(id: number, dto: CreateDayDto) {

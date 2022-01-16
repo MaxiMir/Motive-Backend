@@ -47,7 +47,7 @@ export class DayService {
     return await this.dayRepository.findOneOrFail({ id }, options);
   }
 
-  async findLast(where?: FindConditions<Day> | ObjectLiteral) {
+  async findLastAdd(where?: FindConditions<Day> | ObjectLiteral) {
     const [day] = await this.dayRepository.find({
       where,
       order: {

@@ -1,6 +1,7 @@
 import { ApiProperty } from '@nestjs/swagger';
-import { ArrayMinSize, IsArray, IsString, Length } from 'class-validator';
+import { ArrayMaxSize, ArrayMinSize, IsArray, IsString, Length } from 'class-validator';
 import { CreateTaskDto } from 'src/task/dto/create-task.dto';
+import { Transform, Type } from 'class-transformer';
 
 export class CreateGoalDto {
   @IsString()
@@ -11,8 +12,19 @@ export class CreateGoalDto {
   readonly name: string;
 
   @IsArray()
+  @ArrayMaxSize(100)
+  @Transform(
+    ({ value }) =>
+      value
+        .toLowerCase()
+        .split(' ')
+        .map((v) => v.replace(/[^a-z\d]/g, ''))
+        .filter(Boolean),
+    { toClassOnly: true },
+  )
+  @Type(() => String)
   @ApiProperty({
-    example: ['foreignLanguage', 'knowledge', 'learnFrench', 'immigration'],
+    example: 'foreignLanguage, knowledge, learnFrench, immigration',
   })
   readonly hashtags: string[];
 

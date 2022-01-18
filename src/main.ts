@@ -12,7 +12,7 @@ async function bootstrap() {
   });
 
   app.setGlobalPrefix('/api/v1');
-  app.useGlobalPipes(new ValidationPipe()); // validation for all endpoints
+  app.useGlobalPipes(new ValidationPipe({ transform: true })); // validation for all endpoints
   app.useGlobalFilters(new AllExceptionsFilter());
   useContainer(app.select(AppModule), { fallbackOnErrors: true });
   app.use(helmet());

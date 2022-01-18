@@ -2,13 +2,13 @@ import { Body, Controller, HttpCode, Param, Query, ParseIntPipe, Get, Post, Patc
 import { ApiOperation, ApiParam, ApiQuery, ApiResponse, ApiTags } from '@nestjs/swagger';
 import { Operation, OPERATIONS } from 'src/abstracts/operation';
 import { Characteristic, CHARACTERISTICS } from 'src/abstracts/characteristic';
+import { CreateDayDto } from 'src/day/dto/create-day.dto';
 import { ParseCharacteristicPipe } from 'src/pipes/parse-characteristic.pipe';
 import { ParseOperationPipe } from 'src/pipes/parse-operation.pipe';
 import { CreateGoalDto } from './dto/create-goal.dto';
 import { CalendarDto } from './dto/calendar.dto';
 import { GoalService } from './goal.service';
 import { Goal } from './goal.entity';
-import { CreateDayDto } from '../day/dto/create-day.dto';
 
 @Controller('goals')
 @ApiTags('Goals')

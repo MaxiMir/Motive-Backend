@@ -47,7 +47,6 @@ export class GoalController {
   }
 
   @Patch(':id/days/:dayId/characteristic/:characteristic')
-  @HttpCode(204)
   @ApiOperation({ summary: 'Update day characteristic' })
   @ApiParam({ name: 'characteristic', enum: CHARACTERISTICS })
   @ApiQuery({ name: 'operation', enum: OPERATIONS })

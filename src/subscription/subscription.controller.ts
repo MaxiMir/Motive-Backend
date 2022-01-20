@@ -16,8 +16,8 @@ export class SubscriptionController {
   @ApiQuery({ name: 'operation', enum: OPERATIONS })
   @ApiResponse({ status: 204 })
   updateFollowing(
-    @Query('operation', ParseOperationPipe) operation: Operation,
     @Body() dto: UpdateFollowingDto,
+    @Query('operation', ParseOperationPipe) operation: Operation,
   ) {
     const clientId = 1; // TODO временно
 

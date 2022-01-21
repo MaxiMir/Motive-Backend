@@ -1,8 +1,8 @@
 import { Injectable } from '@nestjs/common';
-import { In } from 'typeorm';
 import { GoalDayDto } from 'src/goal/dto/goal-day.dto';
 import { Goal } from 'src/goal/goal.entity';
 import { UserService } from 'src/user/user.service';
+import { SubscriptionService } from 'src/subscription/subscription.service';
 import { DayService } from 'src/day/day.service';
 import { GoalService } from 'src/goal/goal.service';
 
@@ -12,6 +12,7 @@ export class PageService {
     private readonly userService: UserService,
     private readonly goalService: GoalService,
     private readonly dayService: DayService,
+    private readonly subscriptionService: SubscriptionService,
   ) {}
 
   async findGoalsWithDay(goals: Goal[], goalDatesMap?: GoalDayDto[]) {
@@ -32,11 +33,11 @@ export class PageService {
 
   async findUser(nickname: string, goalDatesMap?: GoalDayDto[]) {
     // TODO временно
-    const client = await this.userService.findByNickname('maximir', { relations: ['subscription'] });
+    const client = await this.userService.findByNickname('maximir');
     const user = await this.userService.findByNickname(nickname, {
-      relations: ['characteristic', 'goals', 'member', 'subscription'],
+      relations: ['characteristic', 'goals', 'member'],
     });
-    const isFollowing = client?.subscription.following.includes(user.id);
+    const isFollowing = await this.subscriptionService.checkOnFollowing(user.id, client.id);
     const goals = await this.findGoalsWithDay(user.goals, goalDatesMap);
     const goalsMember = this.findGoalsWithDay(user.member, goalDatesMap);
 
@@ -47,36 +48,17 @@ export class PageService {
         nickname: user.nickname,
         name: user.name,
         avatar: user.avatar,
-        isFollowing,
         characteristic: user.characteristic,
+        isFollowing,
         goals,
         goalsMember,
       },
     };
   }
 
-  async findSubscription(nickname: string, type: 'following' | 'followers') {
-    const user = await this.userService.findByNickname(nickname, {
-      relations: ['subscription'],
-    });
-
-    if (!user.subscription[type].length) {
-      return [];
-    }
-
-    return await this.userService.find({
-      where: {
-        id: In(user.subscription[type]),
-      },
-      order: {
-        name: 'ASC',
-      },
-      relations: ['characteristic'],
-    });
-  }
-
   async findFollowers(nickname: string) {
-    const followers = await this.findSubscription(nickname, 'followers');
+    const user = await this.userService.findByNickname(nickname, { select: ['id'] });
+    const followers = await this.subscriptionService.findFollowers(user.id, 10, 0);
 
     return { content: followers };
   }
@@ -84,7 +66,7 @@ export class PageService {
   async findFollowing(nickname: string) {
     // TODO временно
     const client = await this.userService.findByNickname(nickname); // REMOVE
-    const following = await this.findSubscription(nickname, 'following');
+    const following = await this.subscriptionService.findFollowing(client.id, 10, 0);
 
     return { client, content: following };
   }

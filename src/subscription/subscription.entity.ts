@@ -1,8 +1,8 @@
 import { ApiProperty } from '@nestjs/swagger';
-import { Column, Entity, JoinColumn, OneToOne, PrimaryGeneratedColumn } from 'typeorm';
+import { Entity, JoinColumn, OneToOne, PrimaryGeneratedColumn } from 'typeorm';
 import { User } from 'src/user/user.entity';
 
-@Entity('subscriptions')
+@Entity('subscription')
 export class Subscription {
   @PrimaryGeneratedColumn()
   @ApiProperty({
@@ -11,21 +11,11 @@ export class Subscription {
   })
   id: number;
 
-  @Column('int', { array: true })
-  @ApiProperty({
-    example: [23, 33],
-    description: 'user id list',
-  })
-  following: number[] = [];
-
-  @Column('int', { array: true })
-  @ApiProperty({
-    example: [23, 33],
-    description: 'user id list',
-  })
-  followers: number[] = [];
-
   @OneToOne(() => User)
   @JoinColumn()
   user: User;
+
+  @OneToOne(() => User)
+  @JoinColumn()
+  follower: User;
 }

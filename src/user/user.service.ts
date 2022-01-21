@@ -5,7 +5,6 @@ import { FindOneOptions } from 'typeorm/find-options/FindOneOptions';
 import { FindManyOptions } from 'typeorm/find-options/FindManyOptions';
 import { FileService } from 'src/file/file.service';
 import { UserCharacteristic } from 'src/user-characteristic/user-characteristic.entity';
-import { Subscription } from 'src/subscription/subscription.entity';
 import { CreateUserDto } from './dto/create-user.dto';
 import { User } from './user.entity';
 
@@ -23,13 +22,11 @@ export class UserService {
 
   async save(dto: CreateUserDto, file: Express.Multer.File) {
     const avatar = await this.fileService.uploadImage(file, 'avatars', { width: 500 });
-
     const user = new User();
     user.name = dto.name;
     user.nickname = dto.nickname;
     user.avatar = avatar.replace(`/${process.env.STATIC_FOLDER}`, '');
     user.characteristic = new UserCharacteristic();
-    user.subscription = new Subscription();
 
     return this.userRepository.save(user);
   }

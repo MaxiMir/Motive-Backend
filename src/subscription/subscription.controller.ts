@@ -12,7 +12,7 @@ export class SubscriptionController {
 
   @Patch()
   @HttpCode(204)
-  @ApiOperation({ summary: 'Update following' })
+  @ApiOperation({ summary: 'Update subscription' })
   @ApiQuery({ name: 'operation', enum: OPERATIONS })
   @ApiResponse({ status: 204 })
   updateFollowing(

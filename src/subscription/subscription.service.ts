@@ -1,9 +1,10 @@
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
+import { Pagination } from 'src/abstracts/pagination';
 import { Operation } from 'src/abstracts/operation';
 import { UserService } from 'src/user/user.service';
-import { UpdateFollowingDto } from './dto/update-following.dto';
+import { UpdateSubscriptionDto } from './dto/update-subscription.dto';
 import { Subscription } from './subscription.entity';
 
 @Injectable()
@@ -26,49 +27,39 @@ export class SubscriptionService {
     return !!result;
   }
 
-  async findFollowing(userId: number, take: number, skip: number) {
+  async findFollowing(userId: number, pagination: Pagination) {
     const result = await this.subscriptionRepository.find({
       where: { follower: userId },
       relations: ['user', 'user.characteristic'],
       order: {
         id: 'DESC',
       },
-      skip,
-      take,
+      ...pagination,
     });
 
     return result.map((item) => item.user); // TODO use inner join ?
   }
 
-  async findFollowers(userId: number, take: number, skip: number) {
+  async findFollowers(userId: number, pagination: Pagination) {
     const result = await this.subscriptionRepository.find({
       where: { user: userId },
       relations: ['follower', 'follower.characteristic'],
       order: {
         id: 'DESC',
       },
-      skip,
-      take,
+      ...pagination,
     });
 
     return result.map((item) => item.follower);
   }
 
-  async updateFollowing(id: number, dto: UpdateFollowingDto, operation: Operation) {
+  async update(id: number, dto: UpdateSubscriptionDto, operation: Operation) {
     const userRepository = this.userService.getRepository();
     const user = await this.userService.findByPK(id);
     const following = await this.userService.findByPK(dto.id, { relations: ['characteristic'] });
 
-    switch (operation) {
-      case 'add':
-        await this.subscriptionRepository.insert({ user: following, follower: user });
-        following.characteristic.followers += 1;
-        break;
-      case 'remove':
-        await this.subscriptionRepository.delete({ user: following, follower: user });
-        following.characteristic.followers -= 1;
-        break;
-    }
+    await this.subscriptionRepository[operation]({ user: following, follower: user });
+    following.characteristic.followers += operation === 'insert' ? 1 : -1;
 
     await userRepository.save(following);
   }

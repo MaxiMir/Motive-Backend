@@ -1,4 +1,5 @@
 import { Injectable } from '@nestjs/common';
+import { Pagination } from 'src/abstracts/pagination';
 import { GoalDayDto } from 'src/goal/dto/goal-day.dto';
 import { Goal } from 'src/goal/goal.entity';
 import { UserService } from 'src/user/user.service';
@@ -56,17 +57,17 @@ export class PageService {
     };
   }
 
-  async findFollowers(nickname: string) {
+  async findFollowers(nickname: string, pagination: Pagination) {
     const user = await this.userService.findByNickname(nickname, { select: ['id'] });
-    const followers = await this.subscriptionService.findFollowers(user.id, 10, 0);
+    const followers = await this.subscriptionService.findFollowers(user.id, pagination);
 
     return { content: followers };
   }
 
-  async findFollowing(nickname: string) {
+  async findFollowing(nickname: string, pagination: Pagination) {
     // TODO временно
     const client = await this.userService.findByNickname(nickname); // REMOVE
-    const following = await this.subscriptionService.findFollowing(client.id, 10, 0);
+    const following = await this.subscriptionService.findFollowing(client.id, pagination);
 
     return { client, content: following };
   }

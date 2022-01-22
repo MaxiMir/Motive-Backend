@@ -85,11 +85,11 @@ export class GoalService {
     }
 
     switch (operation) {
-      case 'add':
+      case 'insert':
         day.characteristic[characteristic].push(userId);
         goal.characteristic[characteristic] += 1;
         break;
-      case 'remove':
+      case 'delete':
         day.characteristic[characteristic] = day.characteristic[characteristic].filter((u) => u !== userId);
         goal.characteristic[characteristic] -= 1;
         break;

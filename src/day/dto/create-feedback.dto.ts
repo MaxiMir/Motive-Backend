@@ -8,5 +8,5 @@ export class CreateFeedbackDto {
   @ApiPropertyOptional({
     example: 'It was a tough day...',
   })
-  readonly text: string;
+  readonly text?: string;
 }

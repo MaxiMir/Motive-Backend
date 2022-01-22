@@ -3,7 +3,7 @@ import { ApiOperation, ApiQuery, ApiResponse, ApiTags } from '@nestjs/swagger';
 import { Operation, OPERATIONS } from 'src/abstracts/operation';
 import { ParseOperationPipe } from 'src/pipes/parse-operation.pipe';
 import { SubscriptionService } from './subscription.service';
-import { UpdateFollowingDto } from './dto/update-following.dto';
+import { UpdateSubscriptionDto } from './dto/update-subscription.dto';
 
 @Controller('subscriptions')
 @ApiTags('Subscriptions')
@@ -15,12 +15,9 @@ export class SubscriptionController {
   @ApiOperation({ summary: 'Update subscription' })
   @ApiQuery({ name: 'operation', enum: OPERATIONS })
   @ApiResponse({ status: 204 })
-  updateFollowing(
-    @Body() dto: UpdateFollowingDto,
-    @Query('operation', ParseOperationPipe) operation: Operation,
-  ) {
+  update(@Body() dto: UpdateSubscriptionDto, @Query('operation', ParseOperationPipe) operation: Operation) {
     const clientId = 1; // TODO временно
 
-    return this.subscriptionService.updateFollowing(clientId, dto, operation);
+    return this.subscriptionService.update(clientId, dto, operation);
   }
 }

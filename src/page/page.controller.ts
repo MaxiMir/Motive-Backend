@@ -1,5 +1,7 @@
 import { Controller, Get, Param, Query } from '@nestjs/common';
 import { ApiOperation, ApiParam, ApiQuery, ApiResponse, ApiTags } from '@nestjs/swagger';
+import { Pagination } from 'src/abstracts/pagination';
+import { ApiPagination } from 'src/decorators/api-pagination.decorator';
 import { ParseGoalDateMapPipe } from 'src/pipes/parse-goal-date-map.pipe';
 import { GoalDayDto } from 'src/goal/dto/goal-day.dto';
 import { UserDto } from './dto/user.dto';
@@ -42,18 +44,20 @@ export class PageController {
   @Get('users/:nickname/followers')
   @ApiOperation({ summary: 'Get followers' })
   @ApiParam({ name: 'nickname', example: 'maximir' })
+  @ApiPagination()
   @ApiResponse({ status: 200, type: SubscriptionDto })
-  getFollowers(@Param('nickname') nickname: string) {
-    return this.pageService.findFollowers(nickname);
+  getFollowers(@Param('nickname') nickname: string, @Query() query: Pagination) {
+    return this.pageService.findFollowers(nickname, query);
   }
 
   @Get('following')
   @ApiOperation({ summary: 'Get following page' })
+  @ApiPagination()
   @ApiResponse({ status: 200, type: SubscriptionDto })
-  getFollowing() {
+  getFollowing(@Query() query: Pagination) {
     const clientNickname = 'maximir'; // TODO временно
 
-    return this.pageService.findFollowing(clientNickname);
+    return this.pageService.findFollowing(clientNickname, query);
   }
 
   @Get('rating')

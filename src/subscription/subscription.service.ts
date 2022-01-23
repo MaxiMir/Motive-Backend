@@ -37,7 +37,7 @@ export class SubscriptionService {
       ...pagination,
     });
 
-    return result.map((item) => item.user); // TODO use inner join ?
+    return result.map((item) => item.user);
   }
 
   async findFollowers(userId: number, pagination: Pagination) {

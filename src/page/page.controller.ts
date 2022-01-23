@@ -5,7 +5,7 @@ import { ApiPagination } from 'src/decorators/api-pagination.decorator';
 import { ParseGoalDateMapPipe } from 'src/pipes/parse-goal-date-map.pipe';
 import { GoalDayDto } from 'src/goal/dto/goal-day.dto';
 import { UserDto } from './dto/user.dto';
-import { SubscriptionDto } from './dto/subcription.dto';
+import { FollowingDto } from './dto/following.dto';
 import { RatingDto } from './dto/rating.dto';
 import { MainDto } from './dto/main.dto';
 import { PageService } from './page.service';
@@ -41,23 +41,14 @@ export class PageController {
     return this.pageService.findUser(nickname, goalDatesMap);
   }
 
-  @Get('users/:nickname/followers')
-  @ApiOperation({ summary: 'Get followers' })
-  @ApiParam({ name: 'nickname', example: 'maximir' })
-  @ApiPagination()
-  @ApiResponse({ status: 200, type: SubscriptionDto })
-  getFollowers(@Param('nickname') nickname: string, @Query() query: Pagination) {
-    return this.pageService.findFollowers(nickname, query);
-  }
-
   @Get('following')
   @ApiOperation({ summary: 'Get following page' })
   @ApiPagination()
-  @ApiResponse({ status: 200, type: SubscriptionDto })
+  @ApiResponse({ status: 200, type: FollowingDto })
   getFollowing(@Query() query: Pagination) {
-    const clientNickname = 'maximir'; // TODO временно
+    const clientId = 1; // TODO временно
 
-    return this.pageService.findFollowing(clientNickname, query);
+    return this.pageService.findFollowing(clientId, query);
   }
 
   @Get('rating')

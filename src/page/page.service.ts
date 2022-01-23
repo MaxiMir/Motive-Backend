@@ -57,17 +57,10 @@ export class PageService {
     };
   }
 
-  async findFollowers(nickname: string, pagination: Pagination) {
-    const user = await this.userService.findByNickname(nickname, { select: ['id'] });
-    const followers = await this.subscriptionService.findFollowers(user.id, pagination);
-
-    return { content: followers };
-  }
-
-  async findFollowing(nickname: string, pagination: Pagination) {
+  async findFollowing(id: number, pagination: Pagination) {
     // TODO временно
-    const client = await this.userService.findByNickname(nickname); // REMOVE
-    const following = await this.subscriptionService.findFollowing(client.id, pagination);
+    const client = await this.userService.findByPK(id);
+    const following = await this.subscriptionService.findFollowing(id, pagination);
 
     return { client, content: following };
   }

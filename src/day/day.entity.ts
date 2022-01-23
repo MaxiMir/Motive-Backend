@@ -62,6 +62,7 @@ export class Day {
   discussionCount: number;
 
   @ManyToOne(() => Goal, (goal) => goal.days, {
+    nullable: false,
     onDelete: 'CASCADE',
   })
   @ApiHideProperty()

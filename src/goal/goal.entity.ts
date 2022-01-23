@@ -48,6 +48,7 @@ export class Goal {
   days: Day[];
 
   @ManyToOne(() => User, (user) => user.goals, {
+    nullable: false,
     eager: true,
     cascade: true,
   })

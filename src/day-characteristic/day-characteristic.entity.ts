@@ -31,7 +31,7 @@ export class DayCharacteristic {
   @Column({ default: 0 })
   support: number;
 
-  @OneToOne(() => Day)
+  @OneToOne(() => Day, { nullable: false })
   @JoinColumn()
   day: Day;
 }

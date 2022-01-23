@@ -47,7 +47,7 @@ export class UserCharacteristic {
   })
   followers: number;
 
-  @OneToOne(() => User)
+  @OneToOne(() => User, { nullable: false })
   @JoinColumn()
   @ApiHideProperty()
   user: User;

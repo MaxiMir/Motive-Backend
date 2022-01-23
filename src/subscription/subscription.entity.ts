@@ -11,11 +11,11 @@ export class Subscription {
   })
   id: number;
 
-  @ManyToOne(() => User)
+  @ManyToOne(() => User, { nullable: false })
   @JoinColumn()
   user: User;
 
-  @ManyToOne(() => User)
+  @ManyToOne(() => User, { nullable: false })
   @JoinColumn()
   follower: User;
 }

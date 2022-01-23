@@ -29,7 +29,7 @@ export class Feedback {
   })
   video: string;
 
-  @OneToOne(() => Day)
+  @OneToOne(() => Day, { nullable: false })
   @JoinColumn()
   day: Day;
 }

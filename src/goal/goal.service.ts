@@ -1,4 +1,4 @@
-import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
+import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { FindOneOptions } from 'typeorm/find-options/FindOneOptions';
@@ -66,19 +66,8 @@ export class GoalService {
     characteristic: Characteristic,
     operation: Operation,
   ) {
-    const goal = await this.goalRepository
-      .createQueryBuilder('goal')
-      .leftJoinAndSelect('goal.characteristic', 'characteristic')
-      .leftJoinAndSelect('goal.days', 'days')
-      .leftJoinAndSelect('days.characteristic', 'day_characteristic')
-      .where('goal.id = :id', { id })
-      .andWhere('days.id = :dayId', { dayId })
-      .getOne();
-    const day = goal?.days[0];
-
-    if (!day) {
-      throw new HttpException('day id is not exists', HttpStatus.NOT_FOUND);
-    }
+    const goal = await this.findByPK(id, { relations: ['characteristic'] });
+    const day = await this.dayService.findByPK(dayId, { relations: ['characteristic'] });
 
     if (!day.characteristic) {
       day.characteristic = new DayCharacteristic();
@@ -95,6 +84,9 @@ export class GoalService {
         break;
     }
 
-    return await this.goalRepository.save(goal);
+    return this.goalRepository.manager.transaction(async (transactionalManager) => {
+      await transactionalManager.save(day);
+      await transactionalManager.save(goal);
+    });
   }
 }

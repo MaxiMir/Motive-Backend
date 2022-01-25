@@ -47,10 +47,11 @@ export class GoalController {
   }
 
   @Patch(':id/days/:dayId/characteristic/:characteristic')
+  @HttpCode(204)
   @ApiOperation({ summary: 'Update day characteristic' })
   @ApiParam({ name: 'characteristic', enum: CHARACTERISTICS })
   @ApiQuery({ name: 'operation', enum: OPERATIONS })
-  @ApiResponse({ status: 200, type: Goal })
+  @ApiResponse({ status: 200 })
   updateCharacteristic(
     @Param('id', ParseIntPipe) id: number,
     @Param('dayId', ParseIntPipe) dayId: number,

@@ -12,7 +12,22 @@ yarn add typeorm @nestjs/typeorm pg
 yarn add -D ts-node #  CLI написана на javascript и запускается в среде nodejs. Однако все наши модели и миграции будут написаны на typescript. Поэтому необходимо провести транспиляцию наших миграций и моделей до использования CLI. Для этого нам понадобится пакет ts-node:
 ```
 
-В package.json:
+**В TypeOrmModule.forRoot:** 
+
+**synchronize** — указывает, должна ли схема базы данных автоматически создаваться при запуске приложения.
+Будьте внимательны с данной опцией и не используйте ее в production, в противном случае вы потеряете данные.
+Данная опция удобна при разработке и отладке приложения.
+Как альтернатива данной опции, вы можете использовать команду schema:sync из CLI TypeORM.
+
+**dropSchema** — сбрасывать схему каждый раз, когда устанавливается соединение.
+Также, как и предыдущую, данную опцию следует использовать только в процессе разработки и отладки приложения.
+
+**entities** — по каким путям искать описание моделей. Обратите внимание, что поддерживается поиск по маске.
+
+cli.entitiesDir — директория, куда по умолчанию должны складываться модели, созданные из CLI TypeORM.
+
+
+**В package.json:**
 
 ```json
 {
@@ -32,7 +47,7 @@ yarn add @nestjsx/crud class-transformer class-validator
 # @nestjsx/crud-typeorm — пакет для интеграции с TypeORM, предоставляющий базовый сервис TypeOrmCrudService с CRUD методами работы с сущностями в БД.
 ```
 
-### JOB
+**JOB**
 
 ```shell
 docker-compose up -d # установка образа с бд
@@ -48,7 +63,7 @@ yarn run migration:generate -- CreateUserTable # создать миграцию
 yarn run migration:run # накатить миграцию
 ```
 
-### STATIC FILES:
+**STATIC FILES:**
 
 ```shell
 yarn add @nestjs/serve-static
@@ -60,7 +75,7 @@ ServeStaticModule.forRoot({
 })
 ```
 
-### VALIDATION
+**VALIDATION**
 
 ```shell
 yarn add class-validator class-transformer # https://docs.nestjs.com/techniques/validation
@@ -83,4 +98,15 @@ yarn add -D @types/multer # Nest uses multer for handling file uploads using the
 
 ```shell
 yarn add helmet # для защиты приложения - передает специальные HTTP заголовки
+```
+
+```typescript
+await this.goalRepository
+      .createQueryBuilder('goal')
+      .leftJoinAndSelect('goal.characteristic', 'characteristic')
+      .leftJoinAndSelect('goal.days', 'days')
+      .leftJoinAndSelect('days.characteristic', 'day_characteristic')
+      .where('goal.id = :id', { id })
+      .andWhere('days.id = :dayId', { dayId })
+      .getOne()
 ```

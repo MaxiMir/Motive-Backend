@@ -1,4 +1,5 @@
 import * as process from 'process';
+import { join } from 'path';
 import { ServeStaticModule } from '@nestjs/serve-static';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { ConfigModule } from '@nestjs/config';
@@ -34,10 +35,14 @@ import { MarkdownModule } from './markown/markdown.module';
       password: process.env.POSTGRES_PASSWORD,
       database: process.env.POSTGRES_DB,
       entities: [__dirname + '/**/*.entity{.ts,.js}'],
+      migrations: [join(__dirname, '..', 'migrations/**/*.ts')],
       synchronize: true, // TODO shouldn't be used in production - otherwise you can lose production data
       dropSchema: false,
-      cache: {
-        duration: 30000,
+      logging: true,
+      cli: {
+        entitiesDir: 'src',
+        migrationsDir: 'migrations',
+        subscribersDir: 'subscriber',
       },
     }),
     UserModule,

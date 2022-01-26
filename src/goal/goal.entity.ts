@@ -21,7 +21,7 @@ export class Goal {
 
   @Column({
     type: 'timestamp with time zone',
-    default: () => 'CURRENT_TIMESTAMP',
+    default: () => "'TOMORROW'",
   })
   @ApiProperty({
     example: '2021-08-15 21:05:15.723336+07',

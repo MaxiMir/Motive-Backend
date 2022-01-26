@@ -8,8 +8,11 @@ import { Task } from 'src/task/task.entity';
 import { Feedback } from 'src/feedback/feedback.entity';
 import { FileService } from 'src/file/file.service';
 import { MarkdownService } from 'src/markown/markdown.service';
+import { Topic } from 'src/topic/topic.entity';
+import { UserService } from 'src/user/user.service';
 import { CreateDayDto } from './dto/create-day.dto';
 import { CreateFeedbackDto } from './dto/create-feedback.dto';
+import { CreateTopicDto } from './dto/create-topic.dto';
 import { Day } from './day.entity';
 
 @Injectable()
@@ -19,6 +22,7 @@ export class DayService {
     private readonly dayRepository: Repository<Day>,
     private readonly fileService: FileService,
     private readonly markdownService: MarkdownService,
+    private readonly userService: UserService,
   ) {}
 
   getRepository() {
@@ -90,5 +94,25 @@ export class DayService {
 
     day.feedback = feedback;
     return await this.dayRepository.save(day);
+  }
+
+  async createTopic(id: number, userId: number, dto: CreateTopicDto) {
+    const day = await this.findByPK(id, { relations: ['topics'] });
+    const user = await this.userService.findByPK(userId);
+    const topic = new Topic();
+
+    topic.message = dto.message;
+    topic.type = dto.type;
+    topic.user = user;
+    day.topicCount = 1;
+    day.topics = [topic];
+
+    return this.dayRepository.save(day);
+  }
+
+  async findTopics(id: number) {
+    const { topics } = await this.findByPK(id, { relations: ['topics', 'topics.user'] });
+
+    return topics;
   }
 }

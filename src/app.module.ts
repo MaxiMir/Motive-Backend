@@ -19,6 +19,7 @@ import { DayCharacteristicModule } from './day-characteristic/day-characteristic
 import { SubscriptionModule } from './subscription/subscription.module';
 import { FeedbackModule } from './feedback/feedback.module';
 import { MarkdownModule } from './markown/markdown.module';
+import { TopicModule } from './topic/topic.module';
 
 @Module({
   imports: [
@@ -58,6 +59,7 @@ import { MarkdownModule } from './markown/markdown.module';
     SubscriptionModule,
     FeedbackModule,
     MarkdownModule,
+    TopicModule,
   ],
   providers: [Unique],
 })

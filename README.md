@@ -99,14 +99,3 @@ yarn add -D @types/multer # Nest uses multer for handling file uploads using the
 ```shell
 yarn add helmet # для защиты приложения - передает специальные HTTP заголовки
 ```
-
-```typescript
-await this.goalRepository
-      .createQueryBuilder('goal')
-      .leftJoinAndSelect('goal.characteristic', 'characteristic')
-      .leftJoinAndSelect('goal.days', 'days')
-      .leftJoinAndSelect('days.characteristic', 'day_characteristic')
-      .where('goal.id = :id', { id })
-      .andWhere('days.id = :dayId', { dayId })
-      .getOne()
-```

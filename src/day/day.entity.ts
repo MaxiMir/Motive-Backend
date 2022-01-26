@@ -1,9 +1,10 @@
-import { ApiHideProperty, ApiProperty } from '@nestjs/swagger';
+import { ApiHideProperty, ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
 import { Column, Entity, ManyToOne, OneToMany, OneToOne, PrimaryGeneratedColumn } from 'typeorm';
 import { Goal } from 'src/goal/goal.entity';
 import { Task } from 'src/task/task.entity';
 import { DayCharacteristic } from 'src/day-characteristic/day-characteristic.entity';
 import { Feedback } from 'src/feedback/feedback.entity';
+import { Topic } from 'src/topic/topic.entity';
 
 @Entity('days')
 export class Day {
@@ -48,18 +49,17 @@ export class Day {
   @ApiProperty({ type: () => Feedback })
   feedback: Feedback;
 
-  // discussion: Discussion;
-
-  // discussionCount: number
-
-  // @RelationId((discussion: Discussion) => discussion.day)
-  // discussionId: number
+  @OneToMany(() => Topic, (topic) => topic.day, {
+    cascade: true,
+  })
+  @ApiPropertyOptional({ type: () => Topic, isArray: true })
+  topics: Topic[];
 
   @Column({ default: 0 })
   @ApiProperty({
     example: 251,
   })
-  discussionCount: number;
+  topicCount: number;
 
   @ManyToOne(() => Goal, (goal) => goal.days, {
     nullable: false,

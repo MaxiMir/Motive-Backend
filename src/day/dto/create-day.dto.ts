@@ -1,5 +1,5 @@
-import { ArrayMinSize, IsArray } from 'class-validator';
 import { ApiProperty } from '@nestjs/swagger';
+import { ArrayMinSize, IsArray } from 'class-validator';
 import { CreateTaskDto } from 'src/task/dto/create-task.dto';
 
 export class CreateDayDto {

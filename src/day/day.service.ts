@@ -4,7 +4,6 @@ import { ObjectLiteral, Repository } from 'typeorm';
 import { FindOneOptions } from 'typeorm/find-options/FindOneOptions';
 import { FindConditions } from 'typeorm/find-options/FindConditions';
 import { FindManyOptions } from 'typeorm/find-options/FindManyOptions';
-import { Pagination } from 'src/abstracts/pagination';
 import { Task } from 'src/task/task.entity';
 import { FileService } from 'src/file/file.service';
 import { MarkdownService } from 'src/markown/markdown.service';
@@ -66,11 +65,5 @@ export class DayService {
     day.views += 1;
 
     await this.dayRepository.save(day);
-  }
-
-  async findTopics(id: number, pagination: Pagination) {
-    const { topics } = await this.findByPK(id, { relations: ['topics', 'topics.user'], ...pagination });
-
-    return topics;
   }
 }

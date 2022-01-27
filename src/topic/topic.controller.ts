@@ -1,7 +1,9 @@
-import { Body, Controller, Post } from '@nestjs/common';
+import { Body, Controller, Query, Get, Post } from '@nestjs/common';
 import { ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
 import { TopicService } from 'src/topic/topic.service';
+import { ApiPagination } from 'src/decorators/api-pagination.decorator';
 import { CreateTopicDto } from './dto/create-topic.dto';
+import { FindQuery } from './dto/find-query';
 import { Topic } from './topic.entity';
 
 @Controller('topics')
@@ -12,9 +14,17 @@ export class TopicController {
   @Post()
   @ApiOperation({ summary: 'Create topic' })
   @ApiResponse({ status: 200, type: Topic })
-  createTopic(@Body() dto: CreateTopicDto) {
+  create(@Body() dto: CreateTopicDto) {
     const clientId = 1; // TODO временно
 
     return this.topicService.create(clientId, dto);
+  }
+
+  @Get()
+  @ApiPagination({ name: 'where', example: 10 })
+  @ApiOperation({ summary: 'Get topics' })
+  @ApiResponse({ status: 200, type: [Topic] })
+  find(@Query() query: FindQuery) {
+    return this.topicService.find(query);
   }
 }

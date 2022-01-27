@@ -5,6 +5,7 @@ import { DayService } from 'src/day/day.service';
 import { UserService } from 'src/user/user.service';
 import { CreateTopicDto } from './dto/create-topic.dto';
 import { Topic } from './topic.entity';
+import { FindQuery } from './dto/find-query';
 
 @Injectable()
 export class TopicService {
@@ -27,5 +28,15 @@ export class TopicService {
     topic.day.topicCount += 1;
 
     return this.topicRepository.save(topic);
+  }
+
+  async find(query: FindQuery) {
+    return this.topicRepository.find({
+      relations: ['user'],
+      order: {
+        id: 'DESC',
+      },
+      ...query,
+    });
   }
 }

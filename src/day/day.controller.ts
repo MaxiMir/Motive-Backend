@@ -1,8 +1,5 @@
-import { Controller, Param, ParseIntPipe, Get, Patch, Query, Post, HttpCode, Body } from '@nestjs/common';
+import { Controller, Param, ParseIntPipe, Get, Patch, Post, HttpCode, Body } from '@nestjs/common';
 import { ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
-import { Pagination } from 'src/abstracts/pagination';
-import { ApiPagination } from 'src/decorators/api-pagination.decorator';
-import { Topic } from 'src/topic/topic.entity';
 import { Goal } from 'src/goal/goal.entity';
 import { DayService } from './day.service';
 import { Day } from './day.entity';
@@ -34,13 +31,5 @@ export class DayController {
   increaseViews(@Param('id', ParseIntPipe) id: number) {
     // todo only auth
     return this.dayService.increaseViews(id);
-  }
-
-  @Get(':id/topics')
-  @ApiPagination()
-  @ApiOperation({ summary: 'Get topics' })
-  @ApiResponse({ status: 200, type: [Topic] })
-  getTopics(@Param('id', ParseIntPipe) id: number, @Query() query: Pagination) {
-    return this.dayService.findTopics(id, query);
   }
 }

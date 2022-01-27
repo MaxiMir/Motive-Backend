@@ -1,5 +1,5 @@
 import { ApiProperty } from '@nestjs/swagger';
-import { IsEnum, IsNumber, IsString, MaxLength, Min } from 'class-validator';
+import { IsEnum, IsNumber, IsString, MaxLength, Min, MinLength } from 'class-validator';
 import { TopicDirectory } from 'src/abstracts/topicDictionary';
 
 export class CreateTopicDto {
@@ -11,6 +11,7 @@ export class CreateTopicDto {
   readonly dayId: number;
 
   @IsString()
+  @MinLength(5)
   @MaxLength(500)
   @ApiProperty({
     example: 'What other books have you read?',

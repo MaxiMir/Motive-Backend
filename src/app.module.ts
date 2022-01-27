@@ -39,7 +39,7 @@ import { TopicModule } from './topic/topic.module';
       migrations: [join(__dirname, '..', 'migrations/**/*.ts')],
       synchronize: true, // TODO shouldn't be used in production - otherwise you can lose production data
       dropSchema: false,
-      logging: true,
+      logging: false,
       cli: {
         entitiesDir: 'src',
         migrationsDir: 'migrations',

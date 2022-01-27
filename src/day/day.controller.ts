@@ -1,16 +1,25 @@
-import { Controller, Param, Body, UploadedFiles, ParseIntPipe, Get, Post, Patch } from '@nestjs/common';
-import { ApiBody, ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
-import { ApiImageFiles } from 'src/decorators/api-images.decorator';
+import { Controller, Param, ParseIntPipe, Get, Patch, Query, Post, HttpCode, Body } from '@nestjs/common';
+import { ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
+import { Pagination } from 'src/abstracts/pagination';
+import { ApiPagination } from 'src/decorators/api-pagination.decorator';
 import { Topic } from 'src/topic/topic.entity';
-import { CreateFeedbackDto } from './dto/create-feedback.dto';
-import { CreateTopicDto } from './dto/create-topic.dto';
+import { Goal } from 'src/goal/goal.entity';
 import { DayService } from './day.service';
 import { Day } from './day.entity';
+import { CreateDayDto } from './dto/create-day.dto';
 
 @Controller('days')
 @ApiTags('Days')
 export class DayController {
   constructor(private readonly dayService: DayService) {}
+
+  @Post('')
+  @HttpCode(201)
+  @ApiOperation({ summary: 'Add day' })
+  @ApiResponse({ status: 200, type: Goal })
+  create(@Body() dto: CreateDayDto) {
+    return this.dayService.create(dto);
+  }
 
   @Get(':id')
   @ApiOperation({ summary: 'Get day' })
@@ -27,49 +36,11 @@ export class DayController {
     return this.dayService.increaseViews(id);
   }
 
-  @Post(':id/feedback')
-  @ApiBody({
-    schema: {
-      type: 'object',
-      required: [],
-      properties: {
-        text: { type: 'string' },
-        photos: {
-          type: 'array',
-          items: {
-            type: 'string',
-            format: 'binary',
-          },
-        },
-      },
-    },
-  })
-  @ApiImageFiles('photos')
-  @ApiResponse({ status: 200 })
-  @ApiOperation({ summary: 'Create day feedback' })
-  createFeedback(
-    @Param('id', ParseIntPipe) id: number,
-    @Body() dto: CreateFeedbackDto,
-    @UploadedFiles() files: Express.Multer.File[],
-  ) {
-    // todo only auth + check user
-    return this.dayService.createFeedback(id, dto, files);
-  }
-
-  @Post(':id/topics')
-  @ApiOperation({ summary: 'Create topic' })
-  @ApiResponse({ status: 200, type: Topic })
-  createTopic(@Param('id', ParseIntPipe) id: number, @Body() dto: CreateTopicDto) {
-    const clientId = 1; // TODO временно
-
-    // todo only auth + check user
-    return this.dayService.createTopic(id, clientId, dto);
-  }
-
   @Get(':id/topics')
+  @ApiPagination()
   @ApiOperation({ summary: 'Get topics' })
   @ApiResponse({ status: 200, type: [Topic] })
-  getTopics(@Param('id', ParseIntPipe) id: number) {
-    return this.dayService.findTopics(id);
+  getTopics(@Param('id', ParseIntPipe) id: number, @Query() query: Pagination) {
+    return this.dayService.findTopics(id, query);
   }
 }

@@ -1,5 +1,5 @@
 import { ApiProperty } from '@nestjs/swagger';
-import { Column, Entity, JoinColumn, ManyToOne, OneToOne, PrimaryGeneratedColumn } from 'typeorm';
+import { Column, Entity, JoinColumn, ManyToOne, PrimaryGeneratedColumn } from 'typeorm';
 import { Day } from 'src/day/day.entity';
 import { User } from 'src/user/user.entity';
 import { TopicDirectory } from 'src/abstracts/topicDictionary';
@@ -42,10 +42,10 @@ export class Topic {
   })
   type: TopicDirectory;
 
-  @OneToOne(() => User, { nullable: false })
+  @ManyToOne(() => User, { nullable: false })
   @JoinColumn()
   user: User;
 
-  @ManyToOne(() => Day, { nullable: false })
+  @ManyToOne(() => Day, { cascade: true, nullable: false })
   day: Day;
 }

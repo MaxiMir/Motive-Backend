@@ -9,7 +9,7 @@ import { Goal } from './goal.entity';
 @Module({
   controllers: [GoalController],
   providers: [GoalService],
-  imports: [UserModule, DayModule, TypeOrmModule.forFeature([Goal])],
+  imports: [TypeOrmModule.forFeature([Goal]), UserModule, DayModule],
   exports: [GoalService],
 })
 export class GoalModule {}

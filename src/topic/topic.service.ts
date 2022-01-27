@@ -1,4 +1,31 @@
 import { Injectable } from '@nestjs/common';
+import { InjectRepository } from '@nestjs/typeorm';
+import { Repository } from 'typeorm';
+import { DayService } from 'src/day/day.service';
+import { UserService } from 'src/user/user.service';
+import { CreateTopicDto } from './dto/create-topic.dto';
+import { Topic } from './topic.entity';
 
 @Injectable()
-export class TopicService {}
+export class TopicService {
+  constructor(
+    @InjectRepository(Topic)
+    private readonly topicRepository: Repository<Topic>,
+    private readonly userService: UserService,
+    private readonly dayService: DayService,
+  ) {}
+
+  async create(userId: number, dto: CreateTopicDto) {
+    const day = await this.dayService.findByPK(dto.dayId);
+    const user = await this.userService.findByPK(userId);
+    const topic = new Topic();
+
+    topic.message = dto.message;
+    topic.type = dto.type;
+    topic.user = user;
+    topic.day = day;
+    topic.day.topicCount += 1;
+
+    return this.topicRepository.save(topic);
+  }
+}

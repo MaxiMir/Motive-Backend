@@ -4,15 +4,11 @@ import { ObjectLiteral, Repository } from 'typeorm';
 import { FindOneOptions } from 'typeorm/find-options/FindOneOptions';
 import { FindConditions } from 'typeorm/find-options/FindConditions';
 import { FindManyOptions } from 'typeorm/find-options/FindManyOptions';
+import { Pagination } from 'src/abstracts/pagination';
 import { Task } from 'src/task/task.entity';
-import { Feedback } from 'src/feedback/feedback.entity';
 import { FileService } from 'src/file/file.service';
 import { MarkdownService } from 'src/markown/markdown.service';
-import { Topic } from 'src/topic/topic.entity';
-import { UserService } from 'src/user/user.service';
 import { CreateDayDto } from './dto/create-day.dto';
-import { CreateFeedbackDto } from './dto/create-feedback.dto';
-import { CreateTopicDto } from './dto/create-topic.dto';
 import { Day } from './day.entity';
 
 @Injectable()
@@ -22,7 +18,6 @@ export class DayService {
     private readonly dayRepository: Repository<Day>,
     private readonly fileService: FileService,
     private readonly markdownService: MarkdownService,
-    private readonly userService: UserService,
   ) {}
 
   getRepository() {
@@ -73,45 +68,8 @@ export class DayService {
     await this.dayRepository.save(day);
   }
 
-  async createFeedback(id: number, dto: CreateFeedbackDto, photos: Express.Multer.File[]) {
-    const day = await this.findByPK(id);
-    const feedback = new Feedback();
-
-    if (dto.text) {
-      feedback.text = this.markdownService.convert(dto.text);
-    }
-
-    if (photos.length) {
-      feedback.photos = await Promise.all(
-        photos.map(async (photo) => {
-          const [width, height] = await this.fileService.getImageRatio(photo);
-          const src = await this.fileService.uploadImage(photo, 'feedback', { width: 1280 });
-
-          return { src, width, height };
-        }),
-      );
-    }
-
-    day.feedback = feedback;
-    return await this.dayRepository.save(day);
-  }
-
-  async createTopic(id: number, userId: number, dto: CreateTopicDto) {
-    const day = await this.findByPK(id, { relations: ['topics'] });
-    const user = await this.userService.findByPK(userId);
-    const topic = new Topic();
-
-    topic.message = dto.message;
-    topic.type = dto.type;
-    topic.user = user;
-    day.topicCount = 1;
-    day.topics = [topic];
-
-    return this.dayRepository.save(day);
-  }
-
-  async findTopics(id: number) {
-    const { topics } = await this.findByPK(id, { relations: ['topics', 'topics.user'] });
+  async findTopics(id: number, pagination: Pagination) {
+    const { topics } = await this.findByPK(id, { relations: ['topics', 'topics.user'], ...pagination });
 
     return topics;
   }

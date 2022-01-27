@@ -43,16 +43,15 @@ export class Day {
   views: number;
 
   @OneToOne(() => Feedback, (feedback) => feedback.day, {
-    cascade: true,
     eager: true,
   })
   @ApiProperty({ type: () => Feedback })
+  @ApiHideProperty()
   feedback: Feedback;
 
-  @OneToMany(() => Topic, (topic) => topic.day, {
-    cascade: true,
-  })
+  @OneToMany(() => Topic, (topic) => topic.day)
   @ApiPropertyOptional({ type: () => Topic, isArray: true })
+  @ApiHideProperty()
   topics: Topic[];
 
   @Column({ default: 0 })

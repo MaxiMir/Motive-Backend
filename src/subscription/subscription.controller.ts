@@ -21,6 +21,14 @@ export class SubscriptionController {
     return this.subscriptionService.findFollowers(id, query);
   }
 
+  @Get(':id/following')
+  @ApiOperation({ summary: 'Get following' })
+  @ApiPagination()
+  @ApiResponse({ status: 200, type: [UserWithCharacteristicDto] })
+  getFollowing(@Param('id', ParseIntPipe) id: number, @Query() query: Pagination) {
+    return this.subscriptionService.findFollowing(id, query);
+  }
+
   @Patch()
   @HttpCode(204)
   @ApiOperation({ summary: 'Update subscription' })

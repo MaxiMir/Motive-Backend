@@ -21,7 +21,7 @@ export class TopicController {
   }
 
   @Get()
-  @ApiPagination({ name: 'where', example: 10 })
+  @ApiPagination({ name: 'where[day]', example: 10 })
   @ApiOperation({ summary: 'Get topics' })
   @ApiResponse({ status: 200, type: [Topic] })
   find(@Query() query: FindQuery) {

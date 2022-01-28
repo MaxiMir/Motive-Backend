@@ -7,6 +7,7 @@ import { MarkdownService } from 'src/markown/markdown.service';
 import { CreateTopicDto } from './dto/create-topic.dto';
 import { Topic } from './topic.entity';
 import { FindQuery } from './dto/find-query';
+import { FindOneOptions } from 'typeorm/find-options/FindOneOptions';
 
 @Injectable()
 export class TopicService {
@@ -23,7 +24,7 @@ export class TopicService {
     const user = await this.userService.findByPK(userId);
     const topic = new Topic();
 
-    topic.message = this.markdownService.convert(dto.message);
+    topic.text = this.markdownService.convert(dto.text);
     topic.type = dto.type;
     topic.user = user;
     topic.day = day;
@@ -34,11 +35,14 @@ export class TopicService {
 
   async find(query: FindQuery) {
     return this.topicRepository.find({
-      relations: ['user'],
       order: {
         id: 'DESC',
       },
       ...query,
     });
+  }
+
+  async findByPK(id: number, options?: FindOneOptions<Topic>) {
+    return await this.topicRepository.findOneOrFail({ id }, options);
   }
 }

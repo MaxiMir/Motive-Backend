@@ -20,6 +20,7 @@ import { SubscriptionModule } from './subscription/subscription.module';
 import { FeedbackModule } from './feedback/feedback.module';
 import { MarkdownModule } from './markown/markdown.module';
 import { TopicModule } from './topic/topic.module';
+import { AnswerModule } from './answer/answer.module';
 
 @Module({
   imports: [
@@ -60,6 +61,7 @@ import { TopicModule } from './topic/topic.module';
     FeedbackModule,
     MarkdownModule,
     TopicModule,
+    AnswerModule,
   ],
   providers: [Unique],
 })

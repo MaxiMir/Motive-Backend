@@ -55,6 +55,8 @@ export class PageController {
   @ApiOperation({ summary: 'Get rating page' })
   @ApiResponse({ status: 200, type: RatingDto })
   getRating() {
-    return this.pageService.findRating();
+    const clientId = 1; // TODO временно
+
+    return this.pageService.findRating(clientId);
   }
 }

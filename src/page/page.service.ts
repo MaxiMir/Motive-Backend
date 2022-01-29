@@ -75,12 +75,15 @@ export class PageService {
       .getMany();
   }
 
-  async findRating() {
+  async findRating(id: number) {
+    // TODO временно
+    const client = await this.userService.findByPK(id);
     const motivation = await this.findRatingByCharacteristic('motivation', 100);
     const creativity = await this.findRatingByCharacteristic('creativity', 100);
     const support = await this.findRatingByCharacteristic('support', 100);
 
     return {
+      client,
       content: {
         motivation,
         creativity,

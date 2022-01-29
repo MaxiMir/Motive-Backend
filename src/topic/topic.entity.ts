@@ -14,6 +14,7 @@ export class Topic extends TopicBase {
 
   @OneToMany(() => Answer, (answer) => answer.topic, {
     eager: true,
+    cascade: true,
   })
   answers: Answer[];
 

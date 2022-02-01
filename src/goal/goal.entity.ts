@@ -25,16 +25,23 @@ export class Goal {
   })
   @ApiProperty({
     example: '2021-08-15 21:05:15.723336+07',
-    description: 'created date',
   })
   started: string;
 
   @Column('simple-array')
   @ApiProperty({
     example: ['knowledge', 'education'],
-    description: 'hashtags array',
   })
   hashtags: string[];
+
+  @Column('simple-array')
+  @ApiProperty({
+    example: ['Develop basic functionality', 'Alpha testing', 'Production release'],
+  })
+  map: string[];
+
+  @Column({ nullable: true })
+  current: number;
 
   @OneToOne(() => GoalCharacteristic, (characteristic) => characteristic.goal, {
     eager: true,

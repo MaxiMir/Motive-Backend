@@ -28,28 +28,22 @@ export class TopicService {
       ? new Topic()
       : await this.findByPK(dto.answer, { relations: ['day', 'day.goal'] });
 
-    return this.topicRepository.manager.transaction(async (transactionalManager) => {
-      if (!dto.answer) {
-        const day = await this.dayService.findByPK(dto.dayId);
-        topic.text = this.markdownService.convert(dto.text);
-        topic.type = dto.type;
-        topic.user = user;
-        topic.day = day;
-      } else {
-        const goal = await this.goalService.findByPK(topic.day.goal.id, { relations: ['characteristic'] });
-        const answer = new Answer();
-        answer.text = this.markdownService.convert(dto.text);
-        answer.user = user;
-        topic.answers.push(answer);
-        topic.day.characteristic.support += 1;
-        goal.characteristic.support += 1;
-        await transactionalManager.save(goal);
-      }
+    if (dto.answer) {
+      const answer = new Answer();
+      answer.text = this.markdownService.convert(dto.text);
+      answer.user = user;
+      topic.answers.push(answer);
+    } else {
+      const day = await this.dayService.findByPK(dto.dayId);
+      topic.text = this.markdownService.convert(dto.text);
+      topic.type = dto.type;
+      topic.user = user;
+      topic.day = day;
+    }
 
-      topic.day.topicCount += 1;
+    topic.day.topicCount += 1;
 
-      return transactionalManager.save(topic);
-    });
+    return this.topicRepository.save(topic);
   }
 
   async find(query: FindQuery) {

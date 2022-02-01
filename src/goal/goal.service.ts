@@ -29,6 +29,7 @@ export class GoalService {
     goal.name = name;
     goal.characteristic = new GoalCharacteristic();
     goal.hashtags = hashtags;
+    goal.map = dto.map;
     goal.days = [day];
     goal.owner = await this.userService.findByPK(userId);
 

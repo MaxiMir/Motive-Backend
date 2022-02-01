@@ -24,9 +24,18 @@ export class CreateGoalDto {
   )
   @Type(() => String)
   @ApiProperty({
-    example: 'foreignLanguage, knowledge, learnFrench, immigration',
+    example: ['foreignLanguage, knowledge, learnFrench, immigration'],
   })
   readonly hashtags: string[];
+
+  @IsArray()
+  @ArrayMaxSize(100)
+  @Transform(({ value }) => value.map((v) => v.trim()).filter(Boolean), { toClassOnly: true })
+  @Type(() => String)
+  @ApiProperty({
+    example: ['Develop basic functionality', 'Alpha testing', 'Production release'],
+  })
+  readonly map: string[];
 
   @IsArray()
   @ArrayMinSize(1)

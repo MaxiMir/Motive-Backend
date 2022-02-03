@@ -22,6 +22,9 @@ export class Day {
   })
   date: Date;
 
+  @Column({ default: 0 })
+  stage: number;
+
   @OneToOne(() => DayCharacteristic, (characteristic) => characteristic.day, {
     eager: true,
     cascade: true,

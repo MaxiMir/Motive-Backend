@@ -35,7 +35,7 @@ export class CreateGoalDto {
   @ApiProperty({
     example: ['Develop basic functionality', 'Alpha testing', 'Production release'],
   })
-  readonly map: string[];
+  readonly stages: string[];
 
   @IsArray()
   @ArrayMinSize(1)

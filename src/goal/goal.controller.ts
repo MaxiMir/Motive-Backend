@@ -7,6 +7,7 @@ import { ParseCharacteristicPipe } from 'src/pipes/parse-characteristic.pipe';
 import { ParseOperationPipe } from 'src/pipes/parse-operation.pipe';
 import { CreateGoalDto } from './dto/create-goal.dto';
 import { CalendarDto } from './dto/calendar.dto';
+import { GoalStageDto } from './dto/goal-stage.dto';
 import { GoalService } from './goal.service';
 import { Goal } from './goal.entity';
 
@@ -46,12 +47,19 @@ export class GoalController {
     return this.goalService.addDay(id, dto);
   }
 
+  @Patch(':id/stage')
+  @HttpCode(204)
+  @ApiOperation({ summary: 'Change stage' })
+  updateStage(@Param('id', ParseIntPipe) id: number, @Body() dto: GoalStageDto) {
+    return this.goalService.updateStage(id, dto);
+  }
+
   @Patch(':id/days/:dayId/characteristic/:characteristic')
   @HttpCode(204)
   @ApiOperation({ summary: 'Update day characteristic' })
   @ApiParam({ name: 'characteristic', enum: CHARACTERISTICS })
   @ApiQuery({ name: 'operation', enum: OPERATIONS })
-  @ApiResponse({ status: 200 })
+  @ApiResponse({ status: 204 })
   updateCharacteristic(
     @Param('id', ParseIntPipe) id: number,
     @Param('dayId', ParseIntPipe) dayId: number,

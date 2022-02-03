@@ -11,6 +11,7 @@ import { UserService } from 'src/user/user.service';
 import { DayService } from 'src/day/day.service';
 import { CreateGoalDto } from './dto/create-goal.dto';
 import { Goal } from './goal.entity';
+import { GoalStageDto } from './dto/goal-stage.dto';
 
 @Injectable()
 export class GoalService {
@@ -29,7 +30,7 @@ export class GoalService {
     goal.name = name;
     goal.characteristic = new GoalCharacteristic();
     goal.hashtags = hashtags;
-    goal.map = dto.map;
+    goal.stages = dto.stages;
     goal.days = [day];
     goal.owner = await this.userService.findByPK(userId);
 
@@ -54,8 +55,16 @@ export class GoalService {
   async addDay(id: number, dto: CreateDayDto) {
     const goal = await this.findByPK(id, { relations: ['days'] });
     const day = this.dayService.create(dto);
-
+    day.stage = goal.stage;
     goal.days.push(day);
+
+    return await this.goalRepository.save(goal);
+  }
+
+  async updateStage(id: number, dto: GoalStageDto) {
+    const goal = await this.findByPK(id);
+
+    goal.stage = dto.stage;
 
     return await this.goalRepository.save(goal);
   }

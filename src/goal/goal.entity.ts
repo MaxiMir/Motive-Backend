@@ -21,7 +21,7 @@ export class Goal {
 
   @Column({
     type: 'timestamp with time zone',
-    default: () => "'TOMORROW'",
+    default: () => "'TODAY'",
   })
   @ApiProperty({
     example: '2021-08-15 21:05:15.723336+07',
@@ -38,10 +38,10 @@ export class Goal {
   @ApiProperty({
     example: ['Develop basic functionality', 'Alpha testing', 'Production release'],
   })
-  map: string[];
+  stages: string[];
 
-  @Column({ nullable: true })
-  current: number;
+  @Column({ default: 0 })
+  stage: number;
 
   @OneToOne(() => GoalCharacteristic, (characteristic) => characteristic.goal, {
     eager: true,

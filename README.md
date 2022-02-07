@@ -99,3 +99,25 @@ yarn add -D @types/multer # Nest uses multer for handling file uploads using the
 ```shell
 yarn add helmet # для защиты приложения - передает специальные HTTP заголовки
 ```
+
+
+### Subscribes:
+
+```typescript
+@EventSubscriber()
+export class ReactionSubscriber implements EntitySubscriberInterface<Reaction> {
+  listenTo() {
+    return Reaction;
+  }
+
+  afterInsert(event: InsertEvent<Reaction>) {
+    const { id } = event.entity.user;
+    event.manager
+      .createQueryBuilder()
+      .update(UserCharacteristic)
+      .set({ followers: () => 'followers + 1' })
+      .where('user.id = :id', { id })
+      .execute();
+  }
+}
+```

@@ -1,4 +1,4 @@
-import { Column, Entity, JoinColumn, ManyToOne, OneToOne, PrimaryGeneratedColumn } from 'typeorm';
+import { Column, Entity, JoinColumn, ManyToOne, PrimaryGeneratedColumn } from 'typeorm';
 import { ApiProperty } from '@nestjs/swagger';
 import { User } from 'src/user/user.entity';
 import { Characteristic, CHARACTERISTICS } from 'src/abstracts/characteristic';
@@ -24,7 +24,7 @@ export class Reaction {
   @JoinColumn()
   user: User;
 
-  @OneToOne(() => Day, { nullable: false })
+  @ManyToOne(() => Day, { nullable: false })
   @JoinColumn()
   day: Day;
 }

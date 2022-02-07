@@ -3,5 +3,5 @@ import { UserBaseDto } from 'src/user/dto/user-base.dto';
 
 export class PageDto {
   @ApiProperty({ type: () => UserBaseDto })
-  client: UserBaseDto;
+  readonly client: UserBaseDto;
 }

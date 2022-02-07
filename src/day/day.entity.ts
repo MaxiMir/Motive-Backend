@@ -5,6 +5,7 @@ import { Task } from 'src/task/task.entity';
 import { DayCharacteristic } from 'src/day-characteristic/day-characteristic.entity';
 import { Feedback } from 'src/feedback/feedback.entity';
 import { Topic } from 'src/topic/topic.entity';
+import { Reaction } from 'src/reaction/reaction.entity';
 
 @Entity('days')
 export class Day {
@@ -61,6 +62,12 @@ export class Day {
     example: 251,
   })
   topicCount: number;
+
+  @OneToMany(() => Reaction, (reaction) => reaction.day, {
+    cascade: true,
+  })
+  @ApiHideProperty()
+  reactions: Reaction[];
 
   @ManyToOne(() => Goal, (goal) => goal.days, {
     nullable: false,

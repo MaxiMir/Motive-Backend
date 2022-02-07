@@ -3,11 +3,11 @@ import { UserWithCharacteristicDto } from 'src/user/dto/user-with-characteristic
 
 export class RatingContentDto {
   @ApiProperty({ type: () => UserWithCharacteristicDto, isArray: true })
-  motivation: UserWithCharacteristicDto[];
+  readonly motivation: UserWithCharacteristicDto[];
 
   @ApiProperty({ type: () => UserWithCharacteristicDto, isArray: true })
-  creativity: UserWithCharacteristicDto[];
+  readonly creativity: UserWithCharacteristicDto[];
 
   @ApiProperty({ type: () => UserWithCharacteristicDto, isArray: true })
-  support: UserWithCharacteristicDto[];
+  readonly support: UserWithCharacteristicDto[];
 }

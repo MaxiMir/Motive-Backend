@@ -4,5 +4,5 @@ import { PageDto } from './page.dto';
 
 export class FollowingDto extends PageDto {
   @ApiProperty({ type: () => UserWithCharacteristicDto, isArray: true })
-  content: UserWithCharacteristicDto[];
+  readonly content: UserWithCharacteristicDto[];
 }

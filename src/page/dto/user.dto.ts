@@ -4,5 +4,5 @@ import { UserContentDto } from './user-content.dto';
 
 export class UserDto extends PageDto {
   @ApiProperty()
-  content: UserContentDto;
+  readonly content: UserContentDto;
 }

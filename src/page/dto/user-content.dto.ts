@@ -1,17 +1,17 @@
 import { ApiProperty } from '@nestjs/swagger';
 import { UserCharacteristic } from 'src/user-characteristic/user-characteristic.entity';
-import { GoalWithCalendarDto } from 'src/goal/dto/goal-with-calendar.dto';
+import { UserPageGoal } from './user-page-goal.dto';
 
 export class UserContentDto {
   @ApiProperty({ type: 'boolean' })
-  following: boolean;
+  readonly following: boolean;
 
   @ApiProperty({ type: () => UserCharacteristic })
-  characteristic: UserCharacteristic;
+  readonly characteristic: UserCharacteristic;
 
-  @ApiProperty({ type: () => GoalWithCalendarDto, isArray: true })
-  goals: GoalWithCalendarDto[];
+  @ApiProperty({ type: () => UserPageGoal, isArray: true })
+  readonly goals: UserPageGoal[];
 
-  @ApiProperty({ type: () => GoalWithCalendarDto, isArray: true })
-  goalsMember: GoalWithCalendarDto[];
+  @ApiProperty({ type: () => UserPageGoal, isArray: true })
+  readonly goalsMember: UserPageGoal[];
 }

@@ -7,11 +7,12 @@ import { Characteristic } from 'src/abstracts/characteristic';
 import { CreateDayDto } from 'src/day/dto/create-day.dto';
 import { DayCharacteristic } from 'src/day-characteristic/day-characteristic.entity';
 import { GoalCharacteristic } from 'src/goal-characteristic/goal-characteristic.entity';
+import { ReactionService } from 'src/reaction/reaction.service';
 import { UserService } from 'src/user/user.service';
 import { DayService } from 'src/day/day.service';
 import { CreateGoalDto } from './dto/create-goal.dto';
-import { Goal } from './goal.entity';
 import { GoalStageDto } from './dto/goal-stage.dto';
+import { Goal } from './goal.entity';
 
 @Injectable()
 export class GoalService {
@@ -20,6 +21,7 @@ export class GoalService {
     private readonly goalRepository: Repository<Goal>,
     private readonly userService: UserService,
     private readonly dayService: DayService,
+    private readonly reactionService: ReactionService,
   ) {}
 
   async save(userId: number, dto: CreateGoalDto) {
@@ -76,25 +78,20 @@ export class GoalService {
     characteristic: Characteristic,
     operation: Operation,
   ) {
+    const user = await this.userService.findByPK(userId);
     const goal = await this.findByPK(id, { relations: ['characteristic'] });
     const day = await this.dayService.findByPK(dayId, { relations: ['characteristic'] });
+    const reactionRepository = this.reactionService.getRepository();
 
     if (!day.characteristic) {
       day.characteristic = new DayCharacteristic();
     }
 
-    switch (operation) {
-      case 'insert':
-        // day.characteristic[characteristic].push(userId);
-        goal.characteristic[characteristic] += 1;
-        break;
-      case 'delete':
-        // day.characteristic[characteristic] = day.characteristic[characteristic].filter((u) => u !== userId);
-        goal.characteristic[characteristic] -= 1;
-        break;
-    }
+    day.characteristic[characteristic] += operation === 'insert' ? 1 : -1;
+    goal.characteristic[characteristic] += operation === 'insert' ? 1 : -1;
 
     return this.goalRepository.manager.transaction(async (transactionalManager) => {
+      await reactionRepository[operation]({ user, characteristic, day });
       await transactionalManager.save(day);
       await transactionalManager.save(goal);
     });

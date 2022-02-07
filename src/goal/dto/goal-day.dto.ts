@@ -5,11 +5,11 @@ export class GoalDayDto {
     example: 32,
     description: 'goal id',
   })
-  goalId: number;
+  readonly goalId: number;
 
   @ApiProperty({
     example: 412,
     description: 'day id',
   })
-  dayId: number;
+  readonly dayId: number;
 }

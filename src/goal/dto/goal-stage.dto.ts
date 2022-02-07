@@ -8,5 +8,5 @@ export class GoalStageDto {
   @ApiProperty({
     example: 2,
   })
-  stage: number;
+  readonly stage: number;
 }

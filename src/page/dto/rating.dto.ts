@@ -4,5 +4,5 @@ import { RatingContentDto } from './rating-content.dto';
 
 export class RatingDto extends PageDto {
   @ApiProperty()
-  content: RatingContentDto;
+  readonly content: RatingContentDto;
 }

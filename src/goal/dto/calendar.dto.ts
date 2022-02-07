@@ -5,11 +5,11 @@ export class CalendarDto {
     example: 1,
     description: 'day identifier',
   })
-  id: number;
+  readonly id: number;
 
   @ApiProperty({
     example: '2021-08-15 00:00:00.000000+07',
     description: 'day date',
   })
-  date: string;
+  readonly date: string;
 }

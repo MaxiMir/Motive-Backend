@@ -3,7 +3,9 @@ import { Pagination } from 'src/abstracts/pagination';
 import { GoalDayDto } from 'src/goal/dto/goal-day.dto';
 import { Goal } from 'src/goal/goal.entity';
 import { UserService } from 'src/user/user.service';
+import { User } from 'src/user/user.entity';
 import { SubscriptionService } from 'src/subscription/subscription.service';
+import { ReactionService } from 'src/reaction/reaction.service';
 import { DayService } from 'src/day/day.service';
 import { GoalService } from 'src/goal/goal.service';
 
@@ -14,23 +16,8 @@ export class PageService {
     private readonly goalService: GoalService,
     private readonly dayService: DayService,
     private readonly subscriptionService: SubscriptionService,
+    private readonly reactionService: ReactionService,
   ) {}
-
-  async findGoalsWithDay(goals: Goal[], goalDatesMap?: GoalDayDto[]) {
-    return await Promise.all(
-      goals.map(async (goal) => {
-        const { dayId } = goalDatesMap?.find(({ goalId }) => goalId === goal.id) || {};
-        const day = dayId
-          ? await this.dayService.findByPK(dayId)
-          : await this.dayService.findLastAdd({ goal: goal.id });
-
-        const tasks = day.tasks.sort((a, b) => a.id - b.id);
-        const calendar = await this.goalService.findDates(goal.id);
-
-        return { ...goal, calendar, days: [{ ...day, tasks }] };
-      }),
-    );
-  }
 
   async findUser(nickname: string, goalDatesMap?: GoalDayDto[]) {
     // TODO временно
@@ -38,9 +25,10 @@ export class PageService {
     const user = await this.userService.findByNickname(nickname, {
       relations: ['characteristic', 'goals', 'member'],
     });
-    const isFollowing = await this.subscriptionService.checkOnFollowing(user.id, client.id);
-    const goals = await this.findGoalsWithDay(user.goals, goalDatesMap);
-    const goalsMember = this.findGoalsWithDay(user.member, goalDatesMap);
+    const reactionsList = await this.findReactionsList(user.goals, client);
+    const following = await this.subscriptionService.checkOnFollowing(user.id, client.id);
+    const goals = await this.findGoals(user.goals, reactionsList, goalDatesMap);
+    const goalsMember = await this.findGoals(user.member, reactionsList, goalDatesMap);
 
     return {
       client,
@@ -50,11 +38,64 @@ export class PageService {
         name: user.name,
         avatar: user.avatar,
         characteristic: user.characteristic,
-        isFollowing,
+        following,
         goals,
         goalsMember,
       },
     };
+  }
+
+  async findGoals(
+    goals: Goal[],
+    reactionsList: Record<string, { motivation: number; creativity: number }>,
+    goalDatesMap?: GoalDayDto[],
+  ) {
+    const goalsWithDay = await Promise.all(
+      goals.map(async (goal) => {
+        const { dayId } = goalDatesMap?.find(({ goalId }) => goalId === goal.id) || {};
+        const day = dayId
+          ? await this.dayService.findByPK(dayId)
+          : await this.dayService.findLastAdd({ goal: goal.id });
+
+        const tasks = day.tasks.sort((a, b) => a.id - b.id);
+        const calendar = await this.goalService.findDates(goal.id);
+        const reactions = reactionsList[goal.id] || { motivation: [], creativity: [] };
+
+        return { ...goal, calendar, reactions, day: { ...day, tasks } };
+      }),
+    );
+
+    return goalsWithDay.sort((a, b) => a.id - b.id);
+  }
+
+  async findReactionsList(goals, user?: User) {
+    const ids = user && goals.filter((g) => g.owner.id !== user.id).map((g) => g.id);
+
+    if (!ids?.length) {
+      return {};
+    }
+
+    const reactions = await this.reactionService
+      .getRepository()
+      .createQueryBuilder('reaction')
+      .leftJoin('reaction.day', 'day')
+      .leftJoin('day.goal', 'goal')
+      .addSelect(['goal.id', 'day.id', 'characteristic'])
+      .where('goal.id IN (:...ids)', { ids })
+      .getMany();
+
+    return reactions.reduce((acc, { characteristic, day }) => {
+      if (!acc[day.goal.id]) {
+        acc[day.goal.id] = {
+          motivation: [],
+          creativity: [],
+        };
+      }
+
+      acc[day.goal.id][characteristic].push(day.id);
+
+      return acc;
+    }, {});
   }
 
   async findFollowing(id: number, pagination: Pagination) {

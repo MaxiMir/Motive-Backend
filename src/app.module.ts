@@ -21,6 +21,7 @@ import { FeedbackModule } from './feedback/feedback.module';
 import { MarkdownModule } from './markown/markdown.module';
 import { TopicModule } from './topic/topic.module';
 import { AnswerModule } from './answer/answer.module';
+import { ReactionModule } from './reaction/reaction.module';
 
 @Module({
   imports: [
@@ -62,6 +63,7 @@ import { AnswerModule } from './answer/answer.module';
     MarkdownModule,
     TopicModule,
     AnswerModule,
+    ReactionModule,
   ],
   providers: [Unique],
 })

@@ -26,7 +26,6 @@ export class Day {
   stage: number;
 
   @OneToOne(() => DayCharacteristic, (characteristic) => characteristic.day, {
-    eager: true,
     cascade: true,
   })
   @ApiProperty({ type: () => DayCharacteristic })

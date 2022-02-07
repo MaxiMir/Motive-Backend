@@ -4,7 +4,7 @@ import { GoalWithCalendarDto } from 'src/goal/dto/goal-with-calendar.dto';
 
 export class UserContentDto {
   @ApiProperty({ type: 'boolean' })
-  isFollowing: boolean;
+  following: boolean;
 
   @ApiProperty({ type: () => UserCharacteristic })
   characteristic: UserCharacteristic;

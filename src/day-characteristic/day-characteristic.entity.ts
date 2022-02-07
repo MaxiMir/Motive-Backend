@@ -11,19 +11,17 @@ export class DayCharacteristic {
   })
   id: number;
 
-  @Column('int', { array: true })
   @ApiProperty({
-    example: [23, 33],
-    description: 'user id list',
+    example: 242,
   })
-  motivation: number[] = [];
+  @Column({ default: 0 })
+  motivation: number;
 
-  @Column('int', { array: true })
   @ApiProperty({
-    example: [23, 33],
-    description: 'user id list',
+    example: 41,
   })
-  creativity: number[] = [];
+  @Column({ default: 0 })
+  creativity: number;
 
   @ApiProperty({
     example: 13,

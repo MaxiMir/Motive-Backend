@@ -9,6 +9,8 @@ services:
     volumes:
       - ./db:/var/lib/postgresql/data
       - ./postgresql.conf:/etc/postgresql/postgresql.conf
+      - /etc/timezone:/etc/timezone:ro
+      - /etc/localtime:/etc/localtime:ro
     ports:
       - 5432:5432
   adminer:

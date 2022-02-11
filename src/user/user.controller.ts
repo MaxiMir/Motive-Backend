@@ -30,7 +30,7 @@ export class UserController {
   })
   @ApiImageFile('avatar')
   @ApiResponse({ status: 201, type: User })
-  create(@Body() dto: CreateUserDto, @UploadedFile(ParseFile) file: Express.Multer.File) {
+  save(@Body() dto: CreateUserDto, @UploadedFile(ParseFile) file: Express.Multer.File) {
     return this.userService.save(dto, file);
   }
 

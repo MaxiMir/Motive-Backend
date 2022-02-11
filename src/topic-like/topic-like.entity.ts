@@ -1,9 +1,10 @@
+import { Entity, JoinColumn, ManyToOne, PrimaryGeneratedColumn } from 'typeorm';
 import { ApiProperty } from '@nestjs/swagger';
-import { Entity, JoinColumn, ManyToOne, OneToOne, PrimaryGeneratedColumn } from 'typeorm';
 import { User } from 'src/user/user.entity';
+import { Topic } from 'src/topic/topic.entity';
 
-@Entity('subscription')
-export class Subscription {
+@Entity('topic-likes')
+export class TopicLike {
   @PrimaryGeneratedColumn()
   @ApiProperty({
     example: 1,
@@ -11,11 +12,11 @@ export class Subscription {
   })
   id: number;
 
-  @OneToOne(() => User, { nullable: false })
+  @ManyToOne(() => Topic, { nullable: false })
   @JoinColumn()
-  user: User;
+  topic: Topic;
 
   @ManyToOne(() => User, { nullable: false })
   @JoinColumn()
-  follower: User;
+  user: User;
 }

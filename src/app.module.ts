@@ -20,8 +20,8 @@ import { SubscriptionModule } from './subscription/subscription.module';
 import { FeedbackModule } from './feedback/feedback.module';
 import { MarkdownModule } from './markown/markdown.module';
 import { TopicModule } from './topic/topic.module';
-import { AnswerModule } from './answer/answer.module';
 import { ReactionModule } from './reaction/reaction.module';
+import { TopicLikeModule } from './topic-like/topic-like.module';
 
 @Module({
   imports: [
@@ -62,8 +62,8 @@ import { ReactionModule } from './reaction/reaction.module';
     FeedbackModule,
     MarkdownModule,
     TopicModule,
-    AnswerModule,
     ReactionModule,
+    TopicLikeModule,
   ],
   providers: [Unique],
 })

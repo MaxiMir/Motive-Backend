@@ -1,6 +1,6 @@
 import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
 import { IsEnum, IsNumber, IsOptional, IsString, MaxLength, Min, MinLength } from 'class-validator';
-import { TopicDirectory } from 'src/abstracts/topic-base.entity';
+import { TopicTypeDto } from './topic-type.dto';
 
 export class CreateTopicDto {
   @IsNumber()
@@ -18,8 +18,8 @@ export class CreateTopicDto {
   })
   readonly text: string;
 
-  @IsEnum(TopicDirectory)
-  type: TopicDirectory;
+  @IsEnum(TopicTypeDto)
+  type: TopicTypeDto;
 
   @IsNumber()
   @IsOptional()
@@ -27,5 +27,5 @@ export class CreateTopicDto {
   @ApiPropertyOptional({
     example: 45,
   })
-  readonly answer: number;
+  readonly topicId: number;
 }

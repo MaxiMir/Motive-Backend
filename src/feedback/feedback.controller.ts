@@ -31,6 +31,6 @@ export class FeedbackController {
   @ApiOperation({ summary: 'Create feedback' })
   createFeedback(@Body() dto: CreateFeedbackDto, @UploadedFiles() files: Express.Multer.File[]) {
     // todo only auth + check user
-    return this.feedbackService.create(dto, files);
+    return this.feedbackService.save(dto, files);
   }
 }

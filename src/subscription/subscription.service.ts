@@ -58,6 +58,7 @@ export class SubscriptionService {
     const following = await this.userService.findByPK(dto.id, { relations: ['characteristic'] });
 
     return this.subscriptionRepository.manager.transaction(async (transactionalManager) => {
+      // todo fix:
       await this.subscriptionRepository[operation]({ user: following, follower: user });
       following.characteristic.followers += operation === 'insert' ? 1 : -1;
 

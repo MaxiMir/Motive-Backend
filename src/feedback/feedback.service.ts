@@ -17,7 +17,7 @@ export class FeedbackService {
     private readonly markdownService: MarkdownService,
   ) {}
 
-  async create(dto: CreateFeedbackDto, photos: Express.Multer.File[]) {
+  async save(dto: CreateFeedbackDto, photos: Express.Multer.File[]) {
     const day = await this.dayService.findByPK(dto.dayId);
     const feedback = new Feedback();
 

@@ -14,10 +14,10 @@ export class TopicController {
   @Post()
   @ApiOperation({ summary: 'Create topic' })
   @ApiResponse({ status: 200, type: Topic })
-  create(@Body() dto: CreateTopicDto) {
+  save(@Body() dto: CreateTopicDto) {
     const clientId = 1; // TODO временно
 
-    return this.topicService.create(clientId, dto);
+    return this.topicService.save(clientId, dto);
   }
 
   @Get()
@@ -25,6 +25,8 @@ export class TopicController {
   @ApiOperation({ summary: 'Get topics' })
   @ApiResponse({ status: 200, type: [Topic] })
   find(@Query() query: FindQuery) {
-    return this.topicService.find(query);
+    const clientId = 1; // TODO временно
+
+    return this.topicService.find(clientId, query);
   }
 }

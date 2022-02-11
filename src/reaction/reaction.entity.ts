@@ -20,11 +20,11 @@ export class Reaction {
   })
   characteristic: Characteristic;
 
-  @ManyToOne(() => User, { nullable: false })
-  @JoinColumn()
-  user: User;
-
   @ManyToOne(() => Day, { nullable: false })
   @JoinColumn()
   day: Day;
+
+  @ManyToOne(() => User, { nullable: false })
+  @JoinColumn()
+  user: User;
 }

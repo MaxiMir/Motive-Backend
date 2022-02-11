@@ -1,22 +1,55 @@
-import { Column, Entity, ManyToOne, OneToMany } from 'typeorm';
-import { TopicBase, TopicDirectory } from 'src/abstracts/topic-base.entity';
-import { Answer } from 'src/answer/answer.entity';
+import { ApiProperty } from '@nestjs/swagger';
+import { Column, Entity, JoinColumn, ManyToOne, OneToOne, PrimaryGeneratedColumn } from 'typeorm';
 import { Day } from 'src/day/day.entity';
+import { User } from 'src/user/user.entity';
+import { TopicTypeDto } from './dto/topic-type.dto';
 
 @Entity('topics')
-export class Topic extends TopicBase {
+export class Topic {
+  @PrimaryGeneratedColumn()
+  @ApiProperty({
+    example: 1,
+    description: 'unique identifier',
+  })
+  id: number;
+
+  @Column({
+    type: 'timestamp with time zone',
+    default: () => 'CURRENT_TIMESTAMP',
+  })
+  @ApiProperty({
+    example: '2021-08-15 21:05:15.723336+07',
+    description: 'created message',
+  })
+  date: string;
+
+  @Column({ default: 0 })
+  @ApiProperty({
+    example: 13,
+  })
+  likeCount: number;
+
+  @Column({ type: 'text' })
+  @ApiProperty({
+    example: 'What other books have you read?',
+  })
+  text: string;
+
+  @ManyToOne(() => User, { eager: true, nullable: false })
+  user: User;
+
   @Column({
     type: 'enum',
-    enum: TopicDirectory,
+    enum: TopicTypeDto,
     nullable: false,
   })
-  type: TopicDirectory;
+  type: TopicTypeDto;
 
-  @OneToMany(() => Answer, (answer) => answer.topic, {
-    eager: true,
+  @OneToOne(() => Topic, {
     cascade: true,
   })
-  answers: Answer[];
+  @JoinColumn()
+  answer: Topic;
 
   @ManyToOne(() => Day, { cascade: true, nullable: false })
   day: Day;

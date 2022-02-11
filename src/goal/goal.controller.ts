@@ -19,7 +19,7 @@ export class GoalController {
   @Post()
   @ApiOperation({ summary: 'Create goal' })
   @ApiResponse({ status: 201, type: Goal })
-  create(@Body() dto: CreateGoalDto) {
+  save(@Body() dto: CreateGoalDto) {
     const clientId = 1; // TODO временно
 
     return this.goalService.save(clientId, dto);

@@ -15,7 +15,7 @@ export class TaskService {
     return this.taskRepository.findOneOrFail({ id }, options);
   }
 
-  async setCompleted(userId: number, id: number) {
+  async setCompleted(userID: number, id: number) {
     const task = await this.findByPK(id);
 
     // todo completed | completedBy

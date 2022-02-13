@@ -12,9 +12,7 @@ export type UploadFields = MulterField & { required?: boolean };
 export function ApiFileFields(uploadFields: UploadFields[], localOptions?: MulterOptions) {
   const bodyProperties: Record<string, SchemaObject | ReferenceObject> = Object.assign(
     {},
-    ...uploadFields.map((field) => {
-      return { [field.name]: { type: 'string', format: 'binary' } };
-    }),
+    ...uploadFields.map((field) => ({ [field.name]: { type: 'string', format: 'binary' } })),
   );
   const apiBody = ApiBody({
     schema: {

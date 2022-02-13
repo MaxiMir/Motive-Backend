@@ -15,21 +15,21 @@ export class SubscriptionService {
     private readonly userService: UserService,
   ) {}
 
-  async checkOnFollowing(userId: number, followerId: number) {
+  async checkOnFollowing(userID: number, followerID: number) {
     const result = await this.subscriptionRepository.findOne({
       select: ['id'],
       where: {
-        user: userId,
-        follower: followerId,
+        user: userID,
+        follower: followerID,
       },
     });
 
     return !!result;
   }
 
-  async findFollowing(userId: number, pagination: Pagination) {
+  async findFollowing(userID: number, pagination: Pagination) {
     const result = await this.subscriptionRepository.find({
-      where: { follower: userId },
+      where: { follower: userID },
       relations: ['user', 'user.characteristic'],
       order: {
         id: 'DESC',
@@ -40,9 +40,9 @@ export class SubscriptionService {
     return result.map((item) => item.user);
   }
 
-  async findFollowers(userId: number, pagination: Pagination) {
+  async findFollowers(userID: number, pagination: Pagination) {
     const result = await this.subscriptionRepository.find({
-      where: { user: userId },
+      where: { user: userID },
       relations: ['follower', 'follower.characteristic'],
       order: {
         id: 'DESC',

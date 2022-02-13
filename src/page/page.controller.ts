@@ -46,17 +46,17 @@ export class PageController {
   @ApiPagination()
   @ApiResponse({ status: 200, type: FollowingDto })
   getFollowing(@Query() query: Pagination) {
-    const clientId = 1; // TODO временно
+    const clientID = 1; // TODO временно
 
-    return this.pageService.findFollowing(clientId, query);
+    return this.pageService.findFollowing(clientID, query);
   }
 
   @Get('rating')
   @ApiOperation({ summary: 'Get rating page' })
   @ApiResponse({ status: 200, type: RatingDto })
   getRating() {
-    const clientId = 1; // TODO временно
+    const clientID = 1; // TODO временно
 
-    return this.pageService.findRating(clientId);
+    return this.pageService.findRating(clientID);
   }
 }

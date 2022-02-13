@@ -7,12 +7,12 @@ import { Characteristic } from 'src/abstracts/characteristic';
 import { CreateDayDto } from 'src/day/dto/create-day.dto';
 import { DayCharacteristic } from 'src/day-characteristic/day-characteristic.entity';
 import { GoalCharacteristic } from 'src/goal-characteristic/goal-characteristic.entity';
-import { ReactionService } from 'src/reaction/reaction.service';
 import { UserService } from 'src/user/user.service';
 import { DayService } from 'src/day/day.service';
 import { CreateGoalDto } from './dto/create-goal.dto';
 import { GoalStageDto } from './dto/goal-stage.dto';
 import { Goal } from './goal.entity';
+import { Reaction } from '../reaction/reaction.entity';
 
 @Injectable()
 export class GoalService {
@@ -21,10 +21,9 @@ export class GoalService {
     private readonly goalRepository: Repository<Goal>,
     private readonly userService: UserService,
     private readonly dayService: DayService,
-    private readonly reactionService: ReactionService,
   ) {}
 
-  async save(userId: number, dto: CreateGoalDto) {
+  async save(userID: number, dto: CreateGoalDto) {
     const { name, hashtags, tasks } = dto;
     const goal = new Goal();
     const day = this.dayService.create({ tasks });
@@ -34,7 +33,7 @@ export class GoalService {
     goal.hashtags = hashtags;
     goal.stages = dto.stages;
     goal.days = [day];
-    goal.owner = await this.userService.findByPK(userId);
+    goal.owner = await this.userService.findByPK(userID);
 
     return await this.goalRepository.save(goal);
   }
@@ -43,15 +42,15 @@ export class GoalService {
     return await this.goalRepository.findOneOrFail({ id }, options);
   }
 
-  async findDates(id: number) {
+  async findCalendar(id: number) {
     return await this.dayService
       .getRepository()
       .createQueryBuilder('day')
       .leftJoinAndSelect('day.goal', 'goal')
-      .select(['day.id', 'day.date'])
+      .select(['day.id as id', 'day.date as date'])
       .where('goal.id = :id', { id })
       .orderBy('day.id', 'ASC')
-      .getMany();
+      .getRawMany();
   }
 
   async addDay(id: number, dto: CreateDayDto) {
@@ -72,17 +71,16 @@ export class GoalService {
   }
 
   async updateCharacteristic(
-    userId: number,
+    userID: number,
     id: number,
-    dayId: number,
+    dayID: number,
     characteristic: Characteristic,
     operation: Operation,
   ) {
-    const user = await this.userService.findByPK(userId);
+    const user = await this.userService.findByPK(userID);
     const goal = await this.findByPK(id, { relations: ['characteristic'] });
-    const day = await this.dayService.findByPK(dayId, { relations: ['characteristic'] });
-    const reactionRepository = this.reactionService.getRepository();
-
+    const day = await this.dayService.findByPK(dayID, { relations: ['characteristic'] });
+    // todo check on exists
     if (!day.characteristic) {
       day.characteristic = new DayCharacteristic();
     }
@@ -91,7 +89,7 @@ export class GoalService {
     goal.characteristic[characteristic] += operation === 'insert' ? 1 : -1;
 
     return this.goalRepository.manager.transaction(async (transactionalManager) => {
-      await reactionRepository[operation]({ user, characteristic, day });
+      await transactionalManager[operation](Reaction, { user, characteristic, day });
       await transactionalManager.save(day);
       await transactionalManager.save(goal);
     });

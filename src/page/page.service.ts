@@ -25,6 +25,7 @@ export class PageService {
     const user = await this.userService.findByNickname(nickname, {
       relations: ['characteristic', 'goals', 'member'],
     });
+
     const reactionsList = await this.findReactionsList(user.goals, client);
     const following = await this.subscriptionService.checkOnFollowing(user.id, client.id);
     const goals = await this.findGoals(user.goals, reactionsList, goalDatesMap);
@@ -47,25 +48,21 @@ export class PageService {
 
   async findGoals(
     goals: Goal[],
-    reactionsList: Record<string, { motivation: number; creativity: number }>,
+    reactionsList: Record<string, { motivation: number[]; creativity: number[] }>,
     goalDatesMap?: GoalDayDto[],
   ) {
-    const goalsWithDay = await Promise.all(
+    return Promise.all(
       goals.map(async (goal) => {
-        const { dayId } = goalDatesMap?.find(({ goalId }) => goalId === goal.id) || {};
-        const day = dayId
-          ? await this.dayService.findByPK(dayId)
+        const { dayID } = goalDatesMap?.find(({ goalID }) => goalID === goal.id) || {};
+        const day = dayID
+          ? await this.dayService.findByPK(dayID)
           : await this.dayService.findLastAdd({ goal: goal.id });
-
-        const tasks = day.tasks.sort((a, b) => a.id - b.id);
-        const calendar = await this.goalService.findDates(goal.id);
+        const calendar = await this.goalService.findCalendar(goal.id);
         const reactions = reactionsList[goal.id] || { motivation: [], creativity: [] };
 
-        return { ...goal, calendar, reactions, day: { ...day, tasks } };
+        return { ...goal, calendar, reactions, day };
       }),
     );
-
-    return goalsWithDay.sort((a, b) => a.id - b.id);
   }
 
   async findReactionsList(goals, user?: User) {
@@ -80,19 +77,19 @@ export class PageService {
       .createQueryBuilder('reaction')
       .leftJoin('reaction.day', 'day')
       .leftJoin('day.goal', 'goal')
-      .addSelect(['goal.id', 'day.id', 'characteristic'])
+      .select(['goal.id', 'day.id', 'characteristic'])
       .where('goal.id IN (:...ids)', { ids })
-      .getMany();
+      .getRawMany();
 
-    return reactions.reduce((acc, { characteristic, day }) => {
-      if (!acc[day.goal.id]) {
-        acc[day.goal.id] = {
+    return reactions.reduce((acc, { goal_id, day_id, characteristic }) => {
+      if (!acc[goal_id]) {
+        acc[goal_id] = {
           motivation: [],
           creativity: [],
         };
       }
 
-      acc[day.goal.id][characteristic].push(day.id);
+      acc[goal_id][characteristic].push(day_id);
 
       return acc;
     }, {});
@@ -106,7 +103,7 @@ export class PageService {
     return { client, content: following };
   }
 
-  async findRatingByCharacteristic(characteristic: string, take: number) {
+  async findByCharacteristic(characteristic: string, take: number) {
     return await this.userService
       .getRepository()
       .createQueryBuilder('user')
@@ -119,9 +116,9 @@ export class PageService {
   async findRating(id: number) {
     // TODO временно
     const client = await this.userService.findByPK(id);
-    const motivation = await this.findRatingByCharacteristic('motivation', 100);
-    const creativity = await this.findRatingByCharacteristic('creativity', 100);
-    const support = await this.findRatingByCharacteristic('support', 100);
+    const motivation = await this.findByCharacteristic('motivation', 100);
+    const creativity = await this.findByCharacteristic('creativity', 100);
+    const support = await this.findByCharacteristic('support', 100);
 
     return {
       client,

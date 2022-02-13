@@ -2,7 +2,11 @@ import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
 import { Column, Entity, ManyToOne, PrimaryGeneratedColumn } from 'typeorm';
 import { Day } from 'src/day/day.entity';
 
-@Entity('tasks')
+@Entity('tasks', {
+  orderBy: {
+    id: 'ASC',
+  },
+})
 export class Task {
   @PrimaryGeneratedColumn()
   @ApiProperty({

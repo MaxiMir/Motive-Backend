@@ -1,7 +1,9 @@
-import { Body, Controller, Query, Get, Post } from '@nestjs/common';
+import { Body, Controller, Query, Get, Post, Patch, HttpCode, Param, ParseIntPipe } from '@nestjs/common';
 import { ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
-import { TopicService } from 'src/topic/topic.service';
+import { Operation } from 'src/abstracts/operation';
 import { ApiPagination } from 'src/decorators/api-pagination.decorator';
+import { ParseOperationPipe } from 'src/pipes/parse-operation.pipe';
+import { TopicService } from 'src/topic/topic.service';
 import { CreateTopicDto } from './dto/create-topic.dto';
 import { FindQuery } from './dto/find-query';
 import { Topic } from './topic.entity';
@@ -15,9 +17,9 @@ export class TopicController {
   @ApiOperation({ summary: 'Create topic' })
   @ApiResponse({ status: 200, type: Topic })
   save(@Body() dto: CreateTopicDto) {
-    const clientId = 1; // TODO временно
+    const clientID = 1; // TODO временно
 
-    return this.topicService.save(clientId, dto);
+    return this.topicService.save(clientID, dto);
   }
 
   @Get()
@@ -25,8 +27,21 @@ export class TopicController {
   @ApiOperation({ summary: 'Get topics' })
   @ApiResponse({ status: 200, type: [Topic] })
   find(@Query() query: FindQuery) {
-    const clientId = 1; // TODO временно
+    const clientID = 1; // TODO временно
 
-    return this.topicService.find(clientId, query);
+    return this.topicService.find(clientID, query);
+  }
+
+  @Patch(':id/likes')
+  @HttpCode(204)
+  @ApiOperation({ summary: 'Update topic likes' })
+  @ApiResponse({ status: 204 })
+  updateLikes(
+    @Param('id', ParseIntPipe) id: number,
+    @Query('operation', ParseOperationPipe) operation: Operation,
+  ) {
+    const clientID = 1; // TODO временно
+
+    return this.topicService.updateLikes(clientID, id, operation);
   }
 }

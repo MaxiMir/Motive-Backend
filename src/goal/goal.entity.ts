@@ -4,7 +4,11 @@ import { User } from 'src/user/user.entity';
 import { Day } from 'src/day/day.entity';
 import { GoalCharacteristic } from 'src/goal-characteristic/goal-characteristic.entity';
 
-@Entity('goals')
+@Entity('goals', {
+  orderBy: {
+    id: 'ASC',
+  },
+})
 export class Goal {
   @PrimaryGeneratedColumn()
   @ApiProperty({

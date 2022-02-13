@@ -7,12 +7,12 @@ import { Characteristic } from 'src/abstracts/characteristic';
 import { CreateDayDto } from 'src/day/dto/create-day.dto';
 import { DayCharacteristic } from 'src/day-characteristic/day-characteristic.entity';
 import { GoalCharacteristic } from 'src/goal-characteristic/goal-characteristic.entity';
+import { Reaction } from 'src/reaction/reaction.entity';
 import { UserService } from 'src/user/user.service';
 import { DayService } from 'src/day/day.service';
 import { CreateGoalDto } from './dto/create-goal.dto';
 import { GoalStageDto } from './dto/goal-stage.dto';
 import { Goal } from './goal.entity';
-import { Reaction } from '../reaction/reaction.entity';
 
 @Injectable()
 export class GoalService {

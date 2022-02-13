@@ -6,13 +6,13 @@ import { Operation } from 'src/abstracts/operation';
 import { UserService } from 'src/user/user.service';
 import { GoalService } from 'src/goal/goal.service';
 import { DayService } from 'src/day/day.service';
-import { TopicLikeService } from 'src/topic-like/topic-like.service';
+import { LikeService } from 'src/like/like.service';
+import { Like } from 'src/like/like.entity';
 import { MarkdownService } from 'src/markown/markdown.service';
 import { CreateTopicDto } from './dto/create-topic.dto';
 import { FindQuery } from './dto/find-query';
 import { TopicTypeDto } from './dto/topic-type.dto';
 import { Topic } from './topic.entity';
-import { TopicLike } from '../topic-like/topic-like.entity';
 
 @Injectable()
 export class TopicService {
@@ -22,7 +22,7 @@ export class TopicService {
     private readonly userService: UserService,
     private readonly goalService: GoalService,
     private readonly dayService: DayService,
-    private readonly topicLikeService: TopicLikeService,
+    private readonly topicLikeService: LikeService,
     private readonly markdownService: MarkdownService,
   ) {}
 
@@ -98,7 +98,7 @@ export class TopicService {
 
     return this.topicRepository.manager.transaction(async (transactionalManager) => {
       // todo check on exists
-      await transactionalManager[operation](TopicLike, { user, topic });
+      await transactionalManager[operation](Like, { user, topic });
       await transactionalManager.save(topic);
     });
   }

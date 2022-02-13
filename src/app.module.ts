@@ -9,7 +9,6 @@ import { UserModule } from './user/user.module';
 import { GoalModule } from './goal/goal.module';
 import { UserCharacteristicModule } from './user-characteristic/user-characteristic.module';
 import { FilesModule } from './file/files.module';
-import { Unique } from './validators/unique';
 import { DayModule } from './day/day.module';
 import { HashtagModule } from './hashtag/hashtag.module';
 import { GoalCharacteristicModule } from './goal-characteristic/goal-characteristic.module';
@@ -21,7 +20,7 @@ import { FeedbackModule } from './feedback/feedback.module';
 import { MarkdownModule } from './markown/markdown.module';
 import { TopicModule } from './topic/topic.module';
 import { ReactionModule } from './reaction/reaction.module';
-import { TopicLikeModule } from './topic-like/topic-like.module';
+import { LikeModule } from './like/like.module';
 
 @Module({
   imports: [
@@ -63,8 +62,7 @@ import { TopicLikeModule } from './topic-like/topic-like.module';
     MarkdownModule,
     TopicModule,
     ReactionModule,
-    TopicLikeModule,
+    LikeModule,
   ],
-  providers: [Unique],
 })
 export class AppModule {}

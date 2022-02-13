@@ -1,13 +1,13 @@
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
-import { TopicLike } from './topic-like.entity';
+import { Like } from './like.entity';
 
 @Injectable()
-export class TopicLikeService {
+export class LikeService {
   constructor(
-    @InjectRepository(TopicLike)
-    private readonly topicRepository: Repository<TopicLike>,
+    @InjectRepository(Like)
+    private readonly topicRepository: Repository<Like>,
   ) {}
 
   getRepository() {

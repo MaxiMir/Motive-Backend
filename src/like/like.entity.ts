@@ -3,8 +3,8 @@ import { ApiProperty } from '@nestjs/swagger';
 import { User } from 'src/user/user.entity';
 import { Topic } from 'src/topic/topic.entity';
 
-@Entity('topic-likes')
-export class TopicLike {
+@Entity('likes')
+export class Like {
   @PrimaryGeneratedColumn()
   @ApiProperty({
     example: 1,

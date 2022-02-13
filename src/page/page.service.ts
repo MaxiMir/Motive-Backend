@@ -23,9 +23,8 @@ export class PageService {
     // TODO временно
     const client = await this.userService.findByNickname('maximir');
     const user = await this.userService.findByNickname(nickname, {
-      relations: ['characteristic', 'goals', 'member'],
+      relations: ['characteristic', 'goals', 'goals.characteristic', 'goals.owner', 'member'],
     });
-
     const reactionsList = await this.findReactionsList(user.goals, client);
     const following = await this.subscriptionService.checkOnFollowing(user.id, client.id);
     const goals = await this.findGoals(user.goals, reactionsList, goalDatesMap);
@@ -46,17 +45,26 @@ export class PageService {
     };
   }
 
-  async findGoals(
+  private findGoals(
     goals: Goal[],
     reactionsList: Record<string, { motivation: number[]; creativity: number[] }>,
     goalDatesMap?: GoalDayDto[],
   ) {
+    const relations = ['tasks', 'feedback'];
+
     return Promise.all(
       goals.map(async (goal) => {
         const { dayID } = goalDatesMap?.find(({ goalID }) => goalID === goal.id) || {};
         const day = dayID
-          ? await this.dayService.findByPK(dayID)
-          : await this.dayService.findLastAdd({ goal: goal.id });
+          ? await this.dayService.findByPK(dayID, { relations })
+          : await this.dayService.findOne({
+              relations,
+              where: { goal: goal.id },
+              order: {
+                id: 'DESC',
+              },
+              take: 1,
+            });
         const calendar = await this.goalService.findCalendar(goal.id);
         const reactions = reactionsList[goal.id] || { motivation: [], creativity: [] };
 
@@ -65,7 +73,7 @@ export class PageService {
     );
   }
 
-  async findReactionsList(goals, user?: User) {
+  private async findReactionsList(goals, user?: User) {
     const ids = user && goals.filter((g) => g.owner.id !== user.id).map((g) => g.id);
 
     if (!ids?.length) {
@@ -75,10 +83,8 @@ export class PageService {
     const reactions = await this.reactionService
       .getRepository()
       .createQueryBuilder('reaction')
-      .leftJoin('reaction.day', 'day')
-      .leftJoin('day.goal', 'goal')
-      .select(['goal.id', 'day.id', 'characteristic'])
-      .where('goal.id IN (:...ids)', { ids })
+      .select(['reaction.goal.id as goal_id', 'reaction.day.id as day_id', 'characteristic'])
+      .where('reaction.goal.id IN (:...ids)', { ids })
       .getRawMany();
 
     return reactions.reduce((acc, { goal_id, day_id, characteristic }) => {
@@ -103,16 +109,6 @@ export class PageService {
     return { client, content: following };
   }
 
-  async findByCharacteristic(characteristic: string, take: number) {
-    return await this.userService
-      .getRepository()
-      .createQueryBuilder('user')
-      .leftJoinAndSelect('user.characteristic', 'characteristic')
-      .orderBy(`characteristic.${characteristic}`, 'DESC')
-      .take(take)
-      .getMany();
-  }
-
   async findRating(id: number) {
     // TODO временно
     const client = await this.userService.findByPK(id);
@@ -128,5 +124,15 @@ export class PageService {
         support,
       },
     };
+  }
+
+  private findByCharacteristic(characteristic: string, take: number) {
+    return this.userService
+      .getRepository()
+      .createQueryBuilder('user')
+      .leftJoinAndSelect('user.characteristic', 'characteristic')
+      .orderBy(`characteristic.${characteristic}`, 'DESC')
+      .take(take)
+      .getMany();
   }
 }

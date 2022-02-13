@@ -1,5 +1,5 @@
 import { ApiProperty } from '@nestjs/swagger';
-import { Column, Entity, JoinColumn, ManyToOne, OneToOne, PrimaryGeneratedColumn } from 'typeorm';
+import { Column, Entity, JoinColumn, ManyToOne, OneToOne, PrimaryGeneratedColumn, RelationId } from 'typeorm';
 import { Day } from 'src/day/day.entity';
 import { User } from 'src/user/user.entity';
 import { TopicTypeDto } from './dto/topic-type.dto';
@@ -53,4 +53,7 @@ export class Topic {
 
   @ManyToOne(() => Day, { cascade: true, nullable: false })
   day: Day;
+
+  @RelationId((topic: Topic) => topic.day)
+  dayId: number;
 }

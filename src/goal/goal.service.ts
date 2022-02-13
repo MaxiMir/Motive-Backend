@@ -35,21 +35,20 @@ export class GoalService {
     goal.days = [day];
     goal.owner = await this.userService.findByPK(userID);
 
-    return await this.goalRepository.save(goal);
+    return this.goalRepository.save(goal);
   }
 
-  async findByPK(id: number, options?: FindOneOptions<Goal>) {
-    return await this.goalRepository.findOneOrFail({ id }, options);
+  findByPK(id: number, options?: FindOneOptions<Goal>) {
+    return this.goalRepository.findOneOrFail({ id }, options);
   }
 
-  async findCalendar(id: number) {
-    return await this.dayService
+  findCalendar(id: number) {
+    return this.dayService
       .getRepository()
       .createQueryBuilder('day')
-      .leftJoinAndSelect('day.goal', 'goal')
       .select(['day.id as id', 'day.date as date'])
-      .where('goal.id = :id', { id })
-      .orderBy('day.id', 'ASC')
+      .where('day.goal.id = :id', { id })
+      .orderBy('day.goal.id', 'ASC')
       .getRawMany();
   }
 
@@ -59,7 +58,7 @@ export class GoalService {
     day.stage = goal.stage;
     goal.days.push(day);
 
-    return await this.goalRepository.save(goal);
+    return this.goalRepository.save(goal);
   }
 
   async updateStage(id: number, dto: GoalStageDto) {
@@ -67,7 +66,7 @@ export class GoalService {
 
     goal.stage = dto.stage;
 
-    return await this.goalRepository.save(goal);
+    return this.goalRepository.save(goal);
   }
 
   async updateCharacteristic(
@@ -80,7 +79,7 @@ export class GoalService {
     const user = await this.userService.findByPK(userID);
     const goal = await this.findByPK(id, { relations: ['characteristic'] });
     const day = await this.dayService.findByPK(dayID, { relations: ['characteristic'] });
-    // todo check on exists
+
     if (!day.characteristic) {
       day.characteristic = new DayCharacteristic();
     }
@@ -89,7 +88,8 @@ export class GoalService {
     goal.characteristic[characteristic] += operation === 'insert' ? 1 : -1;
 
     return this.goalRepository.manager.transaction(async (transactionalManager) => {
-      await transactionalManager[operation](Reaction, { user, characteristic, day });
+      // todo check on exists
+      await transactionalManager[operation](Reaction, { user, characteristic, goal, day });
       await transactionalManager.save(day);
       await transactionalManager.save(goal);
     });

@@ -21,6 +21,7 @@ import { MarkdownModule } from './markown/markdown.module';
 import { TopicModule } from './topic/topic.module';
 import { ReactionModule } from './reaction/reaction.module';
 import { LikeModule } from './like/like.module';
+import { LikeSubscriber } from './like/like.subcriber';
 
 @Module({
   imports: [
@@ -37,6 +38,7 @@ import { LikeModule } from './like/like.module';
       password: process.env.POSTGRES_PASSWORD,
       database: process.env.POSTGRES_DB,
       entities: [__dirname + '/**/*.entity{.ts,.js}'],
+      subscribers: [LikeSubscriber],
       migrations: [join(__dirname, '..', 'migrations/**/*.ts')],
       synchronize: true, // TODO shouldn't be used in production - otherwise you can lose production data
       dropSchema: false,

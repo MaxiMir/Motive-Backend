@@ -11,7 +11,7 @@ export class TaskService {
     private readonly taskRepository: Repository<Task>,
   ) {}
 
-  async findByPK(id: number, options?: FindOneOptions<Task>) {
+  findByPK(id: number, options?: FindOneOptions<Task>) {
     return this.taskRepository.findOneOrFail({ id }, options);
   }
 
@@ -21,6 +21,6 @@ export class TaskService {
     // todo completed | completedBy
     task.completed = true;
 
-    return await this.taskRepository.save(task);
+    return this.taskRepository.save(task);
   }
 }

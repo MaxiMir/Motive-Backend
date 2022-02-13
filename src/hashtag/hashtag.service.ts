@@ -12,11 +12,11 @@ export class HashtagService {
     private readonly hashtagRepository: Repository<Hashtag>,
   ) {}
 
-  async find(options?: FindManyOptions<Hashtag>) {
-    return await this.hashtagRepository.find(options);
+  find(options?: FindManyOptions<Hashtag>) {
+    return this.hashtagRepository.find(options);
   }
 
-  async findOne(conditions: FindConditions<Hashtag>) {
-    return await this.hashtagRepository.findOneOrFail(conditions);
+  findOne(conditions: FindConditions<Hashtag>) {
+    return this.hashtagRepository.findOneOrFail(conditions);
   }
 }

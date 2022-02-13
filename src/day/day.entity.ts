@@ -1,5 +1,5 @@
 import { ApiHideProperty, ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
-import { Column, Entity, ManyToOne, OneToMany, OneToOne, PrimaryGeneratedColumn } from 'typeorm';
+import { Column, Entity, ManyToOne, OneToMany, OneToOne, PrimaryGeneratedColumn, RelationId } from 'typeorm';
 import { Goal } from 'src/goal/goal.entity';
 import { Task } from 'src/task/task.entity';
 import { DayCharacteristic } from 'src/day-characteristic/day-characteristic.entity';
@@ -33,7 +33,6 @@ export class Day {
   characteristic: DayCharacteristic;
 
   @OneToMany(() => Task, (task) => task.day, {
-    eager: true,
     cascade: true,
   })
   @ApiProperty({ type: () => Task, isArray: true })
@@ -45,9 +44,7 @@ export class Day {
   })
   views: number;
 
-  @OneToOne(() => Feedback, (feedback) => feedback.day, {
-    eager: true,
-  })
+  @OneToOne(() => Feedback, (feedback) => feedback.day)
   @ApiProperty({ type: () => Feedback })
   @ApiHideProperty()
   feedback: Feedback;
@@ -75,4 +72,7 @@ export class Day {
   })
   @ApiHideProperty()
   goal: Goal;
+
+  @RelationId((day: Day) => day.goal)
+  goalId: number;
 }

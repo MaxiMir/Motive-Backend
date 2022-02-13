@@ -31,15 +31,15 @@ export class UserService {
     return this.userRepository.save(user);
   }
 
-  async find(options?: FindManyOptions<User>) {
+  find(options?: FindManyOptions<User>) {
     return this.userRepository.find(options);
   }
 
-  async findByPK(id: number, options?: FindOneOptions<User>) {
+  findByPK(id: number, options?: FindOneOptions<User>) {
     return this.userRepository.findOneOrFail({ id }, options);
   }
 
-  async findByNickname(nickname: string, options?: FindOneOptions<User>) {
+  findByNickname(nickname: string, options?: FindOneOptions<User>) {
     return this.userRepository.findOneOrFail({ nickname }, options);
   }
 }

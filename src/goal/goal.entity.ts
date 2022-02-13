@@ -48,7 +48,6 @@ export class Goal {
   stage: number;
 
   @OneToOne(() => GoalCharacteristic, (characteristic) => characteristic.goal, {
-    eager: true,
     cascade: true,
   })
   @ApiPropertyOptional({ type: () => GoalCharacteristic })
@@ -60,7 +59,6 @@ export class Goal {
 
   @ManyToOne(() => User, (user) => user.goals, {
     nullable: false,
-    eager: true,
     cascade: true,
   })
   owner: User;

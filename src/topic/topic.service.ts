@@ -1,4 +1,4 @@
-import { BadRequestException, Injectable } from '@nestjs/common';
+import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Not, Repository } from 'typeorm';
 import { FindOneOptions } from 'typeorm/find-options/FindOneOptions';
@@ -30,7 +30,6 @@ export class TopicService {
     const user = await this.userService.findByPK(userID);
     const day = await this.dayService.findByPK(dto.dayID);
     const topic = new Topic();
-
     topic.text = this.markdownService.convert(dto.text);
     topic.type = dto.type;
     topic.user = user;
@@ -66,12 +65,10 @@ export class TopicService {
     const ids = topics.reduce((acc, { id, answer }) => [...acc, id, ...(!answer ? [] : [answer.id])], []);
     const likes = await this.topicLikeService
       .getRepository()
-      .createQueryBuilder('topic-like')
-      .leftJoin('topic-like.topic', 'topic')
-      .leftJoin('topic-like.user', 'user')
-      .select(['topic.id'])
-      .where('user.id = :userID', { userID })
-      .andWhere('topic.id IN (:...ids)', { ids })
+      .createQueryBuilder('like')
+      .select(['like.topic.id as topic_id'])
+      .where('like.topic.id IN (:...ids)', { ids })
+      .andWhere('like.user.id = :userID', { userID })
       .getRawMany();
     const likedTopic = likes.map((l) => l.topic_id);
 
@@ -88,12 +85,7 @@ export class TopicService {
 
   async updateLikes(userID: number, id: number, operation: Operation) {
     const user = await this.userService.findByPK(userID);
-    const topic = await this.findByPK(id, { relations: ['user'] });
-
-    if (topic.user.id === userID) {
-      throw new BadRequestException("Error: you can't like yourself");
-    }
-
+    const topic = await this.findByPK(id);
     topic.likeCount += operation === 'insert' ? 1 : -1;
 
     return this.topicRepository.manager.transaction(async (transactionalManager) => {

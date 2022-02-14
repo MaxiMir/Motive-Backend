@@ -8,7 +8,7 @@ export class CreateTopicDto {
   @ApiProperty({
     example: 21,
   })
-  readonly dayID: number;
+  readonly dayId: number;
 
   @IsString()
   @MinLength(1)
@@ -27,5 +27,5 @@ export class CreateTopicDto {
   @ApiPropertyOptional({
     example: 45,
   })
-  readonly topicID: number;
+  readonly topicId: number;
 }

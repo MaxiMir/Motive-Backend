@@ -17,9 +17,9 @@ export class TopicController {
   @ApiOperation({ summary: 'Create topic' })
   @ApiResponse({ status: 200, type: Topic })
   save(@Body() dto: CreateTopicDto) {
-    const clientID = 1; // TODO временно
+    const clientId = 1; // TODO временно
 
-    return this.topicService.save(clientID, dto);
+    return this.topicService.save(clientId, dto);
   }
 
   @Get()
@@ -27,9 +27,9 @@ export class TopicController {
   @ApiOperation({ summary: 'Get topics' })
   @ApiResponse({ status: 200, type: [Topic] })
   find(@Query() query: FindQuery) {
-    const clientID = 1; // TODO временно
+    const clientId = 1; // TODO временно
 
-    return this.topicService.find(clientID, query);
+    return this.topicService.find(clientId, query);
   }
 
   @Patch(':id/likes')
@@ -40,8 +40,8 @@ export class TopicController {
     @Param('id', ParseIntPipe) id: number,
     @Query('operation', ParseOperationPipe) operation: Operation,
   ) {
-    const clientID = 1; // TODO временно
+    const clientId = 1; // TODO временно
 
-    return this.topicService.updateLikes(clientID, id, operation);
+    return this.topicService.updateLikes(clientId, id, operation);
   }
 }

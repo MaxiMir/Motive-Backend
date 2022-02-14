@@ -51,6 +51,9 @@ export class Topic {
   @JoinColumn()
   answer: Topic;
 
+  @Column()
+  goalId: number;
+
   @ManyToOne(() => Day, { cascade: true, nullable: false })
   day: Day;
 

@@ -19,8 +19,8 @@ export class TaskController {
   @ApiOperation({ summary: 'Set a task complete' })
   @ApiResponse({ status: 200, type: Task })
   setCompleted(@Param('id', ParseIntPipe) id: number) {
-    const clientID = 1; // TODO временно
+    const clientId = 1; // TODO временно
 
-    return this.taskService.setCompleted(clientID, id);
+    return this.taskService.setCompleted(clientId, id);
   }
 }

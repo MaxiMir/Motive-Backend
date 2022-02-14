@@ -20,9 +20,9 @@ export class GoalController {
   @ApiOperation({ summary: 'Create goal' })
   @ApiResponse({ status: 201, type: Goal })
   save(@Body() dto: CreateGoalDto) {
-    const clientID = 1; // TODO временно
+    const clientId = 1; // TODO временно
 
-    return this.goalService.save(clientID, dto);
+    return this.goalService.save(clientId, dto);
   }
 
   @Get(':id')
@@ -54,7 +54,7 @@ export class GoalController {
     return this.goalService.updateStage(id, dto);
   }
 
-  @Patch(':id/days/:dayID/characteristic/:characteristic')
+  @Patch(':id/days/:dayId/characteristic/:characteristic')
   @HttpCode(204)
   @ApiOperation({ summary: 'Update day characteristic' })
   @ApiParam({ name: 'characteristic', enum: CHARACTERISTICS })
@@ -62,12 +62,12 @@ export class GoalController {
   @ApiResponse({ status: 204 })
   updateCharacteristic(
     @Param('id', ParseIntPipe) id: number,
-    @Param('dayID', ParseIntPipe) dayID: number,
+    @Param('dayId', ParseIntPipe) dayId: number,
     @Param('characteristic', ParseCharacteristicPipe) characteristic: Characteristic,
     @Query('operation', ParseOperationPipe) operation: Operation,
   ) {
-    const clientID = 1; // TODO временно
+    const clientId = 1; // TODO временно
 
-    return this.goalService.updateCharacteristic(clientID, id, dayID, characteristic, operation);
+    return this.goalService.updateCharacteristic(clientId, id, dayId, characteristic, operation);
   }
 }

@@ -15,21 +15,21 @@ export class SubscriptionService {
     private readonly userService: UserService,
   ) {}
 
-  async checkOnFollowing(userID: number, followerID: number) {
+  async checkOnFollowing(userId: number, followerId: number) {
     const result = await this.subscriptionRepository.findOne({
       select: ['id'],
       where: {
-        user: userID,
-        follower: followerID,
+        user: userId,
+        follower: followerId,
       },
     });
 
     return !!result;
   }
 
-  async findFollowing(userID: number, pagination: Pagination) {
+  async findFollowing(userId: number, pagination: Pagination) {
     const result = await this.subscriptionRepository.find({
-      where: { follower: userID },
+      where: { follower: userId },
       relations: ['user', 'user.characteristic'],
       order: {
         id: 'DESC',
@@ -40,9 +40,9 @@ export class SubscriptionService {
     return result.map((item) => item.user);
   }
 
-  async findFollowers(userID: number, pagination: Pagination) {
+  async findFollowers(userId: number, pagination: Pagination) {
     const result = await this.subscriptionRepository.find({
-      where: { user: userID },
+      where: { user: userId },
       relations: ['follower', 'follower.characteristic'],
       order: {
         id: 'DESC',
@@ -56,12 +56,10 @@ export class SubscriptionService {
   async update(id: number, dto: UpdateSubscriptionDto, operation: Operation) {
     const user = await this.userService.findByPK(id);
     const following = await this.userService.findByPK(dto.id, { relations: ['characteristic'] });
+    following.characteristic.followers += operation === 'insert' ? 1 : -1;
 
     return this.subscriptionRepository.manager.transaction(async (transactionalManager) => {
-      // todo fix:
-      await this.subscriptionRepository[operation]({ user: following, follower: user });
-      following.characteristic.followers += operation === 'insert' ? 1 : -1;
-
+      await transactionalManager[operation](Subscription, { user: following, follower: user });
       await transactionalManager.save(following);
     });
   }

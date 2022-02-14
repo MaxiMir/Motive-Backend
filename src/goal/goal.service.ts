@@ -23,7 +23,7 @@ export class GoalService {
     private readonly dayService: DayService,
   ) {}
 
-  async save(userID: number, dto: CreateGoalDto) {
+  async save(userId: number, dto: CreateGoalDto) {
     const { name, hashtags, tasks } = dto;
     const goal = new Goal();
     const day = this.dayService.create({ tasks });
@@ -33,7 +33,7 @@ export class GoalService {
     goal.hashtags = hashtags;
     goal.stages = dto.stages;
     goal.days = [day];
-    goal.owner = await this.userService.findByPK(userID);
+    goal.owner = await this.userService.findByPK(userId);
 
     return this.goalRepository.save(goal);
   }
@@ -70,15 +70,16 @@ export class GoalService {
   }
 
   async updateCharacteristic(
-    userID: number,
+    userId: number,
     id: number,
-    dayID: number,
+    dayId: number,
     characteristic: Characteristic,
     operation: Operation,
   ) {
-    const user = await this.userService.findByPK(userID);
+    const user = await this.userService.findByPK(userId);
     const goal = await this.findByPK(id, { relations: ['characteristic'] });
-    const day = await this.dayService.findByPK(dayID, { relations: ['characteristic'] });
+    const day = await this.dayService.findByPK(dayId, { relations: ['characteristic'] });
+    const uniq = `${user.id}:${day.id}:${characteristic}`;
 
     if (!day.characteristic) {
       day.characteristic = new DayCharacteristic();
@@ -88,8 +89,7 @@ export class GoalService {
     goal.characteristic[characteristic] += operation === 'insert' ? 1 : -1;
 
     return this.goalRepository.manager.transaction(async (transactionalManager) => {
-      // todo check on exists
-      await transactionalManager[operation](Reaction, { user, characteristic, goal, day });
+      await transactionalManager[operation](Reaction, { user, characteristic, goal, day, uniq });
       await transactionalManager.save(day);
       await transactionalManager.save(goal);
     });

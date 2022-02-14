@@ -1,4 +1,4 @@
-import { Column, Entity, JoinColumn, ManyToOne, PrimaryGeneratedColumn, RelationId } from 'typeorm';
+import { Column, Entity, Index, JoinColumn, ManyToOne, PrimaryGeneratedColumn, RelationId } from 'typeorm';
 import { ApiProperty } from '@nestjs/swagger';
 import { User } from 'src/user/user.entity';
 import { Characteristic, CHARACTERISTICS } from 'src/abstracts/characteristic';
@@ -35,4 +35,12 @@ export class Reaction {
   @ManyToOne(() => User, { nullable: false })
   @JoinColumn()
   user: User;
+
+  @Index({ unique: true })
+  @Column()
+  @ApiProperty({
+    example: '1:53',
+    description: '{user.id}:{day.id}:{characteristic}',
+  })
+  uniq: string;
 }

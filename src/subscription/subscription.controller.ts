@@ -1,4 +1,4 @@
-import { Body, Controller, HttpCode, Query, Param, Get, Put, ParseIntPipe } from '@nestjs/common';
+import { Body, Controller, HttpCode, Query, Param, Get, Patch, ParseIntPipe } from '@nestjs/common';
 import { ApiOperation, ApiQuery, ApiResponse, ApiTags } from '@nestjs/swagger';
 import { Pagination } from 'src/abstracts/pagination';
 import { Operation, OPERATIONS } from 'src/abstracts/operation';
@@ -29,14 +29,14 @@ export class SubscriptionController {
     return this.subscriptionService.findFollowing(id, query);
   }
 
-  @Put()
+  @Patch()
   @HttpCode(204)
   @ApiOperation({ summary: 'Update subscription' })
   @ApiQuery({ name: 'operation', enum: OPERATIONS })
   @ApiResponse({ status: 204 })
   update(@Body() dto: UpdateSubscriptionDto, @Query('operation', ParseOperationPipe) operation: Operation) {
-    const clientID = 1; // TODO временно
+    const clientId = 1; // TODO временно
 
-    return this.subscriptionService.update(clientID, dto, operation);
+    return this.subscriptionService.update(clientId, dto, operation);
   }
 }

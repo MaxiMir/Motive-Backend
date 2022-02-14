@@ -10,14 +10,14 @@ export class ParseGoalDateMapPipe implements PipeTransform {
 
     return value.split(',').map((v) => {
       const data = v.split(':');
-      const goalID = parseInt(data[0]);
-      const dayID = parseInt(data[1]);
+      const goalId = parseInt(data[0]);
+      const dayId = parseInt(data[1]);
 
-      if (!goalID || !dayID) {
+      if (!goalId || !dayId) {
         throw new BadRequestException(`Validation failed (incorrect query ${metadata.data})`);
       }
 
-      return { goalID, dayID };
+      return { goalId, dayId };
     });
   }
 }

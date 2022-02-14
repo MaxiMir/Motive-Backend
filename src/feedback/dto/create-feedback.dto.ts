@@ -9,7 +9,7 @@ export class CreateFeedbackDto {
   @ApiProperty({
     example: 21,
   })
-  readonly dayID: number;
+  readonly dayId: number;
 
   @IsString()
   @IsOptional()

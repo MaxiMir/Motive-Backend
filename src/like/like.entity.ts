@@ -1,5 +1,5 @@
-import { Entity, JoinColumn, ManyToOne, PrimaryGeneratedColumn, RelationId } from 'typeorm';
 import { ApiProperty } from '@nestjs/swagger';
+import { Column, Entity, Index, JoinColumn, ManyToOne, PrimaryGeneratedColumn, RelationId } from 'typeorm';
 import { User } from 'src/user/user.entity';
 import { Topic } from 'src/topic/topic.entity';
 
@@ -25,4 +25,12 @@ export class Like {
 
   @RelationId((like: Like) => like.user)
   userId: number;
+
+  @Index({ unique: true })
+  @Column()
+  @ApiProperty({
+    example: '1:53',
+    description: '{user.id}:{topic.id}',
+  })
+  uniq: string;
 }

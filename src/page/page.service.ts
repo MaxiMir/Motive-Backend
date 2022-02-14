@@ -54,9 +54,9 @@ export class PageService {
 
     return Promise.all(
       goals.map(async (goal) => {
-        const { dayID } = goalDatesMap?.find(({ goalID }) => goalID === goal.id) || {};
-        const day = dayID
-          ? await this.dayService.findByPK(dayID, { relations })
+        const { dayId } = goalDatesMap?.find(({ goalId }) => goalId === goal.id) || {};
+        const day = dayId
+          ? await this.dayService.findByPK(dayId, { relations })
           : await this.dayService.findOne({
               relations,
               where: { goal: goal.id },

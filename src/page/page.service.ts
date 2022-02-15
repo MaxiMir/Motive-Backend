@@ -1,9 +1,9 @@
 import { Injectable } from '@nestjs/common';
 import { Pagination } from 'src/abstracts/pagination';
 import { GoalDayDto } from 'src/goal/dto/goal-day.dto';
-import { Goal } from 'src/goal/goal.entity';
+import { Goal } from 'src/goal/entities/goal.entity';
 import { UserService } from 'src/user/user.service';
-import { User } from 'src/user/user.entity';
+import { User } from 'src/user/entities/user.entity';
 import { SubscriptionService } from 'src/subscription/subscription.service';
 import { ReactionService } from 'src/reaction/reaction.service';
 import { DayService } from 'src/day/day.service';

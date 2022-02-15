@@ -1,7 +1,7 @@
 import { Controller, Param, Get, ParseIntPipe } from '@nestjs/common';
 import { HashtagService } from './hashtag.service';
 import { ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
-import { Hashtag } from './hashtag.entity';
+import { Hashtag } from './entities/hashtag.entity';
 
 @Controller('hashtags')
 @ApiTags('Hashtags')

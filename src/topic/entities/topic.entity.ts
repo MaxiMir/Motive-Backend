@@ -1,8 +1,8 @@
 import { ApiProperty } from '@nestjs/swagger';
 import { Column, Entity, JoinColumn, ManyToOne, OneToOne, PrimaryGeneratedColumn, RelationId } from 'typeorm';
-import { Day } from 'src/day/day.entity';
-import { User } from 'src/user/user.entity';
-import { TopicTypeDto } from './dto/topic-type.dto';
+import { Day } from 'src/day/entities/day.entity';
+import { User } from 'src/user/entities/user.entity';
+import { TopicTypeDto } from 'src/topic/dto/topic-type.dto';
 
 @Entity('topics')
 export class Topic {

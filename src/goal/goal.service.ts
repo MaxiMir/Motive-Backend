@@ -5,14 +5,14 @@ import { FindOneOptions } from 'typeorm/find-options/FindOneOptions';
 import { Operation } from 'src/abstracts/operation';
 import { Characteristic } from 'src/abstracts/characteristic';
 import { CreateDayDto } from 'src/day/dto/create-day.dto';
-import { DayCharacteristic } from 'src/day-characteristic/day-characteristic.entity';
-import { GoalCharacteristic } from 'src/goal-characteristic/goal-characteristic.entity';
-import { Reaction } from 'src/reaction/reaction.entity';
+import { DayCharacteristic } from 'src/day-characteristic/entities/day-characteristic.entity';
+import { GoalCharacteristic } from 'src/goal-characteristic/entities/goal-characteristic.entity';
+import { Reaction } from 'src/reaction/entities/reaction.entity';
 import { UserService } from 'src/user/user.service';
 import { DayService } from 'src/day/day.service';
 import { CreateGoalDto } from './dto/create-goal.dto';
 import { GoalStageDto } from './dto/goal-stage.dto';
-import { Goal } from './goal.entity';
+import { Goal } from './entities/goal.entity';
 
 @Injectable()
 export class GoalService {
@@ -48,7 +48,7 @@ export class GoalService {
       .createQueryBuilder('day')
       .select(['day.id as id', 'day.date as date'])
       .where('day.goal.id = :id', { id })
-      .orderBy('day.goal.id', 'ASC')
+      .orderBy('day.id', 'ASC')
       .getRawMany();
   }
 

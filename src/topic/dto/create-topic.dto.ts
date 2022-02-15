@@ -19,7 +19,7 @@ export class CreateTopicDto {
   readonly text: string;
 
   @IsEnum(TopicTypeDto)
-  type: TopicTypeDto;
+  readonly type: TopicTypeDto;
 
   @IsNumber()
   @IsOptional()

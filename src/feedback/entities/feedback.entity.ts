@@ -1,6 +1,6 @@
 import { ApiProperty } from '@nestjs/swagger';
 import { Column, Entity, JoinColumn, OneToOne, PrimaryGeneratedColumn } from 'typeorm';
-import { Day } from 'src/day/day.entity';
+import { Day } from 'src/day/entities/day.entity';
 
 @Entity('feedback')
 export class Feedback {

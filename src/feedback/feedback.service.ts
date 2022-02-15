@@ -4,7 +4,7 @@ import { Repository } from 'typeorm';
 import { DayService } from 'src/day/day.service';
 import { MarkdownService } from 'src/markown/markdown.service';
 import { FileService } from 'src/file/file.service';
-import { Feedback } from './feedback.entity';
+import { Feedback } from './entities/feedback.entity';
 import { CreateFeedbackDto } from './dto/create-feedback.dto';
 
 @Injectable()

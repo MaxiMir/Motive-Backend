@@ -1,7 +1,7 @@
 import { ApiPropertyOptional } from '@nestjs/swagger';
 import { Entity, JoinTable, ManyToMany, OneToMany } from 'typeorm';
-import { Goal } from 'src/goal/goal.entity';
-import { UserWithCharacteristicDto } from './dto/user-with-characteristic.dto';
+import { Goal } from 'src/goal/entities/goal.entity';
+import { UserWithCharacteristicDto } from 'src/user/dto/user-with-characteristic.dto';
 
 @Entity('users')
 export class User extends UserWithCharacteristicDto {

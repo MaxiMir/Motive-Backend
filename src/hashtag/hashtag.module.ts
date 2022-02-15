@@ -1,8 +1,8 @@
 import { Module } from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
+import { Hashtag } from './entities/hashtag.entity';
 import { HashtagController } from './hashtag.controller';
 import { HashtagService } from './hashtag.service';
-import { Hashtag } from './hashtag.entity';
 
 @Module({
   controllers: [HashtagController],

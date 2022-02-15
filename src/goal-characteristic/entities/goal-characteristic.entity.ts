@@ -1,6 +1,6 @@
 import { ApiProperty } from '@nestjs/swagger';
 import { Column, Entity, JoinColumn, OneToOne, PrimaryGeneratedColumn } from 'typeorm';
-import { Goal } from 'src/goal/goal.entity';
+import { Goal } from 'src/goal/entities/goal.entity';
 
 @Entity('goal-characteristics')
 export class GoalCharacteristic {

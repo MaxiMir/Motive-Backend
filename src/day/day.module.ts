@@ -4,7 +4,7 @@ import { FileService } from 'src/file/file.service';
 import { MarkdownService } from 'src/markown/markdown.service';
 import { DayController } from './day.controller';
 import { DayService } from './day.service';
-import { Day } from './day.entity';
+import { Day } from './entities/day.entity';
 
 @Module({
   controllers: [DayController],

@@ -1,6 +1,6 @@
 import { ApiPropertyOptional } from '@nestjs/swagger';
 import { OneToOne } from 'typeorm';
-import { UserCharacteristic } from 'src/user-characteristic/user-characteristic.entity';
+import { UserCharacteristic } from 'src/user-characteristic/entities/user-characteristic.entity';
 import { UserBaseDto } from './user-base.dto';
 
 export class UserWithCharacteristicDto extends UserBaseDto {

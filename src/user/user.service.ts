@@ -4,9 +4,9 @@ import { Repository } from 'typeorm';
 import { FindOneOptions } from 'typeorm/find-options/FindOneOptions';
 import { FindManyOptions } from 'typeorm/find-options/FindManyOptions';
 import { FileService } from 'src/file/file.service';
-import { UserCharacteristic } from 'src/user-characteristic/user-characteristic.entity';
+import { UserCharacteristic } from 'src/user-characteristic/entities/user-characteristic.entity';
 import { CreateUserDto } from './dto/create-user.dto';
-import { User } from './user.entity';
+import { User } from './entities/user.entity';
 
 @Injectable()
 export class UserService {

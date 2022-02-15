@@ -3,11 +3,11 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { FindOneOptions } from 'typeorm/find-options/FindOneOptions';
 import { FindManyOptions } from 'typeorm/find-options/FindManyOptions';
-import { Task } from 'src/task/task.entity';
+import { Task } from 'src/task/entities/task.entity';
 import { FileService } from 'src/file/file.service';
 import { MarkdownService } from 'src/markown/markdown.service';
 import { CreateDayDto } from './dto/create-day.dto';
-import { Day } from './day.entity';
+import { Day } from './entities/day.entity';
 
 @Injectable()
 export class DayService {

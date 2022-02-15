@@ -1,8 +1,8 @@
 import { Module } from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
-import { ReactionService } from './reaction.service';
+import { Reaction } from './entities/reaction.entity';
 import { ReactionController } from './reaction.controller';
-import { Reaction } from './reaction.entity';
+import { ReactionService } from './reaction.service';
 
 @Module({
   controllers: [ReactionController],

@@ -1,6 +1,6 @@
 import { IsString, Length, Validate } from 'class-validator';
 import { ApiProperty } from '@nestjs/swagger';
-import { User } from 'src/user/user.entity';
+import { User } from 'src/user/entities/user.entity';
 import { Unique } from 'src/validators/unique';
 
 export class CreateUserDto {

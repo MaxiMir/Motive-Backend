@@ -1,7 +1,7 @@
 import { Controller, Param, Get, Patch, ParseIntPipe } from '@nestjs/common';
 import { ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
 import { TaskService } from './task.service';
-import { Task } from './task.entity';
+import { Task } from './entities/task.entity';
 
 @Controller('tasks')
 @ApiTags('Tasks')

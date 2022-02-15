@@ -1,6 +1,6 @@
 import { ApiProperty } from '@nestjs/swagger';
 import { Entity, JoinColumn, ManyToOne, OneToOne, PrimaryGeneratedColumn } from 'typeorm';
-import { User } from 'src/user/user.entity';
+import { User } from 'src/user/entities/user.entity';
 
 @Entity('subscription')
 export class Subscription {

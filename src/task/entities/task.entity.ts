@@ -1,6 +1,6 @@
 import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
 import { Column, Entity, ManyToOne, PrimaryGeneratedColumn } from 'typeorm';
-import { Day } from 'src/day/day.entity';
+import { Day } from 'src/day/entities/day.entity';
 
 @Entity('tasks', {
   orderBy: {
@@ -31,7 +31,7 @@ export class Task {
   })
   date: string;
 
-  @Column('boolean')
+  @Column('boolean', { nullable: true, default: false })
   @ApiProperty({
     example: true,
     description: 'completed by owner',

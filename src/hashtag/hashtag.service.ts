@@ -3,7 +3,7 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { FindConditions } from 'typeorm/find-options/FindConditions';
 import { FindManyOptions } from 'typeorm/find-options/FindManyOptions';
-import { Hashtag } from './hashtag.entity';
+import { Hashtag } from './entities/hashtag.entity';
 
 @Injectable()
 export class HashtagService {

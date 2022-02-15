@@ -5,7 +5,7 @@ import { Pagination } from 'src/abstracts/pagination';
 import { Operation } from 'src/abstracts/operation';
 import { UserService } from 'src/user/user.service';
 import { UpdateSubscriptionDto } from './dto/update-subscription.dto';
-import { Subscription } from './subscription.entity';
+import { Subscription } from './entities/subscription.entity';
 
 @Injectable()
 export class SubscriptionService {

@@ -22,6 +22,7 @@ import { TopicModule } from './topic/topic.module';
 import { ReactionModule } from './reaction/reaction.module';
 import { LikeModule } from './like/like.module';
 import { LikeSubscriber } from './like/like.subcriber';
+import { ReportModule } from './report/report.module';
 
 @Module({
   imports: [
@@ -65,6 +66,7 @@ import { LikeSubscriber } from './like/like.subcriber';
     TopicModule,
     ReactionModule,
     LikeModule,
+    ReportModule,
   ],
 })
 export class AppModule {}

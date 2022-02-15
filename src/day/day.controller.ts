@@ -1,9 +1,9 @@
 import { Controller, Param, ParseIntPipe, Get, Patch, Post, HttpCode, Body } from '@nestjs/common';
 import { ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
-import { Goal } from 'src/goal/goal.entity';
-import { DayService } from './day.service';
-import { Day } from './day.entity';
+import { Goal } from 'src/goal/entities/goal.entity';
 import { CreateDayDto } from './dto/create-day.dto';
+import { Day } from './entities/day.entity';
+import { DayService } from './day.service';
 
 @Controller('days')
 @ApiTags('Days')

@@ -4,7 +4,7 @@ import { ApiImageFile } from 'src/decorators/api-image.decorator';
 import { ParseFile } from 'src/pipes/parse-file.pipe';
 import { CreateUserDto } from './dto/create-user.dto';
 import { UserBaseDto } from './dto/user-base.dto';
-import { User } from './user.entity';
+import { User } from './entities/user.entity';
 import { UserService } from './user.service';
 
 @Controller('users')

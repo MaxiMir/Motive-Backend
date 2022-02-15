@@ -1,8 +1,8 @@
 import { Module } from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
+import { GoalCharacteristic } from 'src/goal-characteristic/entities/goal-characteristic.entity';
 import { GoalCharacteristicController } from './goal-characteristic.controller';
 import { GoalCharacteristicService } from './goal-characteristic.service';
-import { GoalCharacteristic } from 'src/goal-characteristic/goal-characteristic.entity';
 
 @Module({
   controllers: [GoalCharacteristicController],

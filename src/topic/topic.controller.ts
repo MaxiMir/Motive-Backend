@@ -1,4 +1,15 @@
-import { Body, Controller, Query, Get, Post, Patch, HttpCode, Param, ParseIntPipe } from '@nestjs/common';
+import {
+  Body,
+  Controller,
+  Query,
+  Get,
+  Post,
+  Patch,
+  HttpCode,
+  Param,
+  Put,
+  ParseIntPipe,
+} from '@nestjs/common';
 import { ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
 import { Operation } from 'src/abstracts/operation';
 import { ApiPagination } from 'src/decorators/api-pagination.decorator';
@@ -6,7 +17,8 @@ import { ParseOperationPipe } from 'src/pipes/parse-operation.pipe';
 import { TopicService } from 'src/topic/topic.service';
 import { CreateTopicDto } from './dto/create-topic.dto';
 import { FindQuery } from './dto/find-query';
-import { Topic } from './topic.entity';
+import { Topic } from './entities/topic.entity';
+import { UpdateTopicDto } from './dto/update-topic.dto';
 
 @Controller('topics')
 @ApiTags('Topics')
@@ -30,6 +42,15 @@ export class TopicController {
     const clientId = 1; // TODO временно
 
     return this.topicService.find(clientId, query);
+  }
+
+  @Put(':id')
+  @ApiOperation({ summary: 'Update topic' })
+  @ApiResponse({ status: 200, type: [Topic] })
+  update(@Param('id', ParseIntPipe) id: number, @Body() dto: UpdateTopicDto) {
+    const clientId = 1; // TODO временно
+
+    return this.topicService.update(clientId, id, dto);
   }
 
   @Patch(':id/likes')

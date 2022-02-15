@@ -1,5 +1,5 @@
 import { ApiProperty } from '@nestjs/swagger';
-import { UserCharacteristic } from 'src/user-characteristic/user-characteristic.entity';
+import { UserCharacteristic } from 'src/user-characteristic/entities/user-characteristic.entity';
 import { UserPageGoal } from './user-page-goal.dto';
 
 export class UserContentDto {

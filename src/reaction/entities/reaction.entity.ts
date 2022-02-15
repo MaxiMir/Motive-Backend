@@ -1,9 +1,9 @@
 import { Column, Entity, Index, JoinColumn, ManyToOne, PrimaryGeneratedColumn, RelationId } from 'typeorm';
 import { ApiProperty } from '@nestjs/swagger';
-import { User } from 'src/user/user.entity';
+import { User } from 'src/user/entities/user.entity';
 import { Characteristic, CHARACTERISTICS } from 'src/abstracts/characteristic';
-import { Day } from 'src/day/day.entity';
-import { Goal } from '../goal/goal.entity';
+import { Day } from 'src/day/entities/day.entity';
+import { Goal } from 'src/goal/entities/goal.entity';
 
 @Entity('reactions')
 export class Reaction {

@@ -1,8 +1,8 @@
 import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
 import { Column, Entity, ManyToOne, OneToMany, OneToOne, PrimaryGeneratedColumn } from 'typeorm';
-import { User } from 'src/user/user.entity';
-import { Day } from 'src/day/day.entity';
-import { GoalCharacteristic } from 'src/goal-characteristic/goal-characteristic.entity';
+import { User } from 'src/user/entities/user.entity';
+import { Day } from 'src/day/entities/day.entity';
+import { GoalCharacteristic } from 'src/goal-characteristic/entities/goal-characteristic.entity';
 
 @Entity('goals', {
   orderBy: {

@@ -2,7 +2,7 @@ import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { FindOneOptions } from 'typeorm/find-options/FindOneOptions';
-import { Task } from './task.entity';
+import { Task } from './entities/task.entity';
 
 @Injectable()
 export class TaskService {

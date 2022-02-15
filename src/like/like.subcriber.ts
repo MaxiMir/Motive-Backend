@@ -1,26 +1,13 @@
-import { BadRequestException } from '@nestjs/common';
-import { EntitySubscriberInterface, InsertEvent, RemoveEvent, EventSubscriber } from 'typeorm';
-import { GoalCharacteristic } from 'src/goal-characteristic/goal-characteristic.entity';
-import { DayCharacteristic } from 'src/day-characteristic/day-characteristic.entity';
+import { EntitySubscriberInterface, InsertEvent, EventSubscriber } from 'typeorm';
+import { GoalCharacteristic } from 'src/goal-characteristic/entities/goal-characteristic.entity';
+import { DayCharacteristic } from 'src/day-characteristic/entities/day-characteristic.entity';
 import { TopicTypeDto } from 'src/topic/dto/topic-type.dto';
-import { Like } from './like.entity';
+import { Like } from './entities/like.entity';
 
 @EventSubscriber()
 export class LikeSubscriber implements EntitySubscriberInterface<Like> {
   listenTo() {
     return Like;
-  }
-
-  beforeInsert(event: InsertEvent<Like>) {
-    const { user, topic } = event.entity;
-
-    if (topic.user.id === user.id) {
-      throw new BadRequestException();
-    }
-  }
-
-  beforeRemove(event: RemoveEvent<Like>) {
-    console.log(event.entity);
   }
 
   afterInsert(event: InsertEvent<Like>): Promise<any> | void {

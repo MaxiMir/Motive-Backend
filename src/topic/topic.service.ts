@@ -7,12 +7,13 @@ import { UserService } from 'src/user/user.service';
 import { GoalService } from 'src/goal/goal.service';
 import { DayService } from 'src/day/day.service';
 import { LikeService } from 'src/like/like.service';
-import { Like } from 'src/like/like.entity';
+import { Like } from 'src/like/entities/like.entity';
 import { MarkdownService } from 'src/markown/markdown.service';
 import { CreateTopicDto } from './dto/create-topic.dto';
 import { FindQuery } from './dto/find-query';
 import { TopicTypeDto } from './dto/topic-type.dto';
-import { Topic } from './topic.entity';
+import { Topic } from './entities/topic.entity';
+import { UpdateTopicDto } from './dto/update-topic.dto';
 
 @Injectable()
 export class TopicService {
@@ -22,7 +23,7 @@ export class TopicService {
     private readonly userService: UserService,
     private readonly goalService: GoalService,
     private readonly dayService: DayService,
-    private readonly topicLikeService: LikeService,
+    private readonly likeService: LikeService,
     private readonly markdownService: MarkdownService,
   ) {}
 
@@ -47,6 +48,10 @@ export class TopicService {
     return this.topicRepository.save(question);
   }
 
+  async update(userId: number, id: number, dto: UpdateTopicDto) {
+    console.log(userId, id, dto);
+  }
+
   async find(userId: number, query: FindQuery) {
     const { where, take, skip } = query;
     const topics = await this.topicRepository.find({
@@ -64,7 +69,7 @@ export class TopicService {
     }
 
     const ids = topics.reduce((acc, { id, answer }) => [...acc, id, ...(!answer ? [] : [answer.id])], []);
-    const likes = await this.topicLikeService
+    const likes = await this.likeService
       .getRepository()
       .createQueryBuilder('like')
       .select(['like.topic.id as topic_id'])
@@ -87,12 +92,14 @@ export class TopicService {
   async updateLikes(userId: number, id: number, operation: Operation) {
     const user = await this.userService.findByPK(userId);
     const topic = await this.findByPK(id);
+    const validateLike = this.likeService.checkOnValid(user, topic, operation);
     const uniq = `${user.id}:${topic.id}`;
-    topic.likeCount += operation === 'insert' ? 1 : -1;
 
-    if (topic.type === TopicTypeDto.SUPPORT && operation === 'delete') {
+    if (!validateLike) {
       throw new BadRequestException();
     }
+
+    topic.likeCount += operation === 'insert' ? 1 : -1;
 
     return this.topicRepository.manager.transaction(async (transactionalManager) => {
       await transactionalManager[operation](Like, { user, topic, uniq });

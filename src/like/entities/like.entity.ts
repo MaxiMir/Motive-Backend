@@ -1,7 +1,7 @@
 import { ApiProperty } from '@nestjs/swagger';
 import { Column, Entity, Index, JoinColumn, ManyToOne, PrimaryGeneratedColumn, RelationId } from 'typeorm';
-import { User } from 'src/user/user.entity';
-import { Topic } from 'src/topic/topic.entity';
+import { User } from 'src/user/entities/user.entity';
+import { Topic } from 'src/topic/entities/topic.entity';
 
 @Entity('likes')
 export class Like {

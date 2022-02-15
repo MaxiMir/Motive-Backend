@@ -1,11 +1,11 @@
 import { ApiHideProperty, ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
 import { Column, Entity, ManyToOne, OneToMany, OneToOne, PrimaryGeneratedColumn, RelationId } from 'typeorm';
-import { Goal } from 'src/goal/goal.entity';
-import { Task } from 'src/task/task.entity';
-import { DayCharacteristic } from 'src/day-characteristic/day-characteristic.entity';
-import { Feedback } from 'src/feedback/feedback.entity';
-import { Topic } from 'src/topic/topic.entity';
-import { Reaction } from 'src/reaction/reaction.entity';
+import { Goal } from 'src/goal/entities/goal.entity';
+import { Task } from 'src/task/entities/task.entity';
+import { DayCharacteristic } from 'src/day-characteristic/entities/day-characteristic.entity';
+import { Feedback } from 'src/feedback/entities/feedback.entity';
+import { Topic } from 'src/topic/entities/topic.entity';
+import { Reaction } from 'src/reaction/entities/reaction.entity';
 
 @Entity('days')
 export class Day {
@@ -44,7 +44,9 @@ export class Day {
   })
   views: number;
 
-  @OneToOne(() => Feedback, (feedback) => feedback.day)
+  @OneToOne(() => Feedback, (feedback) => feedback.day, {
+    onDelete: 'CASCADE',
+  })
   @ApiProperty({ type: () => Feedback })
   @ApiHideProperty()
   feedback: Feedback;

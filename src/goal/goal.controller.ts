@@ -9,7 +9,7 @@ import { CreateGoalDto } from './dto/create-goal.dto';
 import { CalendarDto } from './dto/calendar.dto';
 import { GoalStageDto } from './dto/goal-stage.dto';
 import { GoalService } from './goal.service';
-import { Goal } from './goal.entity';
+import { Goal } from './entities/goal.entity';
 
 @Controller('goals')
 @ApiTags('Goals')

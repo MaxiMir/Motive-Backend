@@ -38,6 +38,9 @@ export class Topic {
   @ManyToOne(() => User, { eager: true, nullable: false })
   user: User;
 
+  @RelationId((topic: Topic) => topic.user)
+  userId: number;
+
   @Column({
     type: 'enum',
     enum: TopicTypeDto,
@@ -59,4 +62,10 @@ export class Topic {
 
   @RelationId((topic: Topic) => topic.day)
   dayId: number;
+
+  @Column('boolean', { nullable: true, default: false })
+  @ApiProperty({
+    example: true,
+  })
+  edited = false;
 }

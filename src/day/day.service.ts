@@ -24,7 +24,6 @@ export class DayService {
 
   create(dto: CreateDayDto) {
     const day = new Day();
-
     day.tasks = dto.tasks.map(({ name, date }) => {
       const task = new Task();
       task.name = this.markdownService.convert(name);

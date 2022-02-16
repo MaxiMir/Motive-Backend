@@ -46,7 +46,7 @@ export class GoalService {
     return this.dayService
       .getRepository()
       .createQueryBuilder('day')
-      .select(['day.id as id', 'day.date as date'])
+      .select(['day.id as id', "TO_CHAR(day.date, 'YYYY-MM-DD') as date"])
       .where('day.goal.id = :id', { id })
       .orderBy('day.id', 'ASC')
       .getRawMany();
@@ -63,7 +63,6 @@ export class GoalService {
 
   async updateStage(id: number, dto: GoalStageDto) {
     const goal = await this.findByPK(id);
-
     goal.stage = dto.stage;
 
     return this.goalRepository.save(goal);
@@ -79,7 +78,7 @@ export class GoalService {
     const user = await this.userService.findByPK(userId);
     const goal = await this.findByPK(id, { relations: ['characteristic'] });
     const day = await this.dayService.findByPK(dayId, { relations: ['characteristic'] });
-    const uniq = `${user.id}:${day.id}:${characteristic}`;
+    const uniq = this.getUniq(user.id, day.id, characteristic);
 
     if (!day.characteristic) {
       day.characteristic = new DayCharacteristic();
@@ -93,5 +92,9 @@ export class GoalService {
       await transactionalManager.save(day);
       await transactionalManager.save(goal);
     });
+  }
+
+  getUniq(userId: number, dayId: number, characteristic: Characteristic) {
+    return [userId, dayId, characteristic].join(':');
   }
 }

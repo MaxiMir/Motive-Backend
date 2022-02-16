@@ -8,7 +8,7 @@ export class CalendarDto {
   readonly id: number;
 
   @ApiProperty({
-    example: '2021-08-15 00:00:00.000000+07',
+    example: '2022-01-25',
     description: 'day date',
   })
   readonly date: string;

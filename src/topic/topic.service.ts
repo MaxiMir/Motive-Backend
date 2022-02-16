@@ -49,7 +49,7 @@ export class TopicService {
   }
 
   async update(userId: number, id: number, dto: UpdateTopicDto) {
-    console.log(userId, id, dto);
+    return this.topicRepository.update({ id, userId }, { text: dto.text, edited: true });
   }
 
   async find(userId: number, query: FindQuery) {
@@ -92,8 +92,8 @@ export class TopicService {
   async updateLikes(userId: number, id: number, operation: Operation) {
     const user = await this.userService.findByPK(userId);
     const topic = await this.findByPK(id);
+    const uniq = this.likeService.getUniq(user.id, topic.id); // duplicate
     const validateLike = this.likeService.checkOnValid(user, topic, operation);
-    const uniq = `${user.id}:${topic.id}`;
 
     if (!validateLike) {
       throw new BadRequestException();

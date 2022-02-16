@@ -21,4 +21,8 @@ export class LikeService {
   checkOnValid(user: User, topic: Topic, operation: Operation) {
     return !(topic.user.id === user.id || (topic.type === TopicTypeDto.SUPPORT && operation === 'delete'));
   }
+
+  getUniq(userId: number, topicId: number) {
+    return [userId, topicId].join(':');
+  }
 }

@@ -46,7 +46,7 @@ export class TopicController {
 
   @Put(':id')
   @ApiOperation({ summary: 'Update topic' })
-  @ApiResponse({ status: 200, type: [Topic] })
+  @ApiResponse({ status: 204 })
   update(@Param('id', ParseIntPipe) id: number, @Body() dto: UpdateTopicDto) {
     const clientId = 1; // TODO временно
 

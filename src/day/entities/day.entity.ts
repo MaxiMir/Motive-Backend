@@ -16,12 +16,15 @@ export class Day {
   })
   id: number;
 
-  @Column({ type: 'timestamp with time zone', default: () => "'TOMORROW'" })
+  @Column({
+    type: 'timestamp with time zone',
+    default: () => "'TOMORROW'",
+  })
   @ApiProperty({
-    example: '2021-08-15 00:00:00.000000+07',
+    example: '2022-02-15 00:00:00+03',
     description: 'day date',
   })
-  date: Date;
+  date: string;
 
   @Column({ default: 0 })
   stage: number;

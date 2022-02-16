@@ -18,7 +18,7 @@ export class Topic {
     default: () => 'CURRENT_TIMESTAMP',
   })
   @ApiProperty({
-    example: '2021-08-15 21:05:15.723336+07',
+    example: '2022-02-16 00:00:00+03',
     description: 'created message',
   })
   date: string;
@@ -53,6 +53,9 @@ export class Topic {
   })
   @JoinColumn()
   answer: Topic;
+
+  @Column({ nullable: true })
+  replyId: number;
 
   @Column()
   goalId: number;

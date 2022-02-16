@@ -43,13 +43,16 @@ export class TopicService {
     }
 
     const question = await this.findByPK(dto.topicId);
+    topic.replyId = dto.topicId;
     question.answer = topic;
 
     return this.topicRepository.save(question);
   }
 
   async update(userId: number, id: number, dto: UpdateTopicDto) {
-    return this.topicRepository.update({ id, userId }, { text: dto.text, edited: true });
+    const user = await this.userService.findByPK(userId);
+
+    return this.topicRepository.update({ id, user }, { text: dto.text, edited: true });
   }
 
   async find(userId: number, query: FindQuery) {

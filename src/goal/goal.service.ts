@@ -46,7 +46,7 @@ export class GoalService {
     return this.dayService
       .getRepository()
       .createQueryBuilder('day')
-      .select(['day.id as id', "TO_CHAR(day.date, 'YYYY-MM-DD') as date"])
+      .select(['day.id as id', 'day.date as date'])
       .where('day.goal.id = :id', { id })
       .orderBy('day.id', 'ASC')
       .getRawMany();
@@ -82,6 +82,7 @@ export class GoalService {
 
     if (!day.characteristic) {
       day.characteristic = new DayCharacteristic();
+      day.characteristic[characteristic] = 0;
     }
 
     day.characteristic[characteristic] += operation === 'insert' ? 1 : -1;

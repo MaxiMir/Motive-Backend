@@ -3,7 +3,6 @@ import { Pagination } from 'src/abstracts/pagination';
 import { GoalDayDto } from 'src/goal/dto/goal-day.dto';
 import { Goal } from 'src/goal/entities/goal.entity';
 import { UserService } from 'src/user/user.service';
-import { User } from 'src/user/entities/user.entity';
 import { SubscriptionService } from 'src/subscription/subscription.service';
 import { ReactionService } from 'src/reaction/reaction.service';
 import { DayService } from 'src/day/day.service';
@@ -21,11 +20,11 @@ export class PageService {
 
   async findUser(nickname: string, goalDatesMap?: GoalDayDto[]) {
     // TODO временно
-    const client = await this.userService.findByNickname('maximir');
+    const client = await this.userService.findByPK(1);
     const user = await this.userService.findByNickname(nickname, {
       relations: ['characteristic', 'goals', 'goals.characteristic', 'goals.owner', 'member'],
     });
-    const reactionsList = await this.findReactionsList(user.goals, client);
+    const reactionsList = await this.findReactionsList(user.goals, client.id);
     const following = await this.subscriptionService.checkOnFollowing(user.id, client.id);
     const goals = await this.findGoals(user.goals, reactionsList, goalDatesMap);
     const goalsMember = await this.findGoals(user.member, reactionsList, goalDatesMap);
@@ -73,10 +72,10 @@ export class PageService {
     );
   }
 
-  private async findReactionsList(goals, user?: User) {
-    const ids = user && goals.filter((g) => g.owner.id !== user.id).map((g) => g.id);
+  private async findReactionsList(goals, userId?: number) {
+    const ids = !userId ? [] : goals.filter((g) => g.owner.id !== userId).map((g) => g.id);
 
-    if (!ids?.length) {
+    if (!ids.length) {
       return {};
     }
 

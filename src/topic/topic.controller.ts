@@ -41,7 +41,7 @@ export class TopicController {
   find(@Query() query: FindQuery) {
     const clientId = 1; // TODO временно
 
-    return this.topicService.find(clientId, query);
+    return this.topicService.find(query, clientId);
   }
 
   @Put(':id')

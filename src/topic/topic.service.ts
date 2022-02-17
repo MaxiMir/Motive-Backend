@@ -53,7 +53,7 @@ export class TopicService {
     return this.topicRepository.update({ id, user }, { text: dto.text, edited: true });
   }
 
-  async find(userId: number, query: FindQuery) {
+  async find(query: FindQuery, userId?: number) {
     const { where, take, skip } = query;
     const topics = await this.topicRepository.find({
       where: { type: Not(TopicTypeDto.ANSWER), ...where },

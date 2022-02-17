@@ -40,7 +40,7 @@ import { ReportModule } from './report/report.module';
       entities: [__dirname + '/**/*.entity{.ts,.js}'],
       subscribers: [LikeSubscriber],
       migrations: [join(__dirname, '..', 'migrations/**/*.ts')],
-      synchronize: true, // TODO shouldn't be used in production - otherwise you can lose production data
+      synchronize: false, // TODO shouldn't be used in production - otherwise you can lose production data
       dropSchema: false,
       logging: false,
       cli: {

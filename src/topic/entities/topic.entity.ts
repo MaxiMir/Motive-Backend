@@ -55,7 +55,7 @@ export class Topic {
   answer: Topic;
 
   @Column({ nullable: true })
-  replyId: number;
+  parentId: number;
 
   @Column()
   goalId: number;

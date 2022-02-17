@@ -62,10 +62,7 @@ export class GoalService {
   }
 
   async updateStage(id: number, dto: GoalStageDto) {
-    const goal = await this.findByPK(id);
-    goal.stage = dto.stage;
-
-    return this.goalRepository.save(goal);
+    return this.goalRepository.update({ id }, { stage: dto.stage });
   }
 
   async updateCharacteristic(

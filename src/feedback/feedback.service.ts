@@ -2,7 +2,6 @@ import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { DayService } from 'src/day/day.service';
-import { MarkdownService } from 'src/markown/markdown.service';
 import { FileService } from 'src/file/file.service';
 import { Feedback } from './entities/feedback.entity';
 import { CreateFeedbackDto } from './dto/create-feedback.dto';
@@ -14,7 +13,6 @@ export class FeedbackService {
     private readonly feedbackRepository: Repository<Feedback>,
     private readonly dayService: DayService,
     private readonly fileService: FileService,
-    private readonly markdownService: MarkdownService,
   ) {}
 
   async save(dto: CreateFeedbackDto, photos: Express.Multer.File[]) {
@@ -23,7 +21,7 @@ export class FeedbackService {
     feedback.day = day;
 
     if (dto.text) {
-      feedback.text = this.markdownService.convert(dto.text);
+      feedback.text = dto.text;
     }
 
     if (photos.length) {

@@ -4,8 +4,6 @@ import { Repository } from 'typeorm';
 import { FindOneOptions } from 'typeorm/find-options/FindOneOptions';
 import { FindManyOptions } from 'typeorm/find-options/FindManyOptions';
 import { Task } from 'src/task/entities/task.entity';
-import { FileService } from 'src/file/file.service';
-import { MarkdownService } from 'src/markown/markdown.service';
 import { CreateDayDto } from './dto/create-day.dto';
 import { Day } from './entities/day.entity';
 
@@ -14,8 +12,6 @@ export class DayService {
   constructor(
     @InjectRepository(Day)
     private readonly dayRepository: Repository<Day>,
-    private readonly fileService: FileService,
-    private readonly markdownService: MarkdownService,
   ) {}
 
   getRepository() {
@@ -26,7 +22,7 @@ export class DayService {
     const day = new Day();
     day.tasks = dto.tasks.map(({ name, date }) => {
       const task = new Task();
-      task.name = this.markdownService.convert(name);
+      task.name = name;
 
       if (date) {
         task.date = date;
@@ -46,10 +42,7 @@ export class DayService {
     return this.dayRepository.findOneOrFail({ id }, options);
   }
 
-  async increaseViews(id: number) {
-    const day = await this.findByPK(id);
-    day.views += 1;
-
-    await this.dayRepository.save(day);
+  increaseViews(id: number) {
+    return this.dayRepository.update({ id }, { views: () => 'views + 1' });
   }
 }

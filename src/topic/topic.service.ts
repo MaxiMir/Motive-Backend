@@ -8,7 +8,6 @@ import { GoalService } from 'src/goal/goal.service';
 import { DayService } from 'src/day/day.service';
 import { LikeService } from 'src/like/like.service';
 import { Like } from 'src/like/entities/like.entity';
-import { MarkdownService } from 'src/markown/markdown.service';
 import { CreateTopicDto } from './dto/create-topic.dto';
 import { FindQuery } from './dto/find-query';
 import { TopicTypeDto } from './dto/topic-type.dto';
@@ -24,14 +23,13 @@ export class TopicService {
     private readonly goalService: GoalService,
     private readonly dayService: DayService,
     private readonly likeService: LikeService,
-    private readonly markdownService: MarkdownService,
   ) {}
 
   async save(userId: number, dto: CreateTopicDto) {
     const user = await this.userService.findByPK(userId);
     const day = await this.dayService.findByPK(dto.dayId);
     const topic = new Topic();
-    topic.text = this.markdownService.convert(dto.text);
+    topic.text = dto.text;
     topic.type = dto.type;
     topic.user = user;
     topic.day = day;
@@ -43,7 +41,7 @@ export class TopicService {
     }
 
     const question = await this.findByPK(dto.topicId);
-    topic.replyId = dto.topicId;
+    topic.parentId = dto.topicId;
     question.answer = topic;
 
     return this.topicRepository.save(question);
@@ -66,12 +64,14 @@ export class TopicService {
       take,
       skip,
     });
+    const ids = !userId
+      ? []
+      : topics.reduce((acc, { id, answer }) => [...acc, id, ...(!answer ? [] : [answer.id])], []);
 
-    if (!userId) {
+    if (!ids.length) {
       return topics;
     }
 
-    const ids = topics.reduce((acc, { id, answer }) => [...acc, id, ...(!answer ? [] : [answer.id])], []);
     const likes = await this.likeService
       .getRepository()
       .createQueryBuilder('like')

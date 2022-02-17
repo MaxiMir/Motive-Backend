@@ -17,7 +17,6 @@ import { PageModule } from './page/page.module';
 import { DayCharacteristicModule } from './day-characteristic/day-characteristic.module';
 import { SubscriptionModule } from './subscription/subscription.module';
 import { FeedbackModule } from './feedback/feedback.module';
-import { MarkdownModule } from './markown/markdown.module';
 import { TopicModule } from './topic/topic.module';
 import { ReactionModule } from './reaction/reaction.module';
 import { LikeModule } from './like/like.module';
@@ -62,7 +61,6 @@ import { ReportModule } from './report/report.module';
     DayCharacteristicModule,
     SubscriptionModule,
     FeedbackModule,
-    MarkdownModule,
     TopicModule,
     ReactionModule,
     LikeModule,

@@ -93,16 +93,15 @@ export class TopicService {
   }
 
   async updateLikes(userId: number, id: number, operation: Operation) {
-    const user = await this.userService.findByPK(userId);
     const topic = await this.findByPK(id);
-    const uniq = this.likeService.getUniq(user.id, topic.id); // duplicate
+    const user = await this.userService.findByPK(userId);
+    const uniq = this.likeService.getUniq(user.id, topic.id); // for check duplicate
     const validateLike = this.likeService.checkOnValid(user, topic, operation);
+    topic.likeCount += operation === 'insert' ? 1 : -1;
 
     if (!validateLike) {
       throw new BadRequestException();
     }
-
-    topic.likeCount += operation === 'insert' ? 1 : -1;
 
     return this.topicRepository.manager.transaction(async (transactionalManager) => {
       await transactionalManager[operation](Like, { user, topic, uniq });

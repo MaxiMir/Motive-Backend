@@ -18,11 +18,14 @@ export class LikeService {
     return this.topicRepository;
   }
 
-  checkOnValid(user: User, topic: Topic, operation: Operation) {
-    return !(topic.user.id === user.id || (topic.type === TopicTypeDto.SUPPORT && operation === 'delete'));
-  }
-
   getUniq(userId: number, topicId: number) {
     return [userId, topicId].join(':');
+  }
+
+  checkOnValid(user: User, topic: Topic, operation: Operation) {
+    const isLikeSelf = topic.user.id === user.id;
+    const isDeleteSupport = topic.type === TopicTypeDto.SUPPORT && operation === 'delete';
+
+    return !(isLikeSelf || isDeleteSupport);
   }
 }

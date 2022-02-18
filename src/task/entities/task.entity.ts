@@ -36,7 +36,7 @@ export class Task {
     example: true,
     description: 'completed by owner',
   })
-  completed = false;
+  completed: boolean;
 
   @Column('int', { array: true })
   @ApiProperty({

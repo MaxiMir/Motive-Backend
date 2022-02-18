@@ -20,7 +20,6 @@ import { FeedbackModule } from './feedback/feedback.module';
 import { TopicModule } from './topic/topic.module';
 import { ReactionModule } from './reaction/reaction.module';
 import { LikeModule } from './like/like.module';
-import { LikeSubscriber } from './like/like.subcriber';
 import { ReportModule } from './report/report.module';
 
 @Module({
@@ -38,9 +37,9 @@ import { ReportModule } from './report/report.module';
       password: process.env.POSTGRES_PASSWORD,
       database: process.env.POSTGRES_DB,
       entities: [__dirname + '/**/*.entity{.ts,.js}'],
-      subscribers: [LikeSubscriber],
+      subscribers: [__dirname + '/**/*.subscriber{.ts,.js}'],
       migrations: [join(__dirname, '..', 'migrations/**/*.ts')],
-      synchronize: false, // TODO shouldn't be used in production - otherwise you can lose production data
+      synchronize: true, // TODO shouldn't be used in production - otherwise you can lose production data
       dropSchema: false,
       logging: false,
       cli: {

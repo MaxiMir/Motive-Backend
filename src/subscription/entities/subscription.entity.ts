@@ -1,5 +1,5 @@
 import { ApiProperty } from '@nestjs/swagger';
-import { Entity, JoinColumn, ManyToOne, OneToOne, PrimaryGeneratedColumn } from 'typeorm';
+import { Column, Entity, Index, JoinColumn, ManyToOne, PrimaryGeneratedColumn } from 'typeorm';
 import { User } from 'src/user/entities/user.entity';
 
 @Entity('subscription')
@@ -11,11 +11,19 @@ export class Subscription {
   })
   id: number;
 
-  @OneToOne(() => User, { nullable: false })
+  @ManyToOne(() => User, { nullable: false })
   @JoinColumn()
   user: User;
 
   @ManyToOne(() => User, { nullable: false })
   @JoinColumn()
   follower: User;
+
+  @Index({ unique: true })
+  @Column()
+  @ApiProperty({
+    example: '1:53',
+    description: '{user.id}:{follower.id}',
+  })
+  uniq: string;
 }

@@ -18,6 +18,17 @@ export class LikeService {
     return this.topicRepository;
   }
 
+  async findLikedTopics(userId: number, topicIds: number[]) {
+    const likes = await this.topicRepository
+      .createQueryBuilder('like')
+      .select(['like.topic.id as topic_id'])
+      .where('like.topic.id IN (:...topicIds)', { topicIds })
+      .andWhere('like.user.id = :userId', { userId })
+      .getRawMany();
+
+    return likes.map((l) => l.topic_id);
+  }
+
   getUniq(userId: number, topicId: number) {
     return [userId, topicId].join(':');
   }

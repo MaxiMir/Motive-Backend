@@ -64,22 +64,13 @@ export class TopicService {
       take,
       skip,
     });
-    const ids = !userId
-      ? []
-      : topics.reduce((acc, { id, answer }) => [...acc, id, ...(!answer ? [] : [answer.id])], []);
 
-    if (!ids.length) {
+    if (!userId || !topics.length) {
       return topics;
     }
 
-    const likes = await this.likeService
-      .getRepository()
-      .createQueryBuilder('like')
-      .select(['like.topic.id as topic_id'])
-      .where('like.topic.id IN (:...ids)', { ids })
-      .andWhere('like.user.id = :userId', { userId })
-      .getRawMany();
-    const likedTopic = likes.map((l) => l.topic_id);
+    const ids = topics.reduce((acc, { id, answer }) => [...acc, id, ...(!answer ? [] : [answer.id])], []);
+    const likedTopic = await this.likeService.findLikedTopics(userId, ids);
 
     return topics.map((topic) => ({
       ...topic,

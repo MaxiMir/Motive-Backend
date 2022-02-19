@@ -70,5 +70,5 @@ export class Topic {
   @ApiProperty({
     example: true,
   })
-  edited: boolean;
+  edited = false;
 }

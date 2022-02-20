@@ -34,11 +34,8 @@ export class PageController {
     allowEmptyValue: true,
   })
   @ApiResponse({ status: 200, type: UserDto })
-  getUser(
-    @Param('nickname') nickname: string,
-    @Query('d', ParseGoalDateMapPipe) goalDatesMap?: GoalDayDto[],
-  ) {
-    return this.pageService.findUser(nickname, goalDatesMap);
+  getUser(@Param('nickname') nickname: string, @Query('d', ParseGoalDateMapPipe) goalDateMap?: GoalDayDto[]) {
+    return this.pageService.findUser(nickname, goalDateMap);
   }
 
   @Get('following')

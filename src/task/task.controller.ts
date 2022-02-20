@@ -1,7 +1,7 @@
 import { Controller, Param, Get, Patch, ParseIntPipe } from '@nestjs/common';
 import { ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
-import { TaskService } from './task.service';
 import { Task } from './entities/task.entity';
+import { TaskService } from './task.service';
 
 @Controller('tasks')
 @ApiTags('Tasks')
@@ -18,9 +18,9 @@ export class TaskController {
   @Patch(':id/completed')
   @ApiOperation({ summary: 'Set a task complete' })
   @ApiResponse({ status: 200, type: Task })
-  setCompleted(@Param('id', ParseIntPipe) id: number) {
+  updateCompleted(@Param('id', ParseIntPipe) id: number) {
     const clientId = 1; // TODO временно
 
-    return this.taskService.setCompleted(clientId, id);
+    return this.taskService.updateCompleted(clientId, id);
   }
 }

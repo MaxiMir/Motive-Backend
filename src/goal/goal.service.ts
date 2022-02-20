@@ -11,7 +11,8 @@ import { Reaction } from 'src/reaction/entities/reaction.entity';
 import { UserService } from 'src/user/user.service';
 import { DayService } from 'src/day/day.service';
 import { CreateGoalDto } from './dto/create-goal.dto';
-import { GoalStageDto } from './dto/goal-stage.dto';
+import { UpdateStageDto } from './dto/update-stage.dto';
+import { UpdateCompletedDto } from './dto/update-completed.dto';
 import { Goal } from './entities/goal.entity';
 
 @Injectable()
@@ -61,8 +62,12 @@ export class GoalService {
     return this.goalRepository.save(goal);
   }
 
-  async updateStage(id: number, dto: GoalStageDto) {
+  async updateStage(id: number, dto: UpdateStageDto) {
     return this.goalRepository.update({ id }, { stage: dto.stage });
+  }
+
+  async updateCompleted(id: number, dto: UpdateCompletedDto, photos: Express.Multer.File[]) {
+    // return this.goalRepository.update({ id }, { stage: dto.stage });
   }
 
   async updateCharacteristic(

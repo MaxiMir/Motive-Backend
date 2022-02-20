@@ -47,6 +47,9 @@ export class Goal {
   @Column({ default: 0 })
   stage: number;
 
+  @Column('boolean', { nullable: true, default: false })
+  completed = false;
+
   @OneToOne(() => GoalCharacteristic, (characteristic) => characteristic.goal, {
     cascade: true,
   })

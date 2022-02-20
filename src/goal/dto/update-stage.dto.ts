@@ -1,7 +1,7 @@
 import { ApiProperty } from '@nestjs/swagger';
 import { IsNumber, Max, Min } from 'class-validator';
 
-export class GoalStageDto {
+export class UpdateStageDto {
   @IsNumber()
   @Min(1)
   @Max(100)

@@ -1,4 +1,15 @@
-import { Body, Controller, HttpCode, Param, Query, ParseIntPipe, Get, Post, Patch } from '@nestjs/common';
+import {
+  Body,
+  Controller,
+  HttpCode,
+  Param,
+  Query,
+  Get,
+  Post,
+  Patch,
+  UploadedFiles,
+  ParseIntPipe,
+} from '@nestjs/common';
 import { ApiOperation, ApiParam, ApiQuery, ApiResponse, ApiTags } from '@nestjs/swagger';
 import { Operation, OPERATIONS } from 'src/abstracts/operation';
 import { Characteristic, CHARACTERISTICS } from 'src/abstracts/characteristic';
@@ -7,9 +18,10 @@ import { ParseCharacteristicPipe } from 'src/pipes/parse-characteristic.pipe';
 import { ParseOperationPipe } from 'src/pipes/parse-operation.pipe';
 import { CreateGoalDto } from './dto/create-goal.dto';
 import { CalendarDto } from './dto/calendar.dto';
-import { GoalStageDto } from './dto/goal-stage.dto';
-import { GoalService } from './goal.service';
+import { UpdateStageDto } from './dto/update-stage.dto';
+import { UpdateCompletedDto } from './dto/update-completed.dto';
 import { Goal } from './entities/goal.entity';
+import { GoalService } from './goal.service';
 
 @Controller('goals')
 @ApiTags('Goals')
@@ -44,14 +56,33 @@ export class GoalController {
   @ApiOperation({ summary: 'Add day' })
   @ApiResponse({ status: 200, type: Goal })
   addDay(@Param('id', ParseIntPipe) id: number, @Body() dto: CreateDayDto) {
+    const clientId = 1; // TODO временно
+
     return this.goalService.addDay(id, dto);
   }
 
   @Patch(':id/stage')
   @HttpCode(204)
   @ApiOperation({ summary: 'Change stage' })
-  updateStage(@Param('id', ParseIntPipe) id: number, @Body() dto: GoalStageDto) {
+  @ApiResponse({ status: 204 })
+  updateStage(@Param('id', ParseIntPipe) id: number, @Body() dto: UpdateStageDto) {
+    const clientId = 1; // TODO временно
+
     return this.goalService.updateStage(id, dto);
+  }
+
+  @Patch(':id/completed')
+  @HttpCode(204)
+  @ApiOperation({ summary: 'Make the goal complete' })
+  @ApiResponse({ status: 204 })
+  updateCompleted(
+    @Param('id', ParseIntPipe) id: number,
+    @Body() dto: UpdateCompletedDto,
+    @UploadedFiles() files: Express.Multer.File[],
+  ) {
+    const clientId = 1; // TODO временно
+
+    return this.goalService.updateCompleted(id, dto, files);
   }
 
   @Patch(':id/days/:dayId/characteristic/:characteristic')

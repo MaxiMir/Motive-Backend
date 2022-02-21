@@ -1,8 +1,18 @@
 import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
-import { Column, Entity, ManyToOne, OneToMany, OneToOne, PrimaryGeneratedColumn } from 'typeorm';
+import {
+  Column,
+  Entity,
+  JoinColumn,
+  ManyToOne,
+  OneToMany,
+  OneToOne,
+  PrimaryGeneratedColumn,
+  RelationId,
+} from 'typeorm';
 import { User } from 'src/user/entities/user.entity';
 import { Day } from 'src/day/entities/day.entity';
 import { GoalCharacteristic } from 'src/goal-characteristic/entities/goal-characteristic.entity';
+import { Confirmation } from 'src/confirmation/entities/confirmation.entity';
 
 @Entity('goals', {
   orderBy: {
@@ -47,9 +57,6 @@ export class Goal {
   @Column({ default: 0 })
   stage: number;
 
-  @Column('boolean', { nullable: true, default: false })
-  completed = false;
-
   @OneToOne(() => GoalCharacteristic, (characteristic) => characteristic.goal, {
     cascade: true,
   })
@@ -59,6 +66,14 @@ export class Goal {
   @OneToMany(() => Day, (day) => day.goal, { cascade: true })
   @ApiPropertyOptional({ type: () => Day, isArray: true })
   days: Day[];
+
+  @OneToOne(() => Confirmation, { cascade: true })
+  @JoinColumn()
+  @ApiPropertyOptional({ type: () => Confirmation })
+  confirmation: Confirmation;
+
+  @RelationId((goal: Goal) => goal.confirmation)
+  confirmationId: number;
 
   @ManyToOne(() => User, (user) => user.goals, {
     nullable: false,

@@ -1,5 +1,5 @@
 import { ApiProperty } from '@nestjs/swagger';
-import { Column, Entity, JoinColumn, OneToOne, PrimaryGeneratedColumn } from 'typeorm';
+import { Column, Entity, JoinColumn, OneToOne, PrimaryGeneratedColumn, RelationId } from 'typeorm';
 import { Day } from 'src/day/entities/day.entity';
 
 @Entity('day-characteristics')
@@ -32,4 +32,7 @@ export class DayCharacteristic {
   @OneToOne(() => Day, { nullable: false })
   @JoinColumn()
   day: Day;
+
+  @RelationId((characteristic: DayCharacteristic) => characteristic.day)
+  dayId: number;
 }

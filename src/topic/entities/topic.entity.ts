@@ -35,7 +35,7 @@ export class Topic {
   })
   text: string;
 
-  @ManyToOne(() => User, { eager: true, nullable: false })
+  @ManyToOne(() => User, { cascade: true, eager: true, nullable: false })
   user: User;
 
   @RelationId((topic: Topic) => topic.user)

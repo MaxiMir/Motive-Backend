@@ -37,4 +37,15 @@ export class FileService {
       throw new HttpException(e.message, HttpStatus.INTERNAL_SERVER_ERROR);
     }
   }
+
+  uploadAndMeasureImages(files: Express.Multer.File[], folder) {
+    return Promise.all(
+      files.map(async (photo) => {
+        const [width, height] = await this.getImageRatio(photo);
+        const src = await this.uploadImage(photo, folder, { width: 1280 });
+
+        return { src, width, height };
+      }),
+    );
+  }
 }

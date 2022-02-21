@@ -43,6 +43,6 @@ export class DayService {
   }
 
   increaseViews(id: number) {
-    return this.dayRepository.update({ id }, { views: () => 'views + 1' });
+    return this.dayRepository.increment({ id }, 'views', 1);
   }
 }

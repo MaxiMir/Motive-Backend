@@ -7,7 +7,10 @@ import { UserService } from 'src/user/user.service';
 import { GoalService } from 'src/goal/goal.service';
 import { DayService } from 'src/day/day.service';
 import { LikeService } from 'src/like/like.service';
+import { ExperienceService } from 'src/experience/experience.service';
 import { Like } from 'src/like/entities/like.entity';
+import { GoalCharacteristic } from 'src/goal-characteristic/entities/goal-characteristic.entity';
+import { DayCharacteristic } from 'src/day-characteristic/entities/day-characteristic.entity';
 import { CreateTopicDto } from './dto/create-topic.dto';
 import { FindQuery } from './dto/find-query';
 import { TopicTypeDto } from './dto/topic-type.dto';
@@ -84,7 +87,7 @@ export class TopicService {
   }
 
   async updateLikes(userId: number, id: number, operation: Operation) {
-    const topic = await this.findByPK(id);
+    const topic = await this.findByPK(id, { relations: ['user', 'user.characteristic', 'day', 'day.goal'] });
     const user = await this.userService.findByPK(userId);
     const uniq = this.likeService.getUniq(user.id, topic.id); // for check duplicate
     const validateLike = this.likeService.checkOnValid(user, topic, operation);
@@ -96,6 +99,20 @@ export class TopicService {
 
     return this.topicRepository.manager.transaction(async (transactionalManager) => {
       await transactionalManager[operation](Like, { user, topic, uniq });
+
+      switch (topic.type) {
+        case TopicTypeDto.ANSWER:
+          await transactionalManager.increment(DayCharacteristic, { day: topic.day }, 'support', 1);
+          await transactionalManager.increment(GoalCharacteristic, { goal: topic.day.goal }, 'support', 1);
+          break;
+        case TopicTypeDto.SUPPORT:
+          topic.user.characteristic.support = ExperienceService.getProgress(
+            topic.user.characteristic.support_points + 1,
+          );
+          topic.user.characteristic.support_points += 1;
+          break;
+      }
+
       await transactionalManager.save(topic);
     });
   }

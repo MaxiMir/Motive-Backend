@@ -25,14 +25,7 @@ export class FeedbackService {
     }
 
     if (photos.length) {
-      feedback.photos = await Promise.all(
-        photos.map(async (photo) => {
-          const [width, height] = await this.fileService.getImageRatio(photo);
-          const src = await this.fileService.uploadImage(photo, 'feedback', { width: 1280 });
-
-          return { src, width, height };
-        }),
-      );
+      feedback.photos = await this.fileService.uploadAndMeasureImages(photos, 'feedback');
     }
 
     return await this.feedbackRepository.save(feedback);

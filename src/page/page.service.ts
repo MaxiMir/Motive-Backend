@@ -18,12 +18,20 @@ export class PageService {
     private readonly reactionService: ReactionService,
   ) {}
 
-  async findUser(nickname: string, goalDatesMap?: GoalDayDto[]) {
+  async findUser(userId: number, nickname: string, goalDatesMap?: GoalDayDto[]) {
     // TODO временно
-    const client = await this.userService.findByPK(1);
-    const user = await this.userService.findByNickname(nickname, {
-      relations: ['characteristic', 'goals', 'goals.characteristic', 'goals.owner', 'member'],
-    });
+    const client = await this.userService.findByPK(userId);
+    const user = await this.userService
+      .getRepository()
+      .createQueryBuilder('user')
+      .leftJoinAndSelect('user.characteristic', 'characteristic')
+      .leftJoinAndSelect('user.goals', 'goals')
+      .leftJoinAndSelect('user.member', 'member')
+      .leftJoinAndSelect('goals.characteristic', 'goals-characteristic')
+      .leftJoinAndSelect('goals.owner', 'owner')
+      .where('user.nickname = :nickname', { nickname })
+      .andWhere('goals.confirmation IS NULL')
+      .getOneOrFail();
     const reactionsList = await this.findReactionsList(user.goals, client.id);
     const following = await this.subscriptionService.checkOnFollowing(user.id, client.id);
     const goals = await this.findGoals(user.goals, reactionsList, goalDatesMap);
@@ -100,17 +108,17 @@ export class PageService {
     }, {});
   }
 
-  async findFollowing(id: number, pagination: Pagination) {
+  async findFollowing(userId: number, pagination: Pagination) {
     // TODO временно
-    const client = await this.userService.findByPK(id);
-    const following = await this.subscriptionService.findFollowing(id, pagination);
+    const client = await this.userService.findByPK(userId);
+    const following = await this.subscriptionService.findFollowing(userId, pagination);
 
     return { client, content: following };
   }
 
-  async findRating(id: number) {
+  async findRating(userId: number) {
     // TODO временно
-    const client = await this.userService.findByPK(id);
+    const client = await this.userService.findByPK(userId);
     const motivation = await this.findByCharacteristic('motivation', 100);
     const creativity = await this.findByCharacteristic('creativity', 100);
     const support = await this.findByCharacteristic('support', 100);

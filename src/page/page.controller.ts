@@ -35,7 +35,9 @@ export class PageController {
   })
   @ApiResponse({ status: 200, type: UserDto })
   getUser(@Param('nickname') nickname: string, @Query('d', ParseGoalDateMapPipe) goalDateMap?: GoalDayDto[]) {
-    return this.pageService.findUser(nickname, goalDateMap);
+    const clientId = 1; // TODO временно
+
+    return this.pageService.findUser(clientId, nickname, goalDateMap);
   }
 
   @Get('following')

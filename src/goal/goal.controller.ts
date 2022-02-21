@@ -10,7 +10,7 @@ import {
   UploadedFiles,
   ParseIntPipe,
 } from '@nestjs/common';
-import { ApiOperation, ApiParam, ApiQuery, ApiResponse, ApiTags } from '@nestjs/swagger';
+import { ApiBody, ApiOperation, ApiParam, ApiQuery, ApiResponse, ApiTags } from '@nestjs/swagger';
 import { Operation, OPERATIONS } from 'src/abstracts/operation';
 import { Characteristic, CHARACTERISTICS } from 'src/abstracts/characteristic';
 import { CreateDayDto } from 'src/day/dto/create-day.dto';
@@ -22,6 +22,7 @@ import { UpdateStageDto } from './dto/update-stage.dto';
 import { UpdateCompletedDto } from './dto/update-completed.dto';
 import { Goal } from './entities/goal.entity';
 import { GoalService } from './goal.service';
+import { ApiImageFiles } from '../decorators/api-images.decorator';
 
 @Controller('goals')
 @ApiTags('Goals')
@@ -58,7 +59,7 @@ export class GoalController {
   addDay(@Param('id', ParseIntPipe) id: number, @Body() dto: CreateDayDto) {
     const clientId = 1; // TODO временно
 
-    return this.goalService.addDay(id, dto);
+    return this.goalService.addDay(clientId, id, dto);
   }
 
   @Patch(':id/stage')
@@ -68,21 +69,38 @@ export class GoalController {
   updateStage(@Param('id', ParseIntPipe) id: number, @Body() dto: UpdateStageDto) {
     const clientId = 1; // TODO временно
 
-    return this.goalService.updateStage(id, dto);
+    return this.goalService.updateStage(clientId, id, dto);
   }
 
-  @Patch(':id/completed')
+  @Patch(':id/confirmation')
+  @ApiBody({
+    schema: {
+      type: 'object',
+      required: [],
+      properties: {
+        text: { type: 'string' },
+        photos: {
+          type: 'array',
+          items: {
+            type: 'string',
+            format: 'binary',
+          },
+        },
+      },
+    },
+  })
+  @ApiImageFiles('photos')
   @HttpCode(204)
   @ApiOperation({ summary: 'Make the goal complete' })
   @ApiResponse({ status: 204 })
-  updateCompleted(
+  updateConfirmation(
     @Param('id', ParseIntPipe) id: number,
     @Body() dto: UpdateCompletedDto,
     @UploadedFiles() files: Express.Multer.File[],
   ) {
     const clientId = 1; // TODO временно
 
-    return this.goalService.updateCompleted(id, dto, files);
+    return this.goalService.updateConfirmation(clientId, id, dto, files);
   }
 
   @Patch(':id/days/:dayId/characteristic/:characteristic')

@@ -1,5 +1,6 @@
-import { Column, Entity, PrimaryGeneratedColumn } from 'typeorm';
+import { Column, Entity, JoinColumn, ManyToOne, PrimaryGeneratedColumn } from 'typeorm';
 import { ApiProperty } from '@nestjs/swagger';
+import { User } from 'src/user/entities/user.entity';
 import { ReportTypeDto } from 'src/report/dto/report-type.dto';
 import { ReasonTypeDto } from 'src/report/dto/reason-type.dto';
 
@@ -38,4 +39,8 @@ export class Report {
     description: 'created message',
   })
   date: string;
+
+  @ManyToOne(() => User, { nullable: false })
+  @JoinColumn()
+  user: User;
 }

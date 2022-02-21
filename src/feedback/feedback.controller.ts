@@ -9,7 +9,7 @@ import { FeedbackService } from './feedback.service';
 export class FeedbackController {
   constructor(private readonly feedbackService: FeedbackService) {}
 
-  @Post('')
+  @Post()
   @ApiBody({
     schema: {
       type: 'object',

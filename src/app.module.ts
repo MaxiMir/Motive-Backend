@@ -8,7 +8,7 @@ import { MulterModule } from '@nestjs/platform-express';
 import { UserModule } from './user/user.module';
 import { GoalModule } from './goal/goal.module';
 import { UserCharacteristicModule } from './user-characteristic/user-characteristic.module';
-import { FilesModule } from './file/files.module';
+import { FileModule } from './file/file.module';
 import { DayModule } from './day/day.module';
 import { HashtagModule } from './hashtag/hashtag.module';
 import { GoalCharacteristicModule } from './goal-characteristic/goal-characteristic.module';
@@ -21,6 +21,7 @@ import { TopicModule } from './topic/topic.module';
 import { ReactionModule } from './reaction/reaction.module';
 import { LikeModule } from './like/like.module';
 import { ReportModule } from './report/report.module';
+import { ConfirmationModule } from './confirmation/confirmation.module';
 
 @Module({
   imports: [
@@ -55,7 +56,7 @@ import { ReportModule } from './report/report.module';
     GoalCharacteristicModule,
     DayModule,
     TaskModule,
-    FilesModule,
+    FileModule,
     PageModule,
     DayCharacteristicModule,
     SubscriptionModule,
@@ -64,6 +65,7 @@ import { ReportModule } from './report/report.module';
     ReactionModule,
     LikeModule,
     ReportModule,
+    ConfirmationModule,
   ],
 })
 export class AppModule {}

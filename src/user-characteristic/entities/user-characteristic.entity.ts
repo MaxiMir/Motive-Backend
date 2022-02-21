@@ -17,29 +17,29 @@ export class UserCharacteristic {
   })
   motivation_points: number;
 
-  @Column({ type: 'float', scale: 4, default: 1.0 })
-  @ApiProperty({
-    example: 13,
-  })
-  motivation: number;
-
   @Column({ default: 0 })
   @ApiProperty({
     example: 1541,
   })
   creativity_points: number;
 
-  @Column({ type: 'float', scale: 4, default: 1.0 })
-  @ApiProperty({
-    example: 26,
-  })
-  creativity: number;
-
   @Column({ default: 0 })
   @ApiProperty({
     example: 1541,
   })
   support_points: number;
+
+  @Column({ type: 'float', scale: 4, default: 1.0 })
+  @ApiProperty({
+    example: 13,
+  })
+  motivation: number;
+
+  @Column({ type: 'float', scale: 4, default: 1.0 })
+  @ApiProperty({
+    example: 26,
+  })
+  creativity: number;
 
   @Column({ type: 'float', scale: 4, default: 1.0 })
   @ApiProperty({

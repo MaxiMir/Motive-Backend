@@ -1,5 +1,5 @@
 import { ApiProperty } from '@nestjs/swagger';
-import { Column, Entity, JoinColumn, OneToOne, PrimaryGeneratedColumn } from 'typeorm';
+import { Column, Entity, JoinColumn, OneToOne, PrimaryGeneratedColumn, RelationId } from 'typeorm';
 import { Goal } from 'src/goal/entities/goal.entity';
 
 @Entity('goal-characteristics')
@@ -42,4 +42,7 @@ export class GoalCharacteristic {
   })
   @JoinColumn()
   goal: Goal;
+
+  @RelationId((characteristic: GoalCharacteristic) => characteristic.goal)
+  goalId: number;
 }

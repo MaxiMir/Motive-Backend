@@ -8,7 +8,10 @@ import { CreateDayDto } from 'src/day/dto/create-day.dto';
 import { DayCharacteristic } from 'src/day-characteristic/entities/day-characteristic.entity';
 import { GoalCharacteristic } from 'src/goal-characteristic/entities/goal-characteristic.entity';
 import { Reaction } from 'src/reaction/entities/reaction.entity';
+import { Confirmation } from 'src/confirmation/entities/confirmation.entity';
 import { UserService } from 'src/user/user.service';
+import { ExperienceService } from 'src/experience/experience.service';
+import { FileService } from 'src/file/file.service';
 import { DayService } from 'src/day/day.service';
 import { CreateGoalDto } from './dto/create-goal.dto';
 import { UpdateStageDto } from './dto/update-stage.dto';
@@ -22,13 +25,13 @@ export class GoalService {
     private readonly goalRepository: Repository<Goal>,
     private readonly userService: UserService,
     private readonly dayService: DayService,
+    private readonly fileService: FileService,
   ) {}
 
   async save(userId: number, dto: CreateGoalDto) {
     const { name, hashtags, tasks } = dto;
     const goal = new Goal();
     const day = this.dayService.create({ tasks });
-
     goal.name = name;
     goal.characteristic = new GoalCharacteristic();
     goal.hashtags = hashtags;
@@ -53,7 +56,7 @@ export class GoalService {
       .getRawMany();
   }
 
-  async addDay(id: number, dto: CreateDayDto) {
+  async addDay(userId: number, id: number, dto: CreateDayDto) {
     const goal = await this.findByPK(id, { relations: ['days'] });
     const day = this.dayService.create(dto);
     day.stage = goal.stage;
@@ -62,12 +65,43 @@ export class GoalService {
     return this.goalRepository.save(goal);
   }
 
-  async updateStage(id: number, dto: UpdateStageDto) {
+  async updateStage(userId: number, id: number, dto: UpdateStageDto) {
     return this.goalRepository.update({ id }, { stage: dto.stage });
   }
 
-  async updateCompleted(id: number, dto: UpdateCompletedDto, photos: Express.Multer.File[]) {
-    // return this.goalRepository.update({ id }, { stage: dto.stage });
+  async updateConfirmation(
+    userId: number,
+    id: number,
+    dto: UpdateCompletedDto,
+    photos: Express.Multer.File[],
+  ) {
+    const owner = await this.userService.findByPK(userId, { relations: ['characteristic'] });
+    const goal = await this.findByPK(id, { relations: ['characteristic'] });
+    goal.confirmation = new Confirmation();
+    goal.confirmation.photos = await this.fileService.uploadAndMeasureImages(photos, 'confirmation');
+
+    if (dto.text) {
+      goal.confirmation.text = dto.text;
+    }
+
+    if (goal.characteristic.creativity) {
+      owner.characteristic.creativity_points += goal.characteristic.creativity;
+      owner.characteristic.creativity = ExperienceService.getProgress(owner.characteristic.creativity_points);
+    }
+
+    if (goal.characteristic.support) {
+      owner.characteristic.support_points += goal.characteristic.support;
+      owner.characteristic.support = ExperienceService.getProgress(owner.characteristic.support_points);
+    }
+
+    owner.characteristic.completed += 1;
+    owner.characteristic.motivation_points += goal.characteristic.motivation + ExperienceService.EXTRA_POINTS;
+    owner.characteristic.motivation = ExperienceService.getProgress(owner.characteristic.motivation_points);
+
+    return this.goalRepository.manager.transaction(async (transactionalManager) => {
+      await transactionalManager.save(goal);
+      await transactionalManager.save(owner);
+    });
   }
 
   async updateCharacteristic(

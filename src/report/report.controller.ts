@@ -13,6 +13,8 @@ export class ReportController {
   @ApiOperation({ summary: 'Create report' })
   @ApiResponse({ status: 201, type: Report })
   create(@Body() createReportDto: CreateReportDto) {
-    return this.reportService.create(createReportDto);
+    const clientId = 1; // TODO временно
+
+    return this.reportService.create(clientId, createReportDto);
   }
 }

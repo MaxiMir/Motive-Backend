@@ -13,16 +13,18 @@ import {
 import { ApiBody, ApiOperation, ApiParam, ApiQuery, ApiResponse, ApiTags } from '@nestjs/swagger';
 import { Operation, OPERATIONS } from 'src/abstracts/operation';
 import { Characteristic, CHARACTERISTICS } from 'src/abstracts/characteristic';
-import { CreateDayDto } from 'src/day/dto/create-day.dto';
 import { ParseCharacteristicPipe } from 'src/pipes/parse-characteristic.pipe';
 import { ParseOperationPipe } from 'src/pipes/parse-operation.pipe';
+import { ApiImageFiles } from 'src/decorators/api-images.decorator';
+import { ApiPagination } from 'src/decorators/api-pagination.decorator';
+import { CreateDayDto } from 'src/day/dto/create-day.dto';
 import { CreateGoalDto } from './dto/create-goal.dto';
 import { CalendarDto } from './dto/calendar.dto';
 import { UpdateStageDto } from './dto/update-stage.dto';
 import { UpdateCompletedDto } from './dto/update-completed.dto';
 import { Goal } from './entities/goal.entity';
 import { GoalService } from './goal.service';
-import { ApiImageFiles } from '../decorators/api-images.decorator';
+import { FindQuery } from './dto/find-query';
 
 @Controller('goals')
 @ApiTags('Goals')
@@ -45,10 +47,18 @@ export class GoalController {
     return this.goalService.findByPK(id);
   }
 
+  @Get()
+  @ApiOperation({ summary: 'Get goals' })
+  @ApiPagination({ name: 'where[owner]', example: 1 })
+  @ApiResponse({ status: 200, type: [Goal] })
+  find(@Query() query: FindQuery) {
+    return this.goalService.find(query);
+  }
+
   @Get(':id/calendar')
   @ApiOperation({ summary: 'Get calendar' })
   @ApiResponse({ status: 200, type: [CalendarDto] })
-  getCalendar(@Param('id', ParseIntPipe) id: number) {
+  findCalendar(@Param('id', ParseIntPipe) id: number) {
     return this.goalService.findCalendar(id);
   }
 

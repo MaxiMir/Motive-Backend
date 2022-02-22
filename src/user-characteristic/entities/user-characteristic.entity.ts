@@ -14,20 +14,23 @@ export class UserCharacteristic {
   @Column({ default: 0 })
   @ApiProperty({
     example: 1541,
+    description: 'motivation points',
   })
-  motivation_points: number;
+  motivation_all: number;
 
   @Column({ default: 0 })
   @ApiProperty({
     example: 1541,
+    description: 'creativity points',
   })
-  creativity_points: number;
+  creativity_all: number;
 
   @Column({ default: 0 })
   @ApiProperty({
     example: 1541,
+    description: 'support points',
   })
-  support_points: number;
+  support_all: number;
 
   @Column({ type: 'float', scale: 4, default: 1.0 })
   @ApiProperty({

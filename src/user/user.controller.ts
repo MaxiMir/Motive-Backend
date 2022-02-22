@@ -34,13 +34,6 @@ export class UserController {
     return this.userService.save(dto, file);
   }
 
-  @Get()
-  @ApiOperation({ summary: 'Get users' })
-  @ApiResponse({ status: 200, type: [UserBaseDto] })
-  getAll() {
-    return this.userService.find();
-  }
-
   @Get(':nickname')
   @ApiOperation({ summary: 'Get user by nickname' })
   @ApiParam({ name: 'nickname', example: 'maximir' })

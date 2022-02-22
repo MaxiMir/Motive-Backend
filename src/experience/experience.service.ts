@@ -9,6 +9,10 @@ export class ExperienceService {
   static EXTRA_POINTS = 5;
 
   static toPoints(level: number): number {
+    if (level === 1) {
+      return 0;
+    }
+
     const coefficient = ExperienceService.getCoefficientByLevel(level);
 
     return (level * ExperienceService.STEP) ** coefficient;

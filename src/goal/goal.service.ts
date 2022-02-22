@@ -17,6 +17,7 @@ import { CreateGoalDto } from './dto/create-goal.dto';
 import { UpdateStageDto } from './dto/update-stage.dto';
 import { UpdateCompletedDto } from './dto/update-completed.dto';
 import { Goal } from './entities/goal.entity';
+import { FindQuery } from './dto/find-query';
 
 @Injectable()
 export class GoalService {
@@ -44,6 +45,20 @@ export class GoalService {
 
   findByPK(id: number, options?: FindOneOptions<Goal>) {
     return this.goalRepository.findOneOrFail({ id }, options);
+  }
+
+  async find(query: FindQuery) {
+    const { where, take, skip } = query;
+
+    return this.goalRepository.find({
+      relations: ['characteristic', 'owner'],
+      where,
+      order: {
+        id: 'DESC',
+      },
+      take,
+      skip,
+    });
   }
 
   findCalendar(id: number) {
@@ -85,18 +100,18 @@ export class GoalService {
     }
 
     if (goal.characteristic.creativity) {
-      owner.characteristic.creativity_points += goal.characteristic.creativity;
-      owner.characteristic.creativity = ExperienceService.getProgress(owner.characteristic.creativity_points);
+      owner.characteristic.creativity_all += goal.characteristic.creativity;
+      owner.characteristic.creativity = ExperienceService.getProgress(owner.characteristic.creativity_all);
     }
 
     if (goal.characteristic.support) {
-      owner.characteristic.support_points += goal.characteristic.support;
-      owner.characteristic.support = ExperienceService.getProgress(owner.characteristic.support_points);
+      owner.characteristic.support_all += goal.characteristic.support;
+      owner.characteristic.support = ExperienceService.getProgress(owner.characteristic.support_all);
     }
 
     owner.characteristic.completed += 1;
-    owner.characteristic.motivation_points += goal.characteristic.motivation + ExperienceService.EXTRA_POINTS;
-    owner.characteristic.motivation = ExperienceService.getProgress(owner.characteristic.motivation_points);
+    owner.characteristic.motivation_all += goal.characteristic.motivation + ExperienceService.EXTRA_POINTS;
+    owner.characteristic.motivation = ExperienceService.getProgress(owner.characteristic.motivation_all);
 
     return this.goalRepository.manager.transaction(async (transactionalManager) => {
       await transactionalManager.save(goal);

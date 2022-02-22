@@ -107,9 +107,9 @@ export class TopicService {
           break;
         case TopicTypeDto.SUPPORT:
           topic.user.characteristic.support = ExperienceService.getProgress(
-            topic.user.characteristic.support_points + 1,
+            topic.user.characteristic.support_all + 1,
           );
-          topic.user.characteristic.support_points += 1;
+          topic.user.characteristic.support_all += 1;
           break;
       }
 

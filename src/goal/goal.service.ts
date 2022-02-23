@@ -51,7 +51,7 @@ export class GoalService {
     const { where, take, skip } = query;
 
     return this.goalRepository.find({
-      relations: ['characteristic', 'owner'],
+      relations: ['characteristic', 'owner', 'confirmation'],
       where,
       order: {
         id: 'DESC',

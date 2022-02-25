@@ -8,7 +8,6 @@ import {
   HttpCode,
   Param,
   Put,
-  UseGuards,
   ParseIntPipe,
 } from '@nestjs/common';
 import { ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
@@ -22,7 +21,6 @@ import { CreateTopicDto } from './dto/create-topic.dto';
 import { FindQuery } from './dto/find-query';
 import { UpdateTopicDto } from './dto/update-topic.dto';
 import { Topic } from './entities/topic.entity';
-import { AuthGuard } from '../guards/auth.guard';
 
 @Controller('topics')
 @ApiTags('Topics')
@@ -41,12 +39,10 @@ export class TopicController {
   @ApiOperation({ summary: 'Get topics' })
   @ApiResponse({ status: 200, type: [Topic] })
   find(@Query() query: FindQuery, @Identify() user: UserBaseDto) {
-    console.log(user);
     return this.topicService.find(query, user.id);
   }
 
   @Put(':id')
-  @UseGuards(AuthGuard)
   @ApiOperation({ summary: 'Update topic' })
   @ApiResponse({ status: 204 })
   update(@Param('id', ParseIntPipe) id: number, @Body() dto: UpdateTopicDto, @Identify() user: UserBaseDto) {
@@ -54,7 +50,6 @@ export class TopicController {
   }
 
   @Patch(':id/likes')
-  @UseGuards(AuthGuard)
   @HttpCode(204)
   @ApiOperation({ summary: 'Update topic likes' })
   @ApiResponse({ status: 204 })

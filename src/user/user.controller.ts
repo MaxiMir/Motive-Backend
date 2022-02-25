@@ -38,7 +38,7 @@ export class UserController {
   @ApiOperation({ summary: 'Get user by nickname' })
   @ApiParam({ name: 'nickname', example: 'maximir' })
   @ApiResponse({ status: 200, type: UserBaseDto })
-  getByNickname(@Param('nickname') nickname: string) {
+  findByNickname(@Param('nickname') nickname: string) {
     return this.userService.findByNickname(nickname);
   }
 }

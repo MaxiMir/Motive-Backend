@@ -8,17 +8,21 @@ import {
   HttpCode,
   Param,
   Put,
+  UseGuards,
   ParseIntPipe,
 } from '@nestjs/common';
 import { ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
 import { Operation } from 'src/abstracts/operation';
 import { ApiPagination } from 'src/decorators/api-pagination.decorator';
+import { Identify } from 'src/decorators/identify.decorator';
 import { ParseOperationPipe } from 'src/pipes/parse-operation.pipe';
 import { TopicService } from 'src/topic/topic.service';
+import { UserBaseDto } from 'src/user/dto/user-base.dto';
 import { CreateTopicDto } from './dto/create-topic.dto';
 import { FindQuery } from './dto/find-query';
-import { Topic } from './entities/topic.entity';
 import { UpdateTopicDto } from './dto/update-topic.dto';
+import { Topic } from './entities/topic.entity';
+import { AuthGuard } from '../guards/auth.guard';
 
 @Controller('topics')
 @ApiTags('Topics')
@@ -28,41 +32,37 @@ export class TopicController {
   @Post()
   @ApiOperation({ summary: 'Create topic' })
   @ApiResponse({ status: 200, type: Topic })
-  save(@Body() dto: CreateTopicDto) {
-    const clientId = 1; // TODO временно
-
-    return this.topicService.save(clientId, dto);
+  save(@Body() dto: CreateTopicDto, @Identify() user: UserBaseDto) {
+    return this.topicService.save(user.id, dto);
   }
 
   @Get()
   @ApiPagination({ name: 'where[day]', example: 10 })
   @ApiOperation({ summary: 'Get topics' })
   @ApiResponse({ status: 200, type: [Topic] })
-  find(@Query() query: FindQuery) {
-    const clientId = 1; // TODO временно
-
-    return this.topicService.find(query, clientId);
+  find(@Query() query: FindQuery, @Identify() user: UserBaseDto) {
+    console.log(user);
+    return this.topicService.find(query, user.id);
   }
 
   @Put(':id')
+  @UseGuards(AuthGuard)
   @ApiOperation({ summary: 'Update topic' })
   @ApiResponse({ status: 204 })
-  update(@Param('id', ParseIntPipe) id: number, @Body() dto: UpdateTopicDto) {
-    const clientId = 1; // TODO временно
-
-    return this.topicService.update(clientId, id, dto);
+  update(@Param('id', ParseIntPipe) id: number, @Body() dto: UpdateTopicDto, @Identify() user: UserBaseDto) {
+    return this.topicService.update(user.id, id, dto);
   }
 
   @Patch(':id/likes')
+  @UseGuards(AuthGuard)
   @HttpCode(204)
   @ApiOperation({ summary: 'Update topic likes' })
   @ApiResponse({ status: 204 })
   updateLikes(
     @Param('id', ParseIntPipe) id: number,
     @Query('operation', ParseOperationPipe) operation: Operation,
+    @Identify() user: UserBaseDto,
   ) {
-    const clientId = 1; // TODO временно
-
-    return this.topicService.updateLikes(clientId, id, operation);
+    return this.topicService.updateLikes(user.id, id, operation);
   }
 }

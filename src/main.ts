@@ -2,6 +2,7 @@ import { NestFactory } from '@nestjs/core';
 import { ValidationPipe } from '@nestjs/common';
 import { SwaggerModule, DocumentBuilder } from '@nestjs/swagger';
 import * as helmet from 'helmet';
+import * as cookieParser from 'cookie-parser';
 import { useContainer } from 'class-validator';
 import { AppModule } from './app.module';
 import { AllExceptionsFilter } from './filters/all-exceptions.filter';
@@ -16,7 +17,8 @@ async function bootstrap() {
   app.useGlobalFilters(new AllExceptionsFilter());
   useContainer(app.select(AppModule), { fallbackOnErrors: true });
   app.use(helmet());
-  app.enableCors();
+  app.use(cookieParser());
+  app.enableCors({ origin: 'http://localhost:3007', credentials: true });
 
   const config = new DocumentBuilder()
     .setTitle('Motiv Backend')

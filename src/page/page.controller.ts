@@ -2,8 +2,10 @@ import { Controller, Param, Query, Get } from '@nestjs/common';
 import { ApiOperation, ApiParam, ApiQuery, ApiResponse, ApiTags } from '@nestjs/swagger';
 import { Pagination } from 'src/abstracts/pagination';
 import { ApiPagination } from 'src/decorators/api-pagination.decorator';
+import { Identify } from 'src/decorators/identify.decorator';
 import { ParseGoalDateMapPipe } from 'src/pipes/parse-goal-date-map.pipe';
 import { GoalDayDto } from 'src/goal/dto/goal-day.dto';
+import { UserBaseDto } from 'src/user/dto/user-base.dto';
 import { UserDto } from './dto/user.dto';
 import { FollowingDto } from './dto/following.dto';
 import { RatingDto } from './dto/rating.dto';
@@ -44,7 +46,7 @@ export class PageController {
   @ApiOperation({ summary: 'Get following page' })
   @ApiPagination()
   @ApiResponse({ status: 200, type: FollowingDto })
-  getFollowing(@Query() query: Pagination) {
+  getFollowing(@Query() query: Pagination, @Identify() user: UserBaseDto) {
     const clientId = 1; // TODO временно
 
     return this.pageService.findFollowing(clientId, query);

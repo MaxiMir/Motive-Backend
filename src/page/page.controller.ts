@@ -9,22 +9,12 @@ import { UserBaseDto } from 'src/user/dto/user-base.dto';
 import { UserDto } from './dto/user.dto';
 import { FollowingDto } from './dto/following.dto';
 import { RatingDto } from './dto/rating.dto';
-import { MainDto } from './dto/main.dto';
 import { PageService } from './page.service';
 
 @Controller('pages')
 @ApiTags('Pages')
 export class PageController {
   constructor(private readonly pageService: PageService) {}
-
-  @Get('main')
-  @ApiOperation({ summary: 'Get main page' })
-  @ApiResponse({ status: 200, type: MainDto })
-  async getMain() {
-    return {
-      client: {},
-    };
-  }
 
   @Get('users/:nickname')
   @ApiOperation({ summary: 'Get user page' })
@@ -36,28 +26,26 @@ export class PageController {
     allowEmptyValue: true,
   })
   @ApiResponse({ status: 200, type: UserDto })
-  getUser(@Param('nickname') nickname: string, @Query('d', ParseGoalDateMapPipe) goalDateMap?: GoalDayDto[]) {
-    const clientId = 1; // TODO временно
-
-    return this.pageService.findUser(clientId, nickname, goalDateMap);
+  getUser(
+    @Param('nickname') nickname: string,
+    @Query('d', ParseGoalDateMapPipe) goalDateMap?: GoalDayDto[],
+    @Identify() client?: UserBaseDto,
+  ) {
+    return this.pageService.findUser(nickname, goalDateMap, client);
   }
 
   @Get('following')
   @ApiOperation({ summary: 'Get following page' })
   @ApiPagination()
   @ApiResponse({ status: 200, type: FollowingDto })
-  getFollowing(@Query() query: Pagination, @Identify() user: UserBaseDto) {
-    const clientId = 1; // TODO временно
-
-    return this.pageService.findFollowing(clientId, query);
+  getFollowing(@Query() query: Pagination, @Identify() client?: UserBaseDto) {
+    return this.pageService.findFollowing(query, client);
   }
 
   @Get('rating')
   @ApiOperation({ summary: 'Get rating page' })
   @ApiResponse({ status: 200, type: RatingDto })
-  getRating() {
-    const clientId = 1; // TODO временно
-
-    return this.pageService.findRating(clientId);
+  getRating(@Identify() client?: UserBaseDto) {
+    return this.pageService.findRating(client);
   }
 }

@@ -13,8 +13,8 @@ export class ReportService {
     private readonly userService: UserService,
   ) {}
 
-  async create(userId: number, dto: CreateReportDto) {
-    const user = await this.userService.findByPK(userId);
+  async create(dto: CreateReportDto, clientId: number) {
+    const user = await this.userService.findByPK(clientId);
     const report = new Report();
     report.entityId = dto.entityId;
     report.type = dto.type;

@@ -7,6 +7,7 @@ import { SubscriptionService } from 'src/subscription/subscription.service';
 import { ReactionService } from 'src/reaction/reaction.service';
 import { DayService } from 'src/day/day.service';
 import { GoalService } from 'src/goal/goal.service';
+import { UserBaseDto } from 'src/user/dto/user-base.dto';
 
 @Injectable()
 export class PageService {
@@ -18,9 +19,7 @@ export class PageService {
     private readonly reactionService: ReactionService,
   ) {}
 
-  async findUser(userId: number, nickname: string, goalDatesMap?: GoalDayDto[]) {
-    // TODO временно
-    const client = await this.userService.findByPK(userId);
+  async findUser(nickname: string, goalDatesMap?: GoalDayDto[], client?: UserBaseDto) {
     const user = await this.userService
       .getRepository()
       .createQueryBuilder('user')
@@ -32,8 +31,10 @@ export class PageService {
       .where('user.nickname = :nickname', { nickname })
       .andWhere('goals.confirmation IS NULL')
       .getOneOrFail();
-    const reactionsList = await this.findReactionsList(user.goals, client.id);
-    const following = await this.subscriptionService.checkOnFollowing(user.id, client.id);
+    const reactionsList = await this.findReactionsList(user.goals, client?.id);
+    const following = !client?.id
+      ? false
+      : await this.subscriptionService.checkOnFollowing(user.id, client.id);
     const goals = await this.findGoals(user.goals, reactionsList, goalDatesMap);
     const goalsMember = await this.findGoals(user.member, reactionsList, goalDatesMap);
 
@@ -108,17 +109,13 @@ export class PageService {
     }, {});
   }
 
-  async findFollowing(userId: number, pagination: Pagination) {
-    // TODO временно
-    const client = await this.userService.findByPK(userId);
-    const following = await this.subscriptionService.findFollowing(userId, pagination);
+  async findFollowing(pagination: Pagination, client?: UserBaseDto) {
+    const following = !client?.id ? [] : await this.subscriptionService.findFollowing(client.id, pagination);
 
     return { client, content: following };
   }
 
-  async findRating(userId: number) {
-    // TODO временно
-    const client = await this.userService.findByPK(userId);
+  async findRating(client?: UserBaseDto) {
     const motivation = await this.findByCharacteristic('motivation', 100);
     const creativity = await this.findByCharacteristic('creativity', 100);
     const support = await this.findByCharacteristic('support', 100);

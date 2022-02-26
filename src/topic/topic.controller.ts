@@ -38,8 +38,8 @@ export class TopicController {
   @ApiPagination({ name: 'where[day]', example: 10 })
   @ApiOperation({ summary: 'Get topics' })
   @ApiResponse({ status: 200, type: [Topic] })
-  find(@Query() query: FindQuery, @Identify() user: UserBaseDto) {
-    return this.topicService.find(query, user.id);
+  find(@Query() query: FindQuery, @Identify() user?: UserBaseDto) {
+    return this.topicService.find(query, user?.id);
   }
 
   @Put(':id')

@@ -3,8 +3,10 @@ import { ApiOperation, ApiQuery, ApiResponse, ApiTags } from '@nestjs/swagger';
 import { Pagination } from 'src/abstracts/pagination';
 import { Operation, OPERATIONS } from 'src/abstracts/operation';
 import { ApiPagination } from 'src/decorators/api-pagination.decorator';
+import { Identify } from 'src/decorators/identify.decorator';
 import { ParseOperationPipe } from 'src/pipes/parse-operation.pipe';
 import { UserWithCharacteristicDto } from 'src/user/dto/user-with-characteristic.dto';
+import { UserBaseDto } from 'src/user/dto/user-base.dto';
 import { SubscriptionService } from './subscription.service';
 import { UpdateSubscriptionDto } from './dto/update-subscription.dto';
 
@@ -34,9 +36,11 @@ export class SubscriptionController {
   @ApiOperation({ summary: 'Update subscription' })
   @ApiQuery({ name: 'operation', enum: OPERATIONS })
   @ApiResponse({ status: 204 })
-  update(@Body() dto: UpdateSubscriptionDto, @Query('operation', ParseOperationPipe) operation: Operation) {
-    const clientId = 1; // TODO временно
-
-    return this.subscriptionService.update(clientId, dto, operation);
+  update(
+    @Body() dto: UpdateSubscriptionDto,
+    @Query('operation', ParseOperationPipe) operation: Operation,
+    @Identify() client: UserBaseDto,
+  ) {
+    return this.subscriptionService.update(dto, operation, client.id);
   }
 }

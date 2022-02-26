@@ -17,7 +17,9 @@ import { ParseCharacteristicPipe } from 'src/pipes/parse-characteristic.pipe';
 import { ParseOperationPipe } from 'src/pipes/parse-operation.pipe';
 import { ApiImageFiles } from 'src/decorators/api-images.decorator';
 import { ApiPagination } from 'src/decorators/api-pagination.decorator';
+import { Identify } from 'src/decorators/identify.decorator';
 import { CreateDayDto } from 'src/day/dto/create-day.dto';
+import { UserBaseDto } from 'src/user/dto/user-base.dto';
 import { CreateGoalDto } from './dto/create-goal.dto';
 import { CalendarDto } from './dto/calendar.dto';
 import { UpdateStageDto } from './dto/update-stage.dto';
@@ -34,10 +36,8 @@ export class GoalController {
   @Post()
   @ApiOperation({ summary: 'Create goal' })
   @ApiResponse({ status: 201, type: Goal })
-  save(@Body() dto: CreateGoalDto) {
-    const clientId = 1; // TODO временно
-
-    return this.goalService.save(clientId, dto);
+  save(@Body() dto: CreateGoalDto, @Identify() client: UserBaseDto) {
+    return this.goalService.save(dto, client.id);
   }
 
   @Get(':id')
@@ -66,20 +66,20 @@ export class GoalController {
   @HttpCode(201)
   @ApiOperation({ summary: 'Add day' })
   @ApiResponse({ status: 200, type: Goal })
-  addDay(@Param('id', ParseIntPipe) id: number, @Body() dto: CreateDayDto) {
-    const clientId = 1; // TODO временно
-
-    return this.goalService.addDay(clientId, id, dto);
+  addDay(@Param('id', ParseIntPipe) id: number, @Body() dto: CreateDayDto, @Identify() client: UserBaseDto) {
+    return this.goalService.addDay(id, dto, client.id);
   }
 
   @Patch(':id/stage')
   @HttpCode(204)
   @ApiOperation({ summary: 'Change stage' })
   @ApiResponse({ status: 204 })
-  updateStage(@Param('id', ParseIntPipe) id: number, @Body() dto: UpdateStageDto) {
-    const clientId = 1; // TODO временно
-
-    return this.goalService.updateStage(clientId, id, dto);
+  updateStage(
+    @Param('id', ParseIntPipe) id: number,
+    @Body() dto: UpdateStageDto,
+    @Identify() client: UserBaseDto,
+  ) {
+    return this.goalService.updateStage(id, dto, client.id);
   }
 
   @Patch(':id/confirmation')
@@ -107,10 +107,9 @@ export class GoalController {
     @Param('id', ParseIntPipe) id: number,
     @Body() dto: UpdateCompletedDto,
     @UploadedFiles() files: Express.Multer.File[],
+    @Identify() client: UserBaseDto,
   ) {
-    const clientId = 1; // TODO временно
-
-    return this.goalService.updateConfirmation(clientId, id, dto, files);
+    return this.goalService.updateConfirmation(id, dto, files, client.id);
   }
 
   @Patch(':id/days/:dayId/characteristic/:characteristic')
@@ -124,9 +123,8 @@ export class GoalController {
     @Param('dayId', ParseIntPipe) dayId: number,
     @Param('characteristic', ParseCharacteristicPipe) characteristic: Characteristic,
     @Query('operation', ParseOperationPipe) operation: Operation,
+    @Identify() client: UserBaseDto,
   ) {
-    const clientId = 1; // TODO временно
-
-    return this.goalService.updateCharacteristic(clientId, id, dayId, characteristic, operation);
+    return this.goalService.updateCharacteristic(id, dayId, characteristic, operation, client.id);
   }
 }

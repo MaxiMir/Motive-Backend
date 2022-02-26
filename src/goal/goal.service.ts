@@ -29,7 +29,7 @@ export class GoalService {
     private readonly fileService: FileService,
   ) {}
 
-  async save(userId: number, dto: CreateGoalDto) {
+  async save(dto: CreateGoalDto, clientId: number) {
     const { name, hashtags, tasks } = dto;
     const goal = new Goal();
     const day = this.dayService.create({ tasks });
@@ -38,7 +38,7 @@ export class GoalService {
     goal.hashtags = hashtags;
     goal.stages = dto.stages;
     goal.days = [day];
-    goal.owner = await this.userService.findByPK(userId);
+    goal.owner = await this.userService.findByPK(clientId);
 
     return this.goalRepository.save(goal);
   }
@@ -71,7 +71,8 @@ export class GoalService {
       .getRawMany();
   }
 
-  async addDay(userId: number, id: number, dto: CreateDayDto) {
+  async addDay(id: number, dto: CreateDayDto, clientId: number) {
+    // TODO clientId
     const goal = await this.findByPK(id, { relations: ['days'] });
     const day = this.dayService.create(dto);
     day.stage = goal.stage;
@@ -80,17 +81,18 @@ export class GoalService {
     return this.goalRepository.save(goal);
   }
 
-  async updateStage(userId: number, id: number, dto: UpdateStageDto) {
+  async updateStage(id: number, dto: UpdateStageDto, clientId: number) {
+    // TODO clientId
     return this.goalRepository.update({ id }, { stage: dto.stage });
   }
 
   async updateConfirmation(
-    userId: number,
     id: number,
     dto: UpdateCompletedDto,
     photos: Express.Multer.File[],
+    clientId: number,
   ) {
-    const owner = await this.userService.findByPK(userId, { relations: ['characteristic'] });
+    const owner = await this.userService.findByPK(clientId, { relations: ['characteristic'] });
     const goal = await this.findByPK(id, { relations: ['characteristic'] });
     goal.confirmation = new Confirmation();
     goal.confirmation.photos = await this.fileService.uploadAndMeasureImages(photos, 'confirmation');
@@ -120,13 +122,13 @@ export class GoalService {
   }
 
   async updateCharacteristic(
-    userId: number,
     id: number,
     dayId: number,
     characteristic: Characteristic,
     operation: Operation,
+    clientId: number,
   ) {
-    const user = await this.userService.findByPK(userId);
+    const user = await this.userService.findByPK(clientId);
     const goal = await this.findByPK(id, { relations: ['characteristic'] });
     const day = await this.dayService.findByPK(dayId, { relations: ['characteristic'] });
     const uniq = this.getUniq(user.id, day.id, characteristic);

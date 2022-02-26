@@ -1,8 +1,10 @@
-import { Controller, UploadedFile, Body, Param, Get, Post } from '@nestjs/common';
+import { Controller, UploadedFile, Body, Param, Get, Post, Patch } from '@nestjs/common';
 import { ApiBody, ApiOperation, ApiParam, ApiResponse, ApiTags } from '@nestjs/swagger';
 import { ApiImageFile } from 'src/decorators/api-image.decorator';
+import { Identify } from 'src/decorators/identify.decorator';
 import { ParseFile } from 'src/pipes/parse-file.pipe';
 import { CreateUserDto } from './dto/create-user.dto';
+import { UpdateUserDto } from './dto/update-user.dto';
 import { UserBaseDto } from './dto/user-base.dto';
 import { User } from './entities/user.entity';
 import { UserService } from './user.service';
@@ -13,7 +15,14 @@ export class UserController {
   constructor(private readonly userService: UserService) {}
 
   @Post()
-  @ApiOperation({ summary: 'Create user' })
+  @ApiOperation({ summary: 'Create or find user' })
+  @ApiResponse({ status: 201, type: User })
+  createOrFind(@Body() dto: CreateUserDto) {
+    return this.userService.createOrFind(dto);
+  }
+
+  @Patch()
+  @ApiOperation({ summary: 'Update user' })
   @ApiBody({
     schema: {
       type: 'object',
@@ -30,8 +39,12 @@ export class UserController {
   })
   @ApiImageFile('avatar')
   @ApiResponse({ status: 201, type: User })
-  save(@Body() dto: CreateUserDto, @UploadedFile(ParseFile) file: Express.Multer.File) {
-    return this.userService.save(dto, file);
+  update(
+    @Body() dto: UpdateUserDto,
+    @UploadedFile(ParseFile) file: Express.Multer.File,
+    @Identify() client: UserBaseDto,
+  ) {
+    return this.userService.update(dto, file, client.id);
   }
 
   @Get(':nickname')

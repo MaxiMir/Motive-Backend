@@ -1,7 +1,5 @@
-import { IsString, Length, Validate } from 'class-validator';
 import { ApiProperty } from '@nestjs/swagger';
-import { User } from 'src/user/entities/user.entity';
-import { Unique } from 'src/validators/unique';
+import { IsEmail, IsOptional, IsString, Length } from 'class-validator';
 
 export class CreateUserDto {
   @IsString()
@@ -11,11 +9,21 @@ export class CreateUserDto {
   })
   readonly name: string;
 
-  @IsString()
-  @Validate(Unique, [User])
-  @Length(3, 100)
+  @IsEmail()
   @ApiProperty({
     example: 'maximir',
   })
-  readonly nickname: string;
+  readonly email: string;
+
+  @IsString()
+  @IsOptional()
+  readonly avatar: string;
+
+  @IsString()
+  @IsOptional()
+  readonly sub: string;
+
+  @IsString()
+  @IsOptional()
+  readonly provider: string;
 }

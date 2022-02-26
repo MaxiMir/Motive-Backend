@@ -53,14 +53,14 @@ export class SubscriptionService {
     return result.map((item) => item.follower);
   }
 
-  async update(id: number, dto: UpdateSubscriptionDto, operation: Operation) {
-    const user = await this.userService.findByPK(id);
+  async update(dto: UpdateSubscriptionDto, operation: Operation, clientId: number) {
+    const client = await this.userService.findByPK(clientId);
     const following = await this.userService.findByPK(dto.id, { relations: ['characteristic'] });
-    const uniq = this.getUniq(following.id, user.id);
+    const uniq = this.getUniq(following.id, client.id);
     following.characteristic.followers += operation === 'insert' ? 1 : -1;
 
     return this.subscriptionRepository.manager.transaction(async (transactionalManager) => {
-      await transactionalManager[operation](Subscription, { user: following, follower: user, uniq });
+      await transactionalManager[operation](Subscription, { user: following, follower: client, uniq });
       await transactionalManager.save(following);
     });
   }

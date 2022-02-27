@@ -1,6 +1,7 @@
-import { Body, Controller, UploadedFiles, Post } from '@nestjs/common';
+import { Body, Controller, UploadedFiles, Post, UseGuards } from '@nestjs/common';
 import { ApiBody, ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
 import { ApiImageFiles } from 'src/decorators/api-images.decorator';
+import { AuthGuard } from 'src/guards/auth.guard';
 import { CreateFeedbackDto } from './dto/create-feedback.dto';
 import { FeedbackService } from './feedback.service';
 
@@ -10,6 +11,7 @@ export class FeedbackController {
   constructor(private readonly feedbackService: FeedbackService) {}
 
   @Post()
+  @UseGuards(AuthGuard)
   @ApiBody({
     schema: {
       type: 'object',
@@ -30,7 +32,6 @@ export class FeedbackController {
   @ApiResponse({ status: 200 })
   @ApiOperation({ summary: 'Create feedback' })
   createFeedback(@Body() dto: CreateFeedbackDto, @UploadedFiles() files: Express.Multer.File[]) {
-    // todo only auth + check user
     return this.feedbackService.save(dto, files);
   }
 }

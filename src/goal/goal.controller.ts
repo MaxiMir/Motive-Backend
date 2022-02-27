@@ -8,6 +8,7 @@ import {
   Post,
   Patch,
   UploadedFiles,
+  UseGuards,
   ParseIntPipe,
 } from '@nestjs/common';
 import { ApiBody, ApiOperation, ApiParam, ApiQuery, ApiResponse, ApiTags } from '@nestjs/swagger';
@@ -18,6 +19,7 @@ import { ParseOperationPipe } from 'src/pipes/parse-operation.pipe';
 import { ApiImageFiles } from 'src/decorators/api-images.decorator';
 import { ApiPagination } from 'src/decorators/api-pagination.decorator';
 import { Identify } from 'src/decorators/identify.decorator';
+import { AuthGuard } from 'src/guards/auth.guard';
 import { CreateDayDto } from 'src/day/dto/create-day.dto';
 import { UserBaseDto } from 'src/user/dto/user-base.dto';
 import { CreateGoalDto } from './dto/create-goal.dto';
@@ -34,6 +36,7 @@ export class GoalController {
   constructor(private readonly goalService: GoalService) {}
 
   @Post()
+  @UseGuards(AuthGuard)
   @ApiOperation({ summary: 'Create goal' })
   @ApiResponse({ status: 201, type: Goal })
   save(@Body() dto: CreateGoalDto, @Identify() client: UserBaseDto) {
@@ -63,6 +66,7 @@ export class GoalController {
   }
 
   @Post(':id/days')
+  @UseGuards(AuthGuard)
   @HttpCode(201)
   @ApiOperation({ summary: 'Add day' })
   @ApiResponse({ status: 200, type: Goal })
@@ -71,6 +75,7 @@ export class GoalController {
   }
 
   @Patch(':id/stage')
+  @UseGuards(AuthGuard)
   @HttpCode(204)
   @ApiOperation({ summary: 'Change stage' })
   @ApiResponse({ status: 204 })
@@ -83,6 +88,7 @@ export class GoalController {
   }
 
   @Patch(':id/confirmation')
+  @UseGuards(AuthGuard)
   @ApiBody({
     schema: {
       type: 'object',
@@ -113,6 +119,7 @@ export class GoalController {
   }
 
   @Patch(':id/days/:dayId/characteristic/:characteristic')
+  @UseGuards(AuthGuard)
   @HttpCode(204)
   @ApiOperation({ summary: 'Update day characteristic' })
   @ApiParam({ name: 'characteristic', enum: CHARACTERISTICS })

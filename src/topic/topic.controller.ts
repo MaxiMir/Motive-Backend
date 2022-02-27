@@ -8,12 +8,14 @@ import {
   HttpCode,
   Param,
   Put,
+  UseGuards,
   ParseIntPipe,
 } from '@nestjs/common';
 import { ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
 import { Operation } from 'src/abstracts/operation';
 import { ApiPagination } from 'src/decorators/api-pagination.decorator';
 import { Identify } from 'src/decorators/identify.decorator';
+import { AuthGuard } from 'src/guards/auth.guard';
 import { ParseOperationPipe } from 'src/pipes/parse-operation.pipe';
 import { TopicService } from 'src/topic/topic.service';
 import { UserBaseDto } from 'src/user/dto/user-base.dto';
@@ -43,6 +45,7 @@ export class TopicController {
   }
 
   @Put(':id')
+  @UseGuards(AuthGuard)
   @ApiOperation({ summary: 'Update topic' })
   @ApiResponse({ status: 204 })
   update(@Param('id', ParseIntPipe) id: number, @Body() dto: UpdateTopicDto, @Identify() user: UserBaseDto) {
@@ -50,6 +53,7 @@ export class TopicController {
   }
 
   @Patch(':id/likes')
+  @UseGuards(AuthGuard)
   @HttpCode(204)
   @ApiOperation({ summary: 'Update topic likes' })
   @ApiResponse({ status: 204 })

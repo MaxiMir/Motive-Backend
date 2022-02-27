@@ -1,7 +1,8 @@
-import { Controller, UploadedFile, Body, Param, Get, Post, Patch } from '@nestjs/common';
+import { Controller, UploadedFile, Body, Param, Get, Post, Patch, UseGuards } from '@nestjs/common';
 import { ApiBody, ApiOperation, ApiParam, ApiResponse, ApiTags } from '@nestjs/swagger';
 import { ApiImageFile } from 'src/decorators/api-image.decorator';
 import { Identify } from 'src/decorators/identify.decorator';
+import { AuthGuard } from 'src/guards/auth.guard';
 import { ParseFile } from 'src/pipes/parse-file.pipe';
 import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
@@ -22,6 +23,7 @@ export class UserController {
   }
 
   @Patch()
+  @UseGuards(AuthGuard)
   @ApiOperation({ summary: 'Update user' })
   @ApiBody({
     schema: {

@@ -1,6 +1,7 @@
-import { Controller, Param, ParseIntPipe, Get, Patch, Post, HttpCode, Body } from '@nestjs/common';
+import { Controller, Param, Get, Patch, Post, HttpCode, Body, UseGuards, ParseIntPipe } from '@nestjs/common';
 import { ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
 import { Goal } from 'src/goal/entities/goal.entity';
+import { AuthGuard } from 'src/guards/auth.guard';
 import { CreateDayDto } from './dto/create-day.dto';
 import { Day } from './entities/day.entity';
 import { DayService } from './day.service';
@@ -11,6 +12,7 @@ export class DayController {
   constructor(private readonly dayService: DayService) {}
 
   @Post('')
+  @UseGuards(AuthGuard)
   @HttpCode(201)
   @ApiOperation({ summary: 'Add day' })
   @ApiResponse({ status: 200, type: Goal })
@@ -26,10 +28,10 @@ export class DayController {
   }
 
   @Patch(':id/views')
+  @UseGuards(AuthGuard)
   @ApiResponse({ status: 204 })
   @ApiOperation({ summary: 'Increase day views' })
   increaseViews(@Param('id', ParseIntPipe) id: number) {
-    // todo only auth
     return this.dayService.increaseViews(id);
   }
 }

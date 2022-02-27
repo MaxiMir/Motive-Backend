@@ -1,4 +1,4 @@
-import { Controller, Param, Query, Get, Req } from '@nestjs/common';
+import { Controller, Param, Query, Get } from '@nestjs/common';
 import { ApiOperation, ApiParam, ApiQuery, ApiResponse, ApiTags } from '@nestjs/swagger';
 import { Pagination } from 'src/abstracts/pagination';
 import { ApiPagination } from 'src/decorators/api-pagination.decorator';
@@ -38,7 +38,7 @@ export class PageController {
   @ApiOperation({ summary: 'Get following page' })
   @ApiPagination()
   @ApiResponse({ status: 200, type: FollowingDto })
-  async getFollowing(@Query() query: Pagination, @Req() req, @Identify() client?: UserBaseDto) {
+  async getFollowing(@Query() query: Pagination, @Identify() client?: UserBaseDto) {
     return this.pageService.findFollowing(query, client?.id);
   }
 

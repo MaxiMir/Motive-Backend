@@ -1,6 +1,7 @@
-import { Controller, Param, Get, Patch, ParseIntPipe } from '@nestjs/common';
+import { Controller, Param, Get, Patch, UseGuards, ParseIntPipe } from '@nestjs/common';
 import { ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
 import { Identify } from 'src/decorators/identify.decorator';
+import { AuthGuard } from 'src/guards/auth.guard';
 import { UserBaseDto } from 'src/user/dto/user-base.dto';
 import { Task } from './entities/task.entity';
 import { TaskService } from './task.service';
@@ -18,6 +19,7 @@ export class TaskController {
   }
 
   @Patch(':id/completed')
+  @UseGuards(AuthGuard)
   @ApiOperation({ summary: 'Set a task complete' })
   @ApiResponse({ status: 200, type: Task })
   updateCompleted(@Param('id', ParseIntPipe) id: number, @Identify() client: UserBaseDto) {

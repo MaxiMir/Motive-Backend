@@ -1,9 +1,20 @@
-import { Body, Controller, HttpCode, Query, Param, Get, Patch, ParseIntPipe } from '@nestjs/common';
+import {
+  Body,
+  Controller,
+  HttpCode,
+  Query,
+  Param,
+  Get,
+  Patch,
+  UseGuards,
+  ParseIntPipe,
+} from '@nestjs/common';
 import { ApiOperation, ApiQuery, ApiResponse, ApiTags } from '@nestjs/swagger';
 import { Pagination } from 'src/abstracts/pagination';
 import { Operation, OPERATIONS } from 'src/abstracts/operation';
 import { ApiPagination } from 'src/decorators/api-pagination.decorator';
 import { Identify } from 'src/decorators/identify.decorator';
+import { AuthGuard } from 'src/guards/auth.guard';
 import { ParseOperationPipe } from 'src/pipes/parse-operation.pipe';
 import { UserWithCharacteristicDto } from 'src/user/dto/user-with-characteristic.dto';
 import { UserBaseDto } from 'src/user/dto/user-base.dto';
@@ -32,6 +43,7 @@ export class SubscriptionController {
   }
 
   @Patch()
+  @UseGuards(AuthGuard)
   @HttpCode(204)
   @ApiOperation({ summary: 'Update subscription' })
   @ApiQuery({ name: 'operation', enum: OPERATIONS })

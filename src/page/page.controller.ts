@@ -31,7 +31,7 @@ export class PageController {
     @Query('d', ParseGoalDateMapPipe) goalDateMap?: GoalDayDto[],
     @Identify() client?: UserBaseDto,
   ) {
-    return this.pageService.findUser(nickname, goalDateMap, client);
+    return this.pageService.findUser(nickname, goalDateMap, client?.id);
   }
 
   @Get('following')
@@ -39,13 +39,13 @@ export class PageController {
   @ApiPagination()
   @ApiResponse({ status: 200, type: FollowingDto })
   getFollowing(@Query() query: Pagination, @Identify() client?: UserBaseDto) {
-    return this.pageService.findFollowing(query, client);
+    return this.pageService.findFollowing(query, client?.id);
   }
 
   @Get('rating')
   @ApiOperation({ summary: 'Get rating page' })
   @ApiResponse({ status: 200, type: RatingDto })
-  getRating(@Identify() client?: UserBaseDto) {
-    return this.pageService.findRating(client);
+  getRating() {
+    return this.pageService.findRating();
   }
 }

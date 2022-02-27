@@ -7,8 +7,7 @@ export const Identify = createParamDecorator(async (_, ctx: ExecutionContext) =>
     token: req.cookies['next-auth.session-token'],
     secret: process.env.NEXTAUTH_SECRET as string,
   });
+  const expires = token?.exp as number | undefined;
 
-  // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-  // @ts-ignore
-  return token?.exp > Date.now() / 1000 ? token : undefined;
+  return expires && expires <= Date.now() / 1000 ? undefined : token?.client;
 });

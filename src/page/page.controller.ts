@@ -5,7 +5,6 @@ import { ApiPagination } from 'src/decorators/api-pagination.decorator';
 import { Identify } from 'src/decorators/identify.decorator';
 import { ParseGoalDateMapPipe } from 'src/pipes/parse-goal-date-map.pipe';
 import { GoalDayDto } from 'src/goal/dto/goal-day.dto';
-import { UserBaseDto } from 'src/user/dto/user-base.dto';
 import { UserDto } from './dto/user.dto';
 import { FollowingDto } from './dto/following.dto';
 import { RatingDto } from './dto/rating.dto';
@@ -29,17 +28,17 @@ export class PageController {
   getUser(
     @Param('nickname') nickname: string,
     @Query('d', ParseGoalDateMapPipe) goalDateMap?: GoalDayDto[],
-    @Identify() client?: UserBaseDto,
+    @Identify() clientId?: number,
   ) {
-    return this.pageService.findUser(nickname, goalDateMap, client?.id);
+    return this.pageService.findUser(nickname, goalDateMap, clientId);
   }
 
   @Get('following')
   @ApiOperation({ summary: 'Get following page' })
   @ApiPagination()
   @ApiResponse({ status: 200, type: FollowingDto })
-  async getFollowing(@Query() query: Pagination, @Identify() client?: UserBaseDto) {
-    return this.pageService.findFollowing(query, client?.id);
+  async getFollowing(@Query() query: Pagination, @Identify() clientId?: number) {
+    return this.pageService.findFollowing(query, clientId);
   }
 
   @Get('rating')

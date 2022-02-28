@@ -33,7 +33,7 @@ export class LikeService {
     return [userId, topicId].join(':');
   }
 
-  checkOnValid(user: User, topic: Topic, operation: Operation) {
+  checkCanLike(user: User, topic: Topic, operation: Operation) {
     const isLikeSelf = topic.user.id === user.id;
     const isDeleteSupport = topic.type === TopicTypeDto.SUPPORT && operation === 'delete';
 

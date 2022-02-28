@@ -1,7 +1,7 @@
 import { ApiProperty } from '@nestjs/swagger';
-import { ArrayMaxSize, ArrayMinSize, IsArray, IsString, Length } from 'class-validator';
-import { CreateTaskDto } from 'src/task/dto/create-task.dto';
+import { ArrayMaxSize, ArrayMinSize, IsArray, IsDateString, IsString, Length } from 'class-validator';
 import { Transform, Type } from 'class-transformer';
+import { CreateTaskDto } from 'src/task/dto/create-task.dto';
 
 export class CreateGoalDto {
   @IsString()
@@ -10,6 +10,10 @@ export class CreateGoalDto {
     example: 'learn French',
   })
   readonly name: string;
+
+  @IsString()
+  @IsDateString()
+  readonly started: string;
 
   @IsArray()
   @ArrayMaxSize(100)
@@ -36,6 +40,10 @@ export class CreateGoalDto {
     example: ['Develop basic functionality', 'Alpha testing', 'Production release'],
   })
   readonly stages: string[];
+
+  @IsString()
+  @IsDateString()
+  readonly date: string;
 
   @IsArray()
   @ArrayMinSize(1)

@@ -19,19 +19,19 @@ export class DayService {
   }
 
   create(dto: CreateDayDto) {
-    const day = new Day();
-    day.tasks = dto.tasks.map(({ name, date }) => {
-      const task = new Task();
-      task.name = name;
+    return this.dayRepository.create({
+      date: dto.date,
+      tasks: dto.tasks.map(({ name, date }) => {
+        const task = new Task();
+        task.name = name;
 
-      if (date) {
-        task.date = date;
-      }
+        if (date) {
+          task.date = date;
+        }
 
-      return task;
+        return task;
+      }),
     });
-
-    return day;
   }
 
   findOne(options?: FindManyOptions<Day>) {

@@ -90,7 +90,7 @@ export class TopicService {
     const topic = await this.findByPK(id, { relations: ['user', 'user.characteristic', 'day', 'day.goal'] });
     const user = await this.userService.findByPK(userId);
     const uniq = this.likeService.getUniq(user.id, topic.id); // for check duplicate
-    const validateLike = this.likeService.checkOnValid(user, topic, operation);
+    const validateLike = this.likeService.checkCanLike(user, topic, operation);
     topic.likeCount += operation === 'insert' ? 1 : -1;
 
     if (!validateLike) {

@@ -41,13 +41,17 @@ export class UserService {
 
   async update(dto: UpdateUserDto, file: Express.Multer.File, clientId: number) {
     const user = await this.findByPK(clientId);
+    const lastAvatar = user.avatar;
     user.name = dto.name;
     user.nickname = dto.nickname;
 
     if (file) {
-      // todo remove old image
       const avatar = await this.fileService.uploadImage(file, 'avatars', { width: 500 });
       user.avatar = avatar.replace(`/${process.env.STATIC_FOLDER}`, '');
+    }
+
+    if (file && lastAvatar) {
+      this.fileService.removeImage(lastAvatar);
     }
 
     return this.userRepository.save(user);

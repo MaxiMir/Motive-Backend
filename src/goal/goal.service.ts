@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { BadRequestException, Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { FindOneOptions } from 'typeorm/find-options/FindOneOptions';
@@ -30,12 +30,12 @@ export class GoalService {
   ) {}
 
   async save(dto: CreateGoalDto, clientId: number) {
-    const { name, hashtags, tasks } = dto;
     const goal = new Goal();
-    const day = this.dayService.create({ tasks });
-    goal.name = name;
+    const day = this.dayService.create({ date: dto.date, tasks: dto.tasks });
+    goal.name = dto.name;
+    goal.started = dto.started;
     goal.characteristic = new GoalCharacteristic();
-    goal.hashtags = hashtags;
+    goal.hashtags = dto.hashtags;
     goal.stages = dto.stages;
     goal.days = [day];
     goal.owner = await this.userService.findByPK(clientId);
@@ -71,9 +71,9 @@ export class GoalService {
       .getRawMany();
   }
 
-  async addDay(id: number, dto: CreateDayDto, clientId: number) {
-    // TODO clientId
-    const goal = await this.findByPK(id, { relations: ['days'] });
+  async addDay(id: number, dto: CreateDayDto, ownerId: number) {
+    const owner = { id: ownerId };
+    const goal = await this.goalRepository.findOneOrFail({ where: { id, owner }, relations: ['days'] });
     const day = this.dayService.create(dto);
     day.stage = goal.stage;
     goal.days.push(day);
@@ -81,9 +81,10 @@ export class GoalService {
     return this.goalRepository.save(goal);
   }
 
-  async updateStage(id: number, dto: UpdateStageDto, clientId: number) {
-    // TODO clientId
-    return this.goalRepository.update({ id }, { stage: dto.stage });
+  async updateStage(id: number, dto: UpdateStageDto, ownerId: number) {
+    const owner = { id: ownerId };
+
+    return this.goalRepository.update({ id, owner }, { stage: dto.stage });
   }
 
   async updateConfirmation(
@@ -128,10 +129,15 @@ export class GoalService {
     operation: Operation,
     clientId: number,
   ) {
-    const user = await this.userService.findByPK(clientId);
+    const user = { id: clientId };
     const goal = await this.findByPK(id, { relations: ['characteristic'] });
     const day = await this.dayService.findByPK(dayId, { relations: ['characteristic'] });
-    const uniq = this.getUniq(user.id, day.id, characteristic);
+    const uniq = this.getUniq(clientId, day.id, characteristic);
+    const canReact = this.checkCanReact(goal, clientId);
+
+    if (!canReact) {
+      throw new BadRequestException();
+    }
 
     if (!day.characteristic) {
       day.characteristic = new DayCharacteristic();
@@ -142,7 +148,13 @@ export class GoalService {
     goal.characteristic[characteristic] += operation === 'insert' ? 1 : -1;
 
     return this.goalRepository.manager.transaction(async (transactionalManager) => {
-      await transactionalManager[operation](Reaction, { user, characteristic, goal, day, uniq });
+      await transactionalManager[operation](Reaction, {
+        user,
+        characteristic,
+        goal,
+        day,
+        uniq,
+      });
       await transactionalManager.save(day);
       await transactionalManager.save(goal);
     });
@@ -150,5 +162,9 @@ export class GoalService {
 
   getUniq(userId: number, dayId: number, characteristic: Characteristic) {
     return [userId, dayId, characteristic].join(':');
+  }
+
+  checkCanReact(goal: Goal, clientId: number) {
+    return goal.owner.id !== clientId;
   }
 }

@@ -4,7 +4,7 @@ import { ConfirmationBase } from 'src/confirmation/entities/confirmation-base.en
 
 @Entity('feedback')
 export class Feedback extends ConfirmationBase {
-  @OneToOne(() => Day, { cascade: true, nullable: false })
+  @OneToOne(() => Day, { cascade: true, nullable: false, onDelete: 'CASCADE' })
   @JoinColumn()
   day: Day;
 }

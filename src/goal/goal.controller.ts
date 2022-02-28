@@ -21,7 +21,6 @@ import { ApiPagination } from 'src/decorators/api-pagination.decorator';
 import { Identify } from 'src/decorators/identify.decorator';
 import { AuthGuard } from 'src/guards/auth.guard';
 import { CreateDayDto } from 'src/day/dto/create-day.dto';
-import { UserBaseDto } from 'src/user/dto/user-base.dto';
 import { CreateGoalDto } from './dto/create-goal.dto';
 import { CalendarDto } from './dto/calendar.dto';
 import { UpdateStageDto } from './dto/update-stage.dto';
@@ -39,8 +38,8 @@ export class GoalController {
   @UseGuards(AuthGuard)
   @ApiOperation({ summary: 'Create goal' })
   @ApiResponse({ status: 201, type: Goal })
-  save(@Body() dto: CreateGoalDto, @Identify() client: UserBaseDto) {
-    return this.goalService.save(dto, client.id);
+  save(@Body() dto: CreateGoalDto, @Identify() clientId: number) {
+    return this.goalService.save(dto, clientId);
   }
 
   @Get(':id')
@@ -70,8 +69,8 @@ export class GoalController {
   @HttpCode(201)
   @ApiOperation({ summary: 'Add day' })
   @ApiResponse({ status: 200, type: Goal })
-  addDay(@Param('id', ParseIntPipe) id: number, @Body() dto: CreateDayDto, @Identify() client: UserBaseDto) {
-    return this.goalService.addDay(id, dto, client.id);
+  addDay(@Param('id', ParseIntPipe) id: number, @Body() dto: CreateDayDto, @Identify() clientId: number) {
+    return this.goalService.addDay(id, dto, clientId);
   }
 
   @Patch(':id/stage')
@@ -82,9 +81,9 @@ export class GoalController {
   updateStage(
     @Param('id', ParseIntPipe) id: number,
     @Body() dto: UpdateStageDto,
-    @Identify() client: UserBaseDto,
+    @Identify() clientId: number,
   ) {
-    return this.goalService.updateStage(id, dto, client.id);
+    return this.goalService.updateStage(id, dto, clientId);
   }
 
   @Patch(':id/confirmation')
@@ -113,9 +112,9 @@ export class GoalController {
     @Param('id', ParseIntPipe) id: number,
     @Body() dto: UpdateCompletedDto,
     @UploadedFiles() files: Express.Multer.File[],
-    @Identify() client: UserBaseDto,
+    @Identify() clientId: number,
   ) {
-    return this.goalService.updateConfirmation(id, dto, files, client.id);
+    return this.goalService.updateConfirmation(id, dto, files, clientId);
   }
 
   @Patch(':id/days/:dayId/characteristic/:characteristic')
@@ -130,8 +129,8 @@ export class GoalController {
     @Param('dayId', ParseIntPipe) dayId: number,
     @Param('characteristic', ParseCharacteristicPipe) characteristic: Characteristic,
     @Query('operation', ParseOperationPipe) operation: Operation,
-    @Identify() client: UserBaseDto,
+    @Identify() clientId: number,
   ) {
-    return this.goalService.updateCharacteristic(id, dayId, characteristic, operation, client.id);
+    return this.goalService.updateCharacteristic(id, dayId, characteristic, operation, clientId);
   }
 }

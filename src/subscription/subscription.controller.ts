@@ -17,7 +17,6 @@ import { Identify } from 'src/decorators/identify.decorator';
 import { AuthGuard } from 'src/guards/auth.guard';
 import { ParseOperationPipe } from 'src/pipes/parse-operation.pipe';
 import { UserWithCharacteristicDto } from 'src/user/dto/user-with-characteristic.dto';
-import { UserBaseDto } from 'src/user/dto/user-base.dto';
 import { SubscriptionService } from './subscription.service';
 import { UpdateSubscriptionDto } from './dto/update-subscription.dto';
 
@@ -51,8 +50,8 @@ export class SubscriptionController {
   update(
     @Body() dto: UpdateSubscriptionDto,
     @Query('operation', ParseOperationPipe) operation: Operation,
-    @Identify() client: UserBaseDto,
+    @Identify() clientId: number,
   ) {
-    return this.subscriptionService.update(dto, operation, client.id);
+    return this.subscriptionService.update(dto, operation, clientId);
   }
 }

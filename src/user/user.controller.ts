@@ -44,9 +44,9 @@ export class UserController {
   update(
     @Body() dto: UpdateUserDto,
     @UploadedFile(ParseFile) file: Express.Multer.File,
-    @Identify() client: UserBaseDto,
+    @Identify() clientId: number,
   ) {
-    return this.userService.update(dto, file, client.id);
+    return this.userService.update(dto, file, clientId);
   }
 
   @Get(':nickname')

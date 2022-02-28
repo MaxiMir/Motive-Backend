@@ -9,5 +9,5 @@ export const Identify = createParamDecorator(async (_, ctx: ExecutionContext) =>
   });
   const expires = token?.exp as number | undefined;
 
-  return !expires || expires <= Date.now() / 1000 ? undefined : token?.user;
+  return !expires || expires <= Date.now() / 1000 ? undefined : token?.id;
 });

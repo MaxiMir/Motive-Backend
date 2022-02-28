@@ -2,7 +2,6 @@ import { Controller, Post, Body, UseGuards } from '@nestjs/common';
 import { ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
 import { Identify } from 'src/decorators/identify.decorator';
 import { AuthGuard } from 'src/guards/auth.guard';
-import { UserBaseDto } from 'src/user/dto/user-base.dto';
 import { CreateReportDto } from './dto/create-report.dto';
 import { Report } from './entities/report.entity';
 import { ReportService } from './report.service';
@@ -16,7 +15,7 @@ export class ReportController {
   @UseGuards(AuthGuard)
   @ApiOperation({ summary: 'Create report' })
   @ApiResponse({ status: 201, type: Report })
-  create(@Body() createReportDto: CreateReportDto, @Identify() client: UserBaseDto) {
-    return this.reportService.create(createReportDto, client.id);
+  create(@Body() createReportDto: CreateReportDto, @Identify() clientId: number) {
+    return this.reportService.create(createReportDto, clientId);
   }
 }

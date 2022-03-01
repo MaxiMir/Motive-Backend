@@ -7,6 +7,6 @@ export class AuthGuard implements CanActivate {
     const req = context.switchToHttp().getRequest();
     const token = await getToken({ req, secret: process.env.NEXTAUTH_SECRET });
 
-    return typeof token?.exp === 'number' && token?.exp <= Date.now();
+    return typeof token?.exp === 'number' && token?.exp > Date.now();
   }
 }

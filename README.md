@@ -1,4 +1,7 @@
 ```shell
+docker build -t maximir/2bebetter-backend:1.0 .
+docker run -d -p 6969:6969 maximir/2bebetter-backend:1.0
+
 npm i -g @nestjs/cli
 nest new motive-backend
 yarn add typeorm @nestjs/typeorm pg

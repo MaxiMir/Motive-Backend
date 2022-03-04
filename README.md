@@ -2,13 +2,15 @@
 docker build -t maximir/2bebetter-backend:1.0 .
 docker run -d -p 6969:6969 maximir/2bebetter-backend:1.0
 
+docker-compose run --rm app
+
 npm i -g @nestjs/cli
 nest new motive-backend
 yarn add typeorm @nestjs/typeorm pg
 
 # typeorm — пакет непосредственно с самой ORM
 # @nestjs/typeorm — TypeORM пакет для NestJS. Добавляет модули для импортирования в модули проекта, а также набор декораторов-хелперов
-# pg — драйвер для работы с PostgreSQL
+# pg — драйвер для работы с PostgresSQL
 
 # postgresql.conf конфиг для работы с подключениям по tcp
 

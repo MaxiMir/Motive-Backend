@@ -38,13 +38,6 @@ export class Task {
   })
   completed = false;
 
-  @Column('int', { array: true })
-  @ApiProperty({
-    example: [23, 33],
-    description: 'user id list',
-  })
-  completedBy: number[] = [];
-
   @ManyToOne(() => Day, (day) => day.tasks, {
     nullable: false,
     onDelete: 'CASCADE',

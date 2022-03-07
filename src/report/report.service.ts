@@ -11,7 +11,7 @@ export class ReportService {
     private readonly reportRepository: Repository<Report>,
   ) {}
 
-  async create(dto: CreateReportDto, clientId: number) {
-    return this.reportRepository.insert({ ...dto, user: { id: clientId } });
+  async create(dto: CreateReportDto, userId: number) {
+    return this.reportRepository.insert({ ...dto, user: { id: userId } });
   }
 }

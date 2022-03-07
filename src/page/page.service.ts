@@ -18,7 +18,7 @@ export class PageService {
     private readonly reactionService: ReactionService,
   ) {}
 
-  async findUser(nickname: string, goalDatesMap?: GoalDayDto[], clientId?: number) {
+  async findUser(nickname: string, goalDatesMap?: GoalDayDto[], userId?: number) {
     const user = await this.userService
       .getRepository()
       .createQueryBuilder('user')
@@ -30,8 +30,8 @@ export class PageService {
       .where('user.nickname = :nickname', { nickname })
       .andWhere('goals.confirmation IS NULL')
       .getOneOrFail();
-    const reactionsList = await this.findReactionsList(user.goals, clientId);
-    const following = !clientId ? false : await this.subscriptionService.checkOnFollowing(user.id, clientId);
+    const reactionsList = await this.findReactionsList(user.goals, userId);
+    const following = !userId ? false : await this.subscriptionService.checkOnFollowing(user.id, userId);
     const goals = await this.findGoals(user.goals, reactionsList, goalDatesMap);
     const goalsMember = await this.findGoals(user.member, reactionsList, goalDatesMap);
 
@@ -67,7 +67,6 @@ export class PageService {
               order: {
                 id: 'DESC',
               },
-              take: 1,
             });
         const calendar = await this.goalService.findCalendar(goal.id);
         const reactions = reactionsList[goal.id] || { motivation: [], creativity: [] };
@@ -105,8 +104,8 @@ export class PageService {
     }, {});
   }
 
-  async findFollowing(pagination: Pagination, clientId?: number) {
-    const following = !clientId ? [] : await this.subscriptionService.findFollowing(clientId, pagination);
+  async findFollowing(pagination: Pagination, userId?: number) {
+    const following = !userId ? [] : await this.subscriptionService.findFollowing(userId, pagination);
 
     return { content: following };
   }

@@ -39,8 +39,8 @@ export class UserService {
     return this.userRepository.save(user);
   }
 
-  async update(dto: UpdateUserDto, file: Express.Multer.File, clientId: number) {
-    const user = await this.findByPK(clientId);
+  async update(dto: UpdateUserDto, file: Express.Multer.File, userId: number) {
+    const user = await this.findByPK(userId);
     const lastAvatar = user.avatar;
     user.name = dto.name;
     user.nickname = dto.nickname;

@@ -15,10 +15,8 @@ export class TaskService {
     return this.taskRepository.findOneOrFail({ id }, options);
   }
 
-  async updateCompleted(id: number, clientId: number) {
+  async updateCompleted(id: number) {
     const task = await this.findByPK(id);
-
-    // todo completed | completedBy
     task.completed = true;
 
     return this.taskRepository.save(task);

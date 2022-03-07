@@ -2,7 +2,6 @@ import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { FindOneOptions } from 'typeorm/find-options/FindOneOptions';
-import { FindManyOptions } from 'typeorm/find-options/FindManyOptions';
 import { Task } from 'src/task/entities/task.entity';
 import { CreateDayDto } from './dto/create-day.dto';
 import { Day } from './entities/day.entity';
@@ -34,7 +33,7 @@ export class DayService {
     });
   }
 
-  findOne(options?: FindManyOptions<Day>) {
+  findOne(options?: FindOneOptions<Day>) {
     return this.dayRepository.findOneOrFail(options);
   }
 

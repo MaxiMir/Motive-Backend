@@ -7,7 +7,7 @@ import { UserService } from 'src/user/user.service';
 import { GoalService } from 'src/goal/goal.service';
 import { DayService } from 'src/day/day.service';
 import { LikeService } from 'src/like/like.service';
-import { ExperienceService } from 'src/experience/experience.service';
+import { ExpService } from 'src/exp/exp.service';
 import { Like } from 'src/like/entities/like.entity';
 import { GoalCharacteristic } from 'src/goal-characteristic/entities/goal-characteristic.entity';
 import { DayCharacteristic } from 'src/day-characteristic/entities/day-characteristic.entity';
@@ -28,7 +28,7 @@ export class TopicService {
     private readonly likeService: LikeService,
   ) {}
 
-  async save(userId: number, dto: CreateTopicDto) {
+  async save(dto: CreateTopicDto, userId: number) {
     const user = await this.userService.findByPK(userId);
     const day = await this.dayService.findByPK(dto.dayId);
     const topic = new Topic();
@@ -50,7 +50,7 @@ export class TopicService {
     return this.topicRepository.save(question);
   }
 
-  async update(userId: number, id: number, dto: UpdateTopicDto) {
+  async update(id: number, dto: UpdateTopicDto, userId: number) {
     const user = await this.userService.findByPK(userId);
 
     return this.topicRepository.update({ id, user }, { text: dto.text, edited: true });
@@ -86,11 +86,11 @@ export class TopicService {
     return await this.topicRepository.findOneOrFail({ id }, options);
   }
 
-  async updateLikes(userId: number, id: number, operation: Operation) {
-    const topic = await this.findByPK(id, { relations: ['user', 'user.characteristic', 'day', 'day.goal'] });
-    const user = await this.userService.findByPK(userId);
-    const uniq = this.likeService.getUniq(user.id, topic.id); // for check duplicate
-    const validateLike = this.likeService.checkCanLike(user, topic, operation);
+  async updateLikes(id: number, operation: Operation, userId: number) {
+    const user = { id: userId };
+    const topic = await this.findByPK(id, { relations: ['user', 'user.characteristic'] });
+    const uniq = this.likeService.getUniq(userId, topic.id);
+    const validateLike = this.likeService.checkCanLike(userId, topic, operation);
     topic.likeCount += operation === 'insert' ? 1 : -1;
 
     if (!validateLike) {
@@ -102,14 +102,12 @@ export class TopicService {
 
       switch (topic.type) {
         case TopicTypeDto.ANSWER:
-          await transactionalManager.increment(DayCharacteristic, { day: topic.day }, 'support', 1);
-          await transactionalManager.increment(GoalCharacteristic, { goal: topic.day.goal }, 'support', 1);
+          await transactionalManager.increment(DayCharacteristic, { day: topic.dayId }, 'support', 1);
+          await transactionalManager.increment(GoalCharacteristic, { goal: topic.goalId }, 'support', 1);
           break;
         case TopicTypeDto.SUPPORT:
-          topic.user.characteristic.support = ExperienceService.getProgress(
-            topic.user.characteristic.support_all + 1,
-          );
           topic.user.characteristic.support_all += 1;
+          topic.user.characteristic.support = ExpService.getProgress(topic.user.characteristic.support_all);
           break;
       }
 

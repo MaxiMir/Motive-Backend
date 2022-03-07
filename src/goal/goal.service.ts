@@ -10,14 +10,14 @@ import { GoalCharacteristic } from 'src/goal-characteristic/entities/goal-charac
 import { Reaction } from 'src/reaction/entities/reaction.entity';
 import { Confirmation } from 'src/confirmation/entities/confirmation.entity';
 import { UserService } from 'src/user/user.service';
-import { ExperienceService } from 'src/experience/experience.service';
+import { ExpService } from 'src/exp/exp.service';
 import { FileService } from 'src/file/file.service';
 import { DayService } from 'src/day/day.service';
 import { CreateGoalDto } from './dto/create-goal.dto';
 import { UpdateStageDto } from './dto/update-stage.dto';
 import { UpdateCompletedDto } from './dto/update-completed.dto';
-import { Goal } from './entities/goal.entity';
 import { FindQuery } from './dto/find-query';
+import { Goal } from './entities/goal.entity';
 
 @Injectable()
 export class GoalService {
@@ -29,7 +29,8 @@ export class GoalService {
     private readonly fileService: FileService,
   ) {}
 
-  async save(dto: CreateGoalDto, clientId: number) {
+  async save(dto: CreateGoalDto, userId: number) {
+    const user = await this.userService.findByPK(userId);
     const goal = new Goal();
     const day = this.dayService.create({ date: dto.date, tasks: dto.tasks });
     goal.name = dto.name;
@@ -38,7 +39,7 @@ export class GoalService {
     goal.hashtags = dto.hashtags;
     goal.stages = dto.stages;
     goal.days = [day];
-    goal.owner = await this.userService.findByPK(clientId);
+    goal.owner = user;
 
     return this.goalRepository.save(goal);
   }
@@ -71,9 +72,12 @@ export class GoalService {
       .getRawMany();
   }
 
-  async addDay(id: number, dto: CreateDayDto, ownerId: number) {
-    const owner = { id: ownerId };
-    const goal = await this.goalRepository.findOneOrFail({ where: { id, owner }, relations: ['days'] });
+  async addDay(id: number, dto: CreateDayDto, userId: number) {
+    const owner = { id: userId };
+    const goal = await this.goalRepository.findOneOrFail({
+      where: { id, owner },
+      relations: ['days'],
+    });
     const day = this.dayService.create(dto);
     day.stage = goal.stage;
     goal.days.push(day);
@@ -91,9 +95,9 @@ export class GoalService {
     id: number,
     dto: UpdateCompletedDto,
     photos: Express.Multer.File[],
-    clientId: number,
+    userId: number,
   ) {
-    const owner = await this.userService.findByPK(clientId, { relations: ['characteristic'] });
+    const owner = await this.userService.findByPK(userId, { relations: ['characteristic'] });
     const goal = await this.findByPK(id, { relations: ['characteristic'] });
     goal.confirmation = new Confirmation();
     goal.confirmation.photos = await this.fileService.uploadAndMeasureImages(photos, 'confirmation');
@@ -104,17 +108,17 @@ export class GoalService {
 
     if (goal.characteristic.creativity) {
       owner.characteristic.creativity_all += goal.characteristic.creativity;
-      owner.characteristic.creativity = ExperienceService.getProgress(owner.characteristic.creativity_all);
+      owner.characteristic.creativity = ExpService.getProgress(owner.characteristic.creativity_all);
     }
 
     if (goal.characteristic.support) {
       owner.characteristic.support_all += goal.characteristic.support;
-      owner.characteristic.support = ExperienceService.getProgress(owner.characteristic.support_all);
+      owner.characteristic.support = ExpService.getProgress(owner.characteristic.support_all);
     }
 
     owner.characteristic.completed += 1;
-    owner.characteristic.motivation_all += goal.characteristic.motivation + ExperienceService.EXTRA_POINTS;
-    owner.characteristic.motivation = ExperienceService.getProgress(owner.characteristic.motivation_all);
+    owner.characteristic.motivation_all += goal.characteristic.motivation + ExpService.EXTRA_POINTS;
+    owner.characteristic.motivation = ExpService.getProgress(owner.characteristic.motivation_all);
 
     return this.goalRepository.manager.transaction(async (transactionalManager) => {
       await transactionalManager.save(goal);
@@ -127,13 +131,13 @@ export class GoalService {
     dayId: number,
     characteristic: Characteristic,
     operation: Operation,
-    clientId: number,
+    userId: number,
   ) {
-    const user = { id: clientId };
+    const user = { id: userId };
     const goal = await this.findByPK(id, { relations: ['characteristic'] });
     const day = await this.dayService.findByPK(dayId, { relations: ['characteristic'] });
-    const uniq = this.getUniq(clientId, day.id, characteristic);
-    const canReact = this.checkCanReact(goal, clientId);
+    const uniq = this.getUniq(userId, day.id, characteristic);
+    const canReact = this.checkCanReact(goal, userId);
 
     if (!canReact) {
       throw new BadRequestException();
@@ -164,7 +168,7 @@ export class GoalService {
     return [userId, dayId, characteristic].join(':');
   }
 
-  checkCanReact(goal: Goal, clientId: number) {
-    return goal.owner.id !== clientId;
+  checkCanReact(goal: Goal, userId: number) {
+    return goal.owner.id !== userId;
   }
 }

@@ -16,6 +16,7 @@ export class TaskService {
   }
 
   async updateCompleted(id: number) {
+    // todo check owner
     const task = await this.findByPK(id);
     task.completed = true;
 

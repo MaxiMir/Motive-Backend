@@ -24,16 +24,18 @@ export class PageService {
       .createQueryBuilder('user')
       .leftJoinAndSelect('user.characteristic', 'characteristic')
       .leftJoinAndSelect('user.goals', 'goals')
-      .leftJoinAndSelect('user.member', 'member')
       .leftJoinAndSelect('goals.characteristic', 'goals-characteristic')
       .leftJoinAndSelect('goals.owner', 'owner')
+      .leftJoinAndSelect('user.member', 'member')
+      .leftJoinAndSelect('member.characteristic', 'member-characteristic')
+      .leftJoinAndSelect('member.owner', 'member-owner')
       .where('user.nickname = :nickname', { nickname })
       .andWhere('goals.confirmation IS NULL')
       .getOneOrFail();
-    const reactionsList = await this.findReactionsList(user.goals, userId);
     const following = !userId ? false : await this.subscriptionService.checkOnFollowing(user.id, userId);
-    const goals = await this.findGoals(user.goals, reactionsList, goalDatesMap);
-    const goalsMember = await this.findGoals(user.member, reactionsList, goalDatesMap);
+    const ownerGoals = await this.findGoals(user.goals, userId, goalDatesMap, false);
+    const memberGoals = await this.findGoals(user.member, userId, goalDatesMap, true);
+    const goals = [...ownerGoals, ...memberGoals];
 
     return {
       content: {
@@ -44,17 +46,13 @@ export class PageService {
         characteristic: user.characteristic,
         following,
         goals,
-        goalsMember,
       },
     };
   }
 
-  private findGoals(
-    goals: Goal[],
-    reactionsList: Record<string, { motivation: number[]; creativity: number[] }>,
-    goalDatesMap?: GoalDayDto[],
-  ) {
+  private async findGoals(goals: Goal[], userId, goalDatesMap: GoalDayDto[] | undefined, member: boolean) {
     const relations = ['tasks', 'feedback'];
+    const reactionsList = await this.findReactionsList(goals, userId);
 
     return Promise.all(
       goals.map(async (goal) => {
@@ -71,7 +69,7 @@ export class PageService {
         const calendar = await this.goalService.findCalendar(goal.id);
         const reactions = reactionsList[goal.id] || { motivation: [], creativity: [] };
 
-        return { ...goal, calendar, reactions, day };
+        return { ...goal, day, calendar, reactions, member };
       }),
     );
   }

@@ -80,4 +80,7 @@ export class Goal {
     cascade: true,
   })
   owner: User;
+
+  @RelationId((goal: Goal) => goal.owner)
+  ownerId: number;
 }

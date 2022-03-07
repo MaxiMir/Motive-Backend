@@ -169,6 +169,6 @@ export class GoalService {
   }
 
   checkCanReact(goal: Goal, userId: number) {
-    return goal.owner.id !== userId;
+    return goal.ownerId !== userId;
   }
 }

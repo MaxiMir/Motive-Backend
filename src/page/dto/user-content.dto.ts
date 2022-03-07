@@ -11,7 +11,4 @@ export class UserContentDto {
 
   @ApiProperty({ type: () => UserPageGoal, isArray: true })
   readonly goals: UserPageGoal[];
-
-  @ApiProperty({ type: () => UserPageGoal, isArray: true })
-  readonly goalsMember: UserPageGoal[];
 }

@@ -1,12 +1,16 @@
 import { Injectable } from '@nestjs/common';
 import { Pagination } from 'src/abstracts/pagination';
+import { Characteristic } from 'src/abstracts/characteristic';
 import { GoalDayDto } from 'src/goal/dto/goal-day.dto';
 import { Goal } from 'src/goal/entities/goal.entity';
+import { Member } from 'src/member/entities/member.entity';
 import { UserService } from 'src/user/user.service';
 import { SubscriptionService } from 'src/subscription/subscription.service';
 import { ReactionService } from 'src/reaction/reaction.service';
 import { DayService } from 'src/day/day.service';
 import { GoalService } from 'src/goal/goal.service';
+
+type ReactionsMap = Record<number, { [k in Characteristic]: number[] }>;
 
 @Injectable()
 export class PageService {
@@ -18,7 +22,8 @@ export class PageService {
     private readonly reactionService: ReactionService,
   ) {}
 
-  async findUser(nickname: string, goalDatesMap?: GoalDayDto[], userId?: number) {
+  async findUser(nickname: string, goalDateMap?: GoalDayDto[], userId?: number) {
+    const client = !userId ? null : await this.userService.findByPK(userId, { relations: ['membership'] });
     const user = await this.userService
       .getRepository()
       .createQueryBuilder('user')
@@ -26,15 +31,18 @@ export class PageService {
       .leftJoinAndSelect('user.goals', 'goals')
       .leftJoinAndSelect('goals.characteristic', 'goals-characteristic')
       .leftJoinAndSelect('goals.owner', 'owner')
-      .leftJoinAndSelect('user.member', 'member')
-      .leftJoinAndSelect('member.characteristic', 'member-characteristic')
-      .leftJoinAndSelect('member.owner', 'member-owner')
+      .leftJoinAndSelect('user.membership', 'membership')
+      .leftJoinAndSelect('membership.goal', 'membership-goal')
+      .leftJoinAndSelect('membership-goal.characteristic', 'membership-goal-characteristic')
+      .leftJoinAndSelect('membership-goal.owner', 'membership-goal-owner')
       .where('user.nickname = :nickname', { nickname })
       .andWhere('goals.confirmation IS NULL')
       .getOneOrFail();
     const following = !userId ? false : await this.subscriptionService.checkOnFollowing(user.id, userId);
-    const ownerGoals = await this.findGoals(user.goals, userId, goalDatesMap, false);
-    const memberGoals = await this.findGoals(user.member, userId, goalDatesMap, true);
+    const membership = this.getMembership(user.membership, goalDateMap);
+    const reactionsList = await this.findReactionsList([...user.goals, ...membership.goals], userId);
+    const ownerGoals = await this.findGoals(user.goals, reactionsList, goalDateMap);
+    const memberGoals = await this.findGoals(membership.goals, reactionsList, membership.goalDateMap, true);
     const goals = [...ownerGoals, ...memberGoals];
 
     return {
@@ -44,15 +52,20 @@ export class PageService {
         name: user.name,
         avatar: user.avatar,
         characteristic: user.characteristic,
+        membership: client?.membership,
         following,
         goals,
       },
     };
   }
 
-  private async findGoals(goals: Goal[], userId, goalDatesMap: GoalDayDto[] | undefined, member: boolean) {
+  private async findGoals(
+    goals: Goal[],
+    reactionsList: ReactionsMap,
+    goalDatesMap?: GoalDayDto[],
+    member?: boolean,
+  ) {
     const relations = ['tasks', 'feedback'];
-    const reactionsList = await this.findReactionsList(goals, userId);
 
     return Promise.all(
       goals.map(async (goal) => {
@@ -71,6 +84,19 @@ export class PageService {
 
         return { ...goal, day, calendar, reactions, member };
       }),
+    );
+  }
+
+  private getMembership(membership: Member[], goalDateMap: GoalDayDto[] = []) {
+    return membership.reduce(
+      (acc, { goal, goalId, dayId }) => {
+        const goalIdExist = acc.goalDateMap.some((d) => d.goalId === goalId);
+        const goalDateMap = goalIdExist ? acc.goalDateMap : [...acc.goalDateMap, { goalId, dayId }];
+        const goals = [...acc.goals, goal];
+
+        return { goals, goalDateMap };
+      },
+      { goals: [], goalDateMap },
     );
   }
 

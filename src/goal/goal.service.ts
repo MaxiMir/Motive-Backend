@@ -134,9 +134,9 @@ export class GoalService {
     userId: number,
   ) {
     const user = { id: userId };
+    const uniq = this.getUniq(userId, dayId, characteristic);
     const goal = await this.findByPK(id, { relations: ['characteristic'] });
     const day = await this.dayService.findByPK(dayId, { relations: ['characteristic'] });
-    const uniq = this.getUniq(userId, day.id, characteristic);
     const canReact = this.checkCanReact(goal, userId);
 
     if (!canReact) {

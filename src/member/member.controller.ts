@@ -1,7 +1,30 @@
-import { Controller } from '@nestjs/common';
+import { Body, Controller, Delete, HttpCode, Param, Post, UseGuards, ParseIntPipe } from '@nestjs/common';
+import { ApiOperation, ApiResponse } from '@nestjs/swagger';
+import { Identify } from 'src/decorators/identify.decorator';
+import { AuthGuard } from 'src/guards/auth.guard';
+import { CreateMemberDto } from './dto/create-member.dto';
+import { Member } from './entities/member.entity';
 import { MemberService } from './member.service';
 
-@Controller('member')
+@Controller('members')
 export class MemberController {
   constructor(private readonly memberService: MemberService) {}
+
+  @Post()
+  @UseGuards(AuthGuard)
+  @ApiOperation({ summary: 'Create member' })
+  @ApiResponse({ status: 201, type: Member })
+  save(@Body() dto: CreateMemberDto, @Identify() clientId: number) {
+    return this.memberService.save(dto, clientId);
+  }
+
+  @Delete(':id')
+  @UseGuards(AuthGuard)
+  @ApiResponse({ status: 201 })
+  @HttpCode(204)
+  @ApiOperation({ summary: 'Delete member' })
+  @ApiResponse({ status: 204 })
+  delete(@Param('id', ParseIntPipe) id: number, @Identify() clientId: number) {
+    return this.memberService.delete(id, clientId);
+  }
 }

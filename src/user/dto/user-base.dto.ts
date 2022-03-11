@@ -28,23 +28,4 @@ export class UserBaseDto {
     description: 'the path to the avatar',
   })
   avatar: string;
-
-  @Column({ nullable: true })
-  @Index({ unique: true })
-  @ApiProperty({
-    example: 'mmirrev@gmail.com',
-  })
-  email: string;
-
-  @Column({ nullable: true })
-  @ApiProperty({
-    example: '135316',
-  })
-  sub: string;
-
-  @Column({ nullable: true })
-  @ApiProperty({
-    example: 'Github',
-  })
-  provider: string;
 }

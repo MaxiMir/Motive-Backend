@@ -6,7 +6,7 @@ import { AuthGuard } from 'src/guards/auth.guard';
 import { ParseFile } from 'src/pipes/parse-file.pipe';
 import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
-import { UserBaseDto } from './dto/user-base.dto';
+import { UserDto } from './dto/user.dto';
 import { User } from './entities/user.entity';
 import { UserService } from './user.service';
 
@@ -52,7 +52,7 @@ export class UserController {
   @Get(':nickname')
   @ApiOperation({ summary: 'Get user by nickname' })
   @ApiParam({ name: 'nickname', example: 'maximir' })
-  @ApiResponse({ status: 200, type: UserBaseDto })
+  @ApiResponse({ status: 200, type: UserDto })
   findByNickname(@Param('nickname') nickname: string) {
     return this.userService.findByNickname(nickname);
   }

@@ -22,6 +22,21 @@ export class Member {
   })
   id: number;
 
+  @Index({ unique: true })
+  @Column()
+  @ApiProperty({
+    example: '1:53',
+    description: '{user.id}:{goal.id}',
+  })
+  uniq: string;
+
+  @Column('int', { array: true })
+  @ApiProperty({
+    example: [23, 33],
+    description: 'completed tasks id list',
+  })
+  completedTasks: number[] = [];
+
   @ManyToOne(() => Goal, { nullable: false })
   @JoinColumn()
   goal: Goal;
@@ -42,19 +57,4 @@ export class Member {
 
   @RelationId((member: Member) => member.day)
   dayId: number;
-
-  @Column('int', { array: true })
-  @ApiProperty({
-    example: [23, 33],
-    description: 'user id list',
-  })
-  completed: number[] = [];
-
-  @Index({ unique: true })
-  @Column()
-  @ApiProperty({
-    example: '1:53',
-    description: '{user.id}:{topic.id}',
-  })
-  uniq: string;
 }

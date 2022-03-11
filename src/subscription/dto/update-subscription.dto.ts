@@ -7,5 +7,5 @@ export class UpdateSubscriptionDto {
     example: 2,
     description: 'user id',
   })
-  readonly id: number;
+  readonly userId: number;
 }

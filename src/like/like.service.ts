@@ -13,10 +13,6 @@ export class LikeService {
     private readonly topicRepository: Repository<Like>,
   ) {}
 
-  getRepository() {
-    return this.topicRepository;
-  }
-
   async findLikedTopics(userId: number, topicIds: number[]) {
     const likes = await this.topicRepository
       .createQueryBuilder('like')

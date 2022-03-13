@@ -1,23 +1,8 @@
 version: '3.1'
 
 services:
-#  app:
-#    container_name: 2bebetter-backend
-#    image: 2bebetter-backend:1.0.0
-#    build:
-#      context: .
-#      dockerfile: Dockerfile
-#    command: npm run start:prod
-#    ports:
-#      - "6969:6969"
-#    depends_on:
-#      - db
-#      - adminer
-#    env_file:
-#      - .env
-
   db:
-    image: postgres:11.2
+    image: postgres:latest
     restart: always
     environment:
       POSTGRES_PASSWORD: example
@@ -34,6 +19,3 @@ services:
     restart: always
     ports:
       - "8080:8080"
-
-#  db — это контейнер непосредственно с базой данных. В нашем случае используется postgresql версии 11.2;
-# adminer — менеджер работы с базой данных. Предоставляет web-интерфейс для просмотра и управления базой.

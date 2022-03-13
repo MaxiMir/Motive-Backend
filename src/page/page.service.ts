@@ -52,7 +52,7 @@ export class PageService {
         name: user.name,
         avatar: user.avatar,
         characteristic: user.characteristic,
-        membership: client?.membership,
+        membership: client?.membership || [],
         following,
         goals,
       },

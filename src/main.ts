@@ -16,9 +16,15 @@ async function bootstrap() {
   app.useGlobalPipes(new ValidationPipe({ transform: true })); // validation for all endpoints
   app.useGlobalFilters(new AllExceptionsFilter());
   useContainer(app.select(AppModule), { fallbackOnErrors: true });
-  app.use(helmet());
+  app.enableCors({ origin: process.env.CLIENT, credentials: true });
   app.use(cookieParser());
-  app.enableCors({ origin: 'http://localhost:3007', credentials: true });
+  app.use(
+    helmet({
+      crossOriginResourcePolicy: {
+        policy: 'cross-origin',
+      },
+    }),
+  );
 
   const config = new DocumentBuilder()
     .setTitle('Motiv Backend')

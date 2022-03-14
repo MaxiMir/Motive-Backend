@@ -52,7 +52,8 @@ export class PageService {
         name: user.name,
         avatar: user.avatar,
         characteristic: user.characteristic,
-        membership: client?.membership || [],
+        userMembership: user.membership,
+        clientMembership: client?.membership || [],
         following,
         goals,
       },
@@ -63,7 +64,7 @@ export class PageService {
     goals: Goal[],
     reactionsList: ReactionsMap,
     goalDatesMap?: GoalDayDto[],
-    member?: boolean,
+    inherited?: boolean,
   ) {
     const relations = ['tasks', 'feedback'];
 
@@ -82,7 +83,7 @@ export class PageService {
         const calendar = await this.goalService.findCalendar(goal.id);
         const reactions = reactionsList[goal.id] || { motivation: [], creativity: [] };
 
-        return { ...goal, day, calendar, reactions, member };
+        return { ...goal, day, calendar, reactions, inherited };
       }),
     );
   }

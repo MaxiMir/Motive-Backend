@@ -38,6 +38,13 @@ export class Task {
   })
   completed = false;
 
+  @Column('boolean', { nullable: true, default: false })
+  @ApiProperty({
+    example: true,
+    description: 'completed by other',
+  })
+  completedByOther = false;
+
   @ManyToOne(() => Day, (day) => day.tasks, {
     nullable: false,
     onDelete: 'CASCADE',

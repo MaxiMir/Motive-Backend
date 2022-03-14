@@ -18,6 +18,8 @@ export class MemberService {
   ) {}
 
   async save(dto: CreateMemberDto, userId: number) {
+    // todo + characteristic
+    // todo completed task
     const member = new Member();
     member.uniq = this.getUniq(userId, dto.goalId);
     member.user = await this.userService.findByPK(userId);
@@ -28,6 +30,7 @@ export class MemberService {
   }
 
   delete(id: number, userId: number) {
+    // todo - characteristic
     return this.memberRepository.delete({ id, user: { id: userId } });
   }
 

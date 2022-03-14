@@ -15,5 +15,8 @@ export class UserContentDto extends UserBaseDto {
   readonly goals: UserPageGoal[];
 
   @ApiProperty({ type: () => Member, isArray: true })
-  readonly membership: Member[];
+  readonly userMembership: Member[];
+
+  @ApiProperty({ type: () => Member, isArray: true })
+  readonly clientMembership: Member[];
 }

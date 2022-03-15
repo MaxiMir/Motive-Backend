@@ -1,11 +1,13 @@
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
+import { FindOneOptions } from 'typeorm/find-options/FindOneOptions';
 import { UserService } from 'src/user/user.service';
 import { GoalService } from 'src/goal/goal.service';
 import { DayService } from 'src/day/day.service';
-import { Member } from './entities/member.entity';
+import { GoalCharacteristic } from 'src/goal-characteristic/entities/goal-characteristic.entity';
 import { CreateMemberDto } from './dto/create-member.dto';
+import { Member } from './entities/member.entity';
 
 @Injectable()
 export class MemberService {
@@ -17,21 +19,30 @@ export class MemberService {
     private readonly dayService: DayService,
   ) {}
 
+  findOne(options?: FindOneOptions<Member>) {
+    return this.memberRepository.findOneOrFail(options);
+  }
+
   async save(dto: CreateMemberDto, userId: number) {
-    // todo + characteristic
-    // todo completed task
     const member = new Member();
     member.uniq = this.getUniq(userId, dto.goalId);
     member.user = await this.userService.findByPK(userId);
     member.goal = await this.goalService.findByPK(dto.goalId);
     member.day = await this.dayService.findByPK(dto.dayId);
 
-    return this.memberRepository.save(member);
+    return this.memberRepository.manager.transaction(async (transactionalManager) => {
+      await transactionalManager.increment(GoalCharacteristic, { goal: member.goal.id }, 'members', 1);
+      await transactionalManager.save(member);
+    });
   }
 
-  delete(id: number, userId: number) {
-    // todo - characteristic
-    return this.memberRepository.delete({ id, user: { id: userId } });
+  async delete(id: number, userId: number) {
+    const member = await this.findOne({ where: { id, user: userId } });
+
+    return this.memberRepository.manager.transaction(async (transactionalManager) => {
+      await transactionalManager.decrement(GoalCharacteristic, { goal: member.goalId }, 'members', 1);
+      await transactionalManager.remove(member);
+    });
   }
 
   getUniq(userId: number, goalId: number) {

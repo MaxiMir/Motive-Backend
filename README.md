@@ -3,6 +3,7 @@ docker build -t maximir/2bebetter-backend:1.0 .
 docker run -d -p 6969:6969 maximir/2bebetter-backend:1.0
 
 docker-compose run --rm app
+docker-compose up -d # установка образа с бд
 
 npm i -g @nestjs/cli
 nest new motive-backend
@@ -55,7 +56,6 @@ yarn add @nestjsx/crud class-transformer class-validator
 **JOB**
 
 ```shell
-docker-compose up -d # установка образа с бд
 yarn start # запуск проекта
 
 nest g module user # создание модуля user

@@ -17,13 +17,13 @@ export class CreateUserDto {
 
   @IsString()
   @IsOptional()
-  readonly avatar: string;
+  readonly avatar?: string;
 
   @IsString()
   @IsOptional()
-  readonly sub: string;
+  readonly sub?: string;
 
   @IsString()
   @IsOptional()
-  readonly provider: string;
+  readonly provider?: string;
 }

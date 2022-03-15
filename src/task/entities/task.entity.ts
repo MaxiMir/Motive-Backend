@@ -16,6 +16,9 @@ export class Task {
   id: number;
 
   @Column()
+  userId: number;
+
+  @Column()
   @ApiProperty({
     example: 'read 20 pages Harry Potter',
   })

@@ -33,7 +33,7 @@ export class UserService {
     }
 
     const user = this.userRepository.create(dto);
-    user.nickname = [dto.name, '-', dto.sub].join('').toLowerCase();
+    user.nickname = [dto.name.replace(' ', '_'), '-', dto.sub].join('').toLowerCase();
     user.characteristic = new UserCharacteristic();
 
     return this.userRepository.save(user);

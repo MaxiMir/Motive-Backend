@@ -11,5 +11,6 @@ import { GoalModule } from 'src/goal/goal.module';
   controllers: [MemberController],
   providers: [MemberService],
   imports: [TypeOrmModule.forFeature([Member]), UserModule, GoalModule, DayModule],
+  exports: [MemberService],
 })
 export class MemberModule {}

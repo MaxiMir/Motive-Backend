@@ -32,7 +32,7 @@ export class GoalService {
   async save(dto: CreateGoalDto, userId: number) {
     const user = await this.userService.findByPK(userId);
     const goal = new Goal();
-    const day = this.dayService.create({ date: dto.date, tasks: dto.tasks });
+    const day = this.dayService.create({ date: dto.date, tasks: dto.tasks }, userId);
     goal.name = dto.name;
     goal.started = dto.started;
     goal.characteristic = new GoalCharacteristic();
@@ -78,7 +78,7 @@ export class GoalService {
       where: { id, owner },
       relations: ['days'],
     });
-    const day = this.dayService.create(dto);
+    const day = this.dayService.create(dto, userId);
     day.stage = goal.stage;
     goal.days.push(day);
 

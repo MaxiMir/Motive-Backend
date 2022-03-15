@@ -27,5 +27,5 @@ export class CreateTopicDto {
   @ApiPropertyOptional({
     example: 45,
   })
-  readonly topicId: number;
+  readonly topicId?: number;
 }

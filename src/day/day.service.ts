@@ -17,7 +17,7 @@ export class DayService {
     return this.dayRepository;
   }
 
-  create(dto: CreateDayDto) {
+  create(dto: CreateDayDto, userId: number) {
     return this.dayRepository.create({
       date: dto.date,
       tasks: dto.tasks.map(({ name, date }) => {
@@ -27,6 +27,8 @@ export class DayService {
         if (date) {
           task.date = date;
         }
+
+        task.userId = userId;
 
         return task;
       }),

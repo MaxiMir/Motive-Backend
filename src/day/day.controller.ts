@@ -1,5 +1,6 @@
 import { Controller, Param, Get, Patch, Post, HttpCode, Body, UseGuards, ParseIntPipe } from '@nestjs/common';
 import { ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
+import { Identify } from 'src/decorators/identify.decorator';
 import { Goal } from 'src/goal/entities/goal.entity';
 import { AuthGuard } from 'src/guards/auth.guard';
 import { CreateDayDto } from './dto/create-day.dto';
@@ -16,8 +17,8 @@ export class DayController {
   @HttpCode(201)
   @ApiOperation({ summary: 'Add day' })
   @ApiResponse({ status: 200, type: Goal })
-  create(@Body() dto: CreateDayDto) {
-    return this.dayService.create(dto);
+  create(@Body() dto: CreateDayDto, @Identify() clientId: number) {
+    return this.dayService.create(dto, clientId);
   }
 
   @Get(':id')

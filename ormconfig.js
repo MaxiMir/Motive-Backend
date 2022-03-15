@@ -14,7 +14,7 @@ module.exports = {
   dropSchema: false,
   logging: true,
   entities: [__dirname + '/src/**/*.entity.ts', __dirname + '/dist/**/*.entity.js'],
-  migrations: ['migrations/**/*.ts'],
+  migrations: [__dirname + '/src/migrations/**/*.ts'],
   subscribers: ['subscriber/**/*.ts', 'dist/subscriber/**/.js'],
   cli: {
     entitiesDir: 'src',

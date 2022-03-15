@@ -25,9 +25,9 @@ import { CreateGoalDto } from './dto/create-goal.dto';
 import { CalendarDto } from './dto/calendar.dto';
 import { UpdateStageDto } from './dto/update-stage.dto';
 import { UpdateCompletedDto } from './dto/update-completed.dto';
+import { FindQuery } from './dto/find-query';
 import { Goal } from './entities/goal.entity';
 import { GoalService } from './goal.service';
-import { FindQuery } from './dto/find-query';
 
 @Controller('goals')
 @ApiTags('Goals')

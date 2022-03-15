@@ -43,7 +43,7 @@ export class CreateGoalDto {
 
   @IsString()
   @IsDateString()
-  readonly date: string;
+  readonly tasksDate: string;
 
   @IsArray()
   @ArrayMinSize(1)

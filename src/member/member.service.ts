@@ -8,6 +8,7 @@ import { DayService } from 'src/day/day.service';
 import { GoalCharacteristic } from 'src/goal-characteristic/entities/goal-characteristic.entity';
 import { CreateMemberDto } from './dto/create-member.dto';
 import { Member } from './entities/member.entity';
+import { UpdateMemberDto } from './dto/update-member.dto';
 
 @Injectable()
 export class MemberService {
@@ -34,6 +35,12 @@ export class MemberService {
       await transactionalManager.increment(GoalCharacteristic, { goal: member.goal.id }, 'members', 1);
       await transactionalManager.save(member);
     });
+  }
+
+  async update(id: number, dto: UpdateMemberDto, userId: number) {
+    const member = await this.findOne({ where: { id, user: userId } });
+    member.day = await this.dayService.findByPK(dto.dayId);
+    member.lastEndOfDay = dto.lastEndOfDay;
   }
 
   async delete(id: number, userId: number) {

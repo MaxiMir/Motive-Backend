@@ -1,10 +1,21 @@
-import { Body, Controller, Delete, HttpCode, Param, Post, UseGuards, ParseIntPipe } from '@nestjs/common';
+import {
+  Body,
+  Controller,
+  Delete,
+  HttpCode,
+  Param,
+  Post,
+  UseGuards,
+  Patch,
+  ParseIntPipe,
+} from '@nestjs/common';
 import { ApiOperation, ApiResponse } from '@nestjs/swagger';
 import { Identify } from 'src/decorators/identify.decorator';
 import { AuthGuard } from 'src/guards/auth.guard';
 import { CreateMemberDto } from './dto/create-member.dto';
 import { Member } from './entities/member.entity';
 import { MemberService } from './member.service';
+import { UpdateMemberDto } from './dto/update-member.dto';
 
 @Controller('members')
 export class MemberController {
@@ -16,6 +27,14 @@ export class MemberController {
   @ApiResponse({ status: 201, type: Member })
   save(@Body() dto: CreateMemberDto, @Identify() clientId: number) {
     return this.memberService.save(dto, clientId);
+  }
+
+  @Patch()
+  @UseGuards(AuthGuard)
+  @ApiOperation({ summary: 'Create member' })
+  @ApiResponse({ status: 201, type: Member })
+  update(@Param('id', ParseIntPipe) id: number, @Body() dto: UpdateMemberDto, @Identify() clientId: number) {
+    return this.memberService.update(id, dto, clientId);
   }
 
   @Delete(':id')

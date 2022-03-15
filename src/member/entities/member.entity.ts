@@ -37,6 +37,12 @@ export class Member {
   })
   completedTasks: number[] = [];
 
+  @Column({ nullable: true })
+  @ApiProperty({
+    example: '2022-02-16 00:00:00+03',
+  })
+  lastEndOfDay: string;
+
   @ManyToOne(() => Goal, { nullable: false })
   @JoinColumn()
   goal: Goal;

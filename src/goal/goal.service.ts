@@ -30,16 +30,16 @@ export class GoalService {
   ) {}
 
   async save(dto: CreateGoalDto, userId: number) {
-    const user = await this.userService.findByPK(userId);
+    const owner = await this.userService.findByPK(userId);
     const goal = new Goal();
-    const day = this.dayService.create({ date: dto.date, tasks: dto.tasks }, userId);
+    const day = this.dayService.create({ date: dto.tasksDate, tasks: dto.tasks }, userId);
     goal.name = dto.name;
     goal.started = dto.started;
     goal.characteristic = new GoalCharacteristic();
     goal.hashtags = dto.hashtags;
     goal.stages = dto.stages;
     goal.days = [day];
-    goal.owner = user;
+    goal.owner = owner;
 
     return this.goalRepository.save(goal);
   }
@@ -100,6 +100,7 @@ export class GoalService {
     const owner = await this.userService.findByPK(userId, { relations: ['characteristic'] });
     const goal = await this.findByPK(id, { relations: ['characteristic'] });
     goal.confirmation = new Confirmation();
+    goal.confirmation.date = dto.date;
     goal.confirmation.photos = await this.fileService.uploadAndMeasureImages(photos, 'confirmation');
 
     if (dto.text) {

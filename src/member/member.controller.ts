@@ -29,7 +29,7 @@ export class MemberController {
     return this.memberService.save(dto, clientId);
   }
 
-  @Patch()
+  @Patch(':id')
   @UseGuards(AuthGuard)
   @ApiOperation({ summary: 'Create member' })
   @ApiResponse({ status: 201, type: Member })

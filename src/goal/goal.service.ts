@@ -102,7 +102,7 @@ export class GoalService {
     goal.confirmation = new Confirmation();
     goal.confirmation.date = dto.date;
     goal.confirmation.photos = await this.fileService.uploadAndMeasureImages(photos, 'confirmation');
-
+    // todo tasks/ + members + front
     if (dto.text) {
       goal.confirmation.text = dto.text;
     }

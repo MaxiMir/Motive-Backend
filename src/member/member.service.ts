@@ -41,6 +41,8 @@ export class MemberService {
     const member = await this.findOne({ where: { id, user: userId } });
     member.day = await this.dayService.findByPK(dto.dayId);
     member.lastEndOfDay = dto.lastEndOfDay;
+
+    return this.memberRepository.save(member);
   }
 
   async delete(id: number, userId: number) {

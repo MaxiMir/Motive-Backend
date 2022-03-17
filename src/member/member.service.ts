@@ -29,11 +29,14 @@ export class MemberService {
     member.uniq = this.getUniq(userId, dto.goalId);
     member.user = await this.userService.findByPK(userId);
     member.goal = await this.goalService.findByPK(dto.goalId);
-    member.day = await this.dayService.findByPK(dto.dayId);
+    member.day = dto.dayId
+      ? await this.dayService.findByPK(dto.dayId)
+      : await this.dayService.findOne({ where: { goal: dto.goalId } });
 
     return this.memberRepository.manager.transaction(async (transactionalManager) => {
       await transactionalManager.increment(GoalCharacteristic, { goal: member.goal.id }, 'members', 1);
-      await transactionalManager.save(member);
+
+      return transactionalManager.save(member);
     });
   }
 

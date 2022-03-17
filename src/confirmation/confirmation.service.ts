@@ -31,6 +31,7 @@ export class ConfirmationService {
     confirmation.goal = goal;
     confirmation.user = user;
     confirmation.owner = user; // todo member
+    confirmation.inherited = false; // todo member
 
     if (dto.text) {
       confirmation.text = dto.text;
@@ -56,7 +57,6 @@ export class ConfirmationService {
 
     return this.confirmationRepository.manager.transaction(async (transactionalManager) => {
       await transactionalManager.save(user);
-
       return transactionalManager.save(confirmation);
     });
   }

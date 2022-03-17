@@ -12,7 +12,6 @@ module.exports = {
   database: process.env.POSTGRES_DB,
   synchronize: false,
   dropSchema: false,
-  logging: true,
   entities: [__dirname + '/src/**/*.entity.ts', __dirname + '/dist/**/*.entity.js'],
   migrations: [__dirname + '/src/migrations/**/*.ts'],
   subscribers: ['subscriber/**/*.ts', 'dist/subscriber/**/.js'],

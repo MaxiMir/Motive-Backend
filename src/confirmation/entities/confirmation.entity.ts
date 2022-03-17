@@ -29,4 +29,10 @@ export class Confirmation extends ConfirmationBase {
   @OneToOne(() => User, { nullable: false })
   @JoinColumn()
   owner: User;
+
+  @Column('boolean')
+  @ApiProperty({
+    example: true,
+  })
+  inherited: boolean;
 }

@@ -28,7 +28,7 @@ export class PageService {
       .getRepository()
       .createQueryBuilder('user')
       .leftJoinAndSelect('user.characteristic', 'characteristic')
-      .leftJoinAndSelect('user.goals', 'goals')
+      .leftJoinAndSelect('user.goals', 'goals', 'goals."completed" = false')
       .leftJoinAndSelect('goals.characteristic', 'goals-characteristic')
       .leftJoinAndSelect('goals.owner', 'owner')
       .leftJoinAndSelect('user.membership', 'membership')
@@ -36,8 +36,8 @@ export class PageService {
       .leftJoinAndSelect('membership-goal.characteristic', 'membership-goal-characteristic')
       .leftJoinAndSelect('membership-goal.owner', 'membership-goal-owner')
       .where('user.nickname = :nickname', { nickname })
-      .andWhere('goals.completed = false')
       .getOneOrFail();
+
     const following = !userId ? false : await this.subscriptionService.checkOnFollowing(user.id, userId);
     const membership = this.getMembership(user.membership, goalDateMap);
     const reactionsList = await this.findReactionsList([...user.goals, ...membership.goals], userId);

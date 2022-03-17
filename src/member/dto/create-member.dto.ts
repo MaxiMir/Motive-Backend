@@ -1,5 +1,5 @@
 import { ApiProperty } from '@nestjs/swagger';
-import { IsInt, Min } from 'class-validator';
+import { IsInt, IsOptional, Min } from 'class-validator';
 import { Type } from 'class-transformer';
 
 export class CreateMemberDto {
@@ -11,6 +11,7 @@ export class CreateMemberDto {
   })
   readonly goalId: number;
 
+  @IsOptional()
   @Type(() => Number)
   @IsInt()
   @Min(1)
@@ -18,5 +19,5 @@ export class CreateMemberDto {
     example: 412,
     description: 'day id',
   })
-  readonly dayId: number;
+  readonly dayId?: number;
 }

@@ -8,15 +8,10 @@ import { CreateDayDto } from 'src/day/dto/create-day.dto';
 import { DayCharacteristic } from 'src/day-characteristic/entities/day-characteristic.entity';
 import { GoalCharacteristic } from 'src/goal-characteristic/entities/goal-characteristic.entity';
 import { Reaction } from 'src/reaction/entities/reaction.entity';
-import { Confirmation } from 'src/confirmation/entities/confirmation.entity';
 import { UserService } from 'src/user/user.service';
-import { ExpService } from 'src/exp/exp.service';
-import { FileService } from 'src/file/file.service';
 import { DayService } from 'src/day/day.service';
 import { CreateGoalDto } from './dto/create-goal.dto';
 import { UpdateStageDto } from './dto/update-stage.dto';
-import { UpdateCompletedDto } from './dto/update-completed.dto';
-import { FindQuery } from './dto/find-query';
 import { Goal } from './entities/goal.entity';
 
 @Injectable()
@@ -26,7 +21,6 @@ export class GoalService {
     private readonly goalRepository: Repository<Goal>,
     private readonly userService: UserService,
     private readonly dayService: DayService,
-    private readonly fileService: FileService,
   ) {}
 
   async save(dto: CreateGoalDto, userId: number) {
@@ -46,20 +40,6 @@ export class GoalService {
 
   findByPK(id: number, options?: FindOneOptions<Goal>) {
     return this.goalRepository.findOneOrFail({ id }, options);
-  }
-
-  async find(query: FindQuery) {
-    const { where, take, skip } = query;
-
-    return this.goalRepository.find({
-      relations: ['characteristic', 'owner', 'confirmation'],
-      where,
-      order: {
-        id: 'DESC',
-      },
-      take,
-      skip,
-    });
   }
 
   findCalendar(id: number) {
@@ -89,42 +69,6 @@ export class GoalService {
     const owner = { id: ownerId };
 
     return this.goalRepository.update({ id, owner }, { stage: dto.stage });
-  }
-
-  async updateConfirmation(
-    id: number,
-    dto: UpdateCompletedDto,
-    photos: Express.Multer.File[],
-    userId: number,
-  ) {
-    const owner = await this.userService.findByPK(userId, { relations: ['characteristic'] });
-    const goal = await this.findByPK(id, { relations: ['characteristic'] });
-    goal.confirmation = new Confirmation();
-    goal.confirmation.date = dto.date;
-    goal.confirmation.photos = await this.fileService.uploadAndMeasureImages(photos, 'confirmation');
-    // todo tasks/ + members + front
-    if (dto.text) {
-      goal.confirmation.text = dto.text;
-    }
-
-    if (goal.characteristic.creativity) {
-      owner.characteristic.creativity_all += goal.characteristic.creativity;
-      owner.characteristic.creativity = ExpService.getProgress(owner.characteristic.creativity_all);
-    }
-
-    if (goal.characteristic.support) {
-      owner.characteristic.support_all += goal.characteristic.support;
-      owner.characteristic.support = ExpService.getProgress(owner.characteristic.support_all);
-    }
-
-    owner.characteristic.completed += 1;
-    owner.characteristic.motivation_all += goal.characteristic.motivation + ExpService.EXTRA_POINTS;
-    owner.characteristic.motivation = ExpService.getProgress(owner.characteristic.motivation_all);
-
-    return this.goalRepository.manager.transaction(async (transactionalManager) => {
-      await transactionalManager.save(goal);
-      await transactionalManager.save(owner);
-    });
   }
 
   async updateCharacteristic(

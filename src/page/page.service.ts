@@ -36,7 +36,7 @@ export class PageService {
       .leftJoinAndSelect('membership-goal.characteristic', 'membership-goal-characteristic')
       .leftJoinAndSelect('membership-goal.owner', 'membership-goal-owner')
       .where('user.nickname = :nickname', { nickname })
-      .andWhere('goals.confirmation IS NULL')
+      .andWhere('goals.completed = false')
       .getOneOrFail();
     const following = !userId ? false : await this.subscriptionService.checkOnFollowing(user.id, userId);
     const membership = this.getMembership(user.membership, goalDateMap);

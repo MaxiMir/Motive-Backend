@@ -7,10 +7,11 @@ import { LikeModule } from 'src/like/like.module';
 import { Topic } from './entities/topic.entity';
 import { TopicController } from './topic.controller';
 import { TopicService } from './topic.service';
+import { ExpModule } from '../exp/exp.module';
 
 @Module({
   controllers: [TopicController],
   providers: [TopicService],
-  imports: [TypeOrmModule.forFeature([Topic]), UserModule, GoalModule, DayModule, LikeModule],
+  imports: [TypeOrmModule.forFeature([Topic]), UserModule, GoalModule, DayModule, LikeModule, ExpModule],
 })
 export class TopicModule {}

@@ -4,7 +4,7 @@ import { IsDateString, IsOptional, IsString, MaxLength } from 'class-validator';
 export class UpdateCompletedDto {
   @IsString()
   @IsDateString()
-  readonly date: string;
+  readonly end: string;
 
   @IsString()
   @IsOptional()

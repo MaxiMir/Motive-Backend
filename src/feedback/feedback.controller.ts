@@ -3,6 +3,7 @@ import { ApiBody, ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
 import { ApiImageFiles } from 'src/decorators/api-images.decorator';
 import { AuthGuard } from 'src/guards/auth.guard';
 import { CreateFeedbackDto } from './dto/create-feedback.dto';
+import { Feedback } from './entities/feedback.entity';
 import { FeedbackService } from './feedback.service';
 
 @Controller('feedback')
@@ -29,7 +30,7 @@ export class FeedbackController {
     },
   })
   @ApiImageFiles('photos')
-  @ApiResponse({ status: 200 })
+  @ApiResponse({ status: 201, type: Feedback })
   @ApiOperation({ summary: 'Create feedback' })
   createFeedback(@Body() dto: CreateFeedbackDto, @UploadedFiles() files: Express.Multer.File[]) {
     return this.feedbackService.save(dto, files);

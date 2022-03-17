@@ -8,33 +8,33 @@ export class ExpService {
   static HARD_COEFFICIENT = 3;
   static EXTRA_POINTS = 5;
 
-  static toPoints(level: number): number {
+  toPoints(level: number): number {
     if (level === 1) {
       return 0;
     }
 
-    const coefficient = ExpService.getCoefficientByLevel(level);
+    const coefficient = this.getCoefficientByLevel(level);
 
     return (level * ExpService.STEP) ** coefficient;
   }
 
-  static toLevel(points: number): number {
-    const coefficient = ExpService.getCoefficientByPoints(points);
+  toLevel(points: number): number {
+    const coefficient = this.getCoefficientByPoints(points);
 
     return Math.trunc(points ** (1 / coefficient) / ExpService.STEP) || 1;
   }
 
-  static getProgress(points: number): number {
-    const level = ExpService.toLevel(points);
-    const startPoints = ExpService.toPoints(level);
-    const nextPoints = ExpService.toPoints(level + 1);
+  getProgress(points: number): number {
+    const level = this.toLevel(points);
+    const startPoints = this.toPoints(level);
+    const nextPoints = this.toPoints(level + 1);
     const levelPointsAll = nextPoints - startPoints;
     const levelPointsCurrent = points - startPoints;
 
     return level + levelPointsCurrent / levelPointsAll;
   }
 
-  static getCoefficientByLevel(level: number) {
+  getCoefficientByLevel(level: number) {
     switch (true) {
       case level > 70:
         return ExpService.HARD_COEFFICIENT;
@@ -45,7 +45,7 @@ export class ExpService {
     }
   }
 
-  static getCoefficientByPoints(points: number) {
+  getCoefficientByPoints(points: number) {
     switch (true) {
       case points >= 982107784:
         return ExpService.HARD_COEFFICIENT;

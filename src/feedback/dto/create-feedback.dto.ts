@@ -1,10 +1,10 @@
 import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
-import { IsNumber, IsOptional, IsString, MaxLength, Min } from 'class-validator';
+import { IsInt, IsOptional, IsString, MaxLength, Min } from 'class-validator';
 import { Type } from 'class-transformer';
 
 export class CreateFeedbackDto {
   @Type(() => Number)
-  @IsNumber()
+  @IsInt()
   @Min(1)
   @ApiProperty({
     example: 21,

@@ -26,6 +26,7 @@ export class TopicService {
     private readonly goalService: GoalService,
     private readonly dayService: DayService,
     private readonly likeService: LikeService,
+    private readonly expService: ExpService,
   ) {}
 
   async save(dto: CreateTopicDto, userId: number) {
@@ -107,7 +108,9 @@ export class TopicService {
           break;
         case TopicTypeDto.SUPPORT:
           topic.user.characteristic.support_all += 1;
-          topic.user.characteristic.support = ExpService.getProgress(topic.user.characteristic.support_all);
+          topic.user.characteristic.support = this.expService.getProgress(
+            topic.user.characteristic.support_all,
+          );
           break;
       }
 

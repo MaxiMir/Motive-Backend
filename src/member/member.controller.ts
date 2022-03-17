@@ -31,7 +31,7 @@ export class MemberController {
 
   @Patch(':id')
   @UseGuards(AuthGuard)
-  @ApiOperation({ summary: 'Create member' })
+  @ApiOperation({ summary: 'Update member' })
   @ApiResponse({ status: 201, type: Member })
   update(@Param('id', ParseIntPipe) id: number, @Body() dto: UpdateMemberDto, @Identify() clientId: number) {
     return this.memberService.update(id, dto, clientId);

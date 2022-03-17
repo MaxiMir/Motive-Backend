@@ -2,7 +2,6 @@ import { Module } from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { UserModule } from 'src/user/user.module';
 import { DayModule } from 'src/day/day.module';
-import { FileModule } from 'src/file/file.module';
 import { Goal } from './entities/goal.entity';
 import { GoalController } from './goal.controller';
 import { GoalService } from './goal.service';
@@ -10,7 +9,7 @@ import { GoalService } from './goal.service';
 @Module({
   controllers: [GoalController],
   providers: [GoalService],
-  imports: [TypeOrmModule.forFeature([Goal]), UserModule, DayModule, FileModule],
+  imports: [TypeOrmModule.forFeature([Goal]), UserModule, DayModule],
   exports: [GoalService],
 })
 export class GoalModule {}

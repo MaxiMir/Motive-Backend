@@ -1,8 +1,12 @@
 import { ApiProperty } from '@nestjs/swagger';
-import { IsInt, IsOptional, Min } from 'class-validator';
+import { IsDateString, IsInt, IsOptional, IsString, Min } from 'class-validator';
 import { Type } from 'class-transformer';
 
 export class CreateMemberDto {
+  @IsString()
+  @IsDateString()
+  readonly started: string;
+
   @IsInt()
   @Min(1)
   @ApiProperty({

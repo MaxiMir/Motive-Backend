@@ -34,14 +34,14 @@ export class Task {
   })
   date: string;
 
-  @Column('boolean', { nullable: true, default: false })
+  @Column('boolean', { default: false })
   @ApiProperty({
     example: true,
     description: 'completed by owner',
   })
   completed = false;
 
-  @Column('boolean', { nullable: true, default: false })
+  @Column('boolean', { default: false })
   @ApiProperty({
     example: true,
     description: 'completed by other',

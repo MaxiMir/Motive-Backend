@@ -57,7 +57,7 @@ export class Goal {
   @ApiPropertyOptional({ type: () => Day, isArray: true })
   days: Day[];
 
-  @Column('boolean', { nullable: true, default: false })
+  @Column('boolean', { default: false })
   @ApiProperty({
     example: true,
     description: 'goal completed',

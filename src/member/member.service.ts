@@ -29,6 +29,7 @@ export class MemberService {
     member.uniq = this.getUniq(userId, dto.goalId);
     member.user = await this.userService.findByPK(userId);
     member.goal = await this.goalService.findByPK(dto.goalId);
+    member.started = dto.started;
     member.day = dto.dayId
       ? await this.dayService.findByPK(dto.dayId)
       : await this.dayService.findOne({ where: { goal: dto.goalId } });

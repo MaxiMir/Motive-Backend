@@ -30,6 +30,15 @@ export class Member {
   })
   uniq: string;
 
+  @Column({
+    type: 'timestamp with time zone',
+    default: () => "'TODAY'",
+  })
+  @ApiProperty({
+    example: '2022-02-16 00:00:00+03',
+  })
+  started: string;
+
   @Column('int', { array: true })
   @ApiProperty({
     example: [23, 33],

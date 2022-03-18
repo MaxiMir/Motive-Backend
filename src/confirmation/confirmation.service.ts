@@ -2,6 +2,7 @@ import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { UserService } from 'src/user/user.service';
+import { MemberService } from 'src/member/member.service';
 import { GoalService } from 'src/goal/goal.service';
 import { FileService } from 'src/file/file.service';
 import { ExpService } from 'src/exp/exp.service';
@@ -15,6 +16,7 @@ export class ConfirmationService {
     @InjectRepository(Confirmation)
     private readonly confirmationRepository: Repository<Confirmation>,
     private readonly userService: UserService,
+    private readonly memberService: MemberService,
     private readonly goalService: GoalService,
     private readonly fileService: FileService,
     private readonly expService: ExpService,
@@ -22,32 +24,34 @@ export class ConfirmationService {
 
   async save(dto: CreateConfirmationDto, photos: Express.Multer.File[], userId: number) {
     const user = await this.userService.findByPK(userId, { relations: ['characteristic'] });
-    const goal = await this.goalService.findByPK(dto.goalId, { relations: ['characteristic'] });
-    const isOwner = goal.ownerId === userId;
+    const goal = await this.goalService.findByPK(dto.goalId, { relations: ['owner', 'characteristic'] });
+    const member =
+      goal.ownerId === userId
+        ? null
+        : await this.memberService.findOne({ where: { user: user.id, goal: goal.id } });
     const confirmation = new Confirmation();
-    confirmation.started = goal.started; // todo member
+    confirmation.started = member?.started || goal.started;
     confirmation.end = dto.end;
     confirmation.photos = await this.fileService.uploadAndMeasureImages(photos, 'confirmation');
     confirmation.goal = goal;
     confirmation.user = user;
-    confirmation.owner = user; // todo member
-    confirmation.inherited = false; // todo member
+    confirmation.inherited = !!member;
 
     if (dto.text) {
       confirmation.text = dto.text;
     }
 
-    if (isOwner && goal.characteristic.creativity) {
+    if (!member && goal.characteristic.creativity) {
       user.characteristic.creativity_all += goal.characteristic.creativity;
       user.characteristic.creativity = this.expService.getProgress(user.characteristic.creativity_all);
     }
 
-    if (isOwner && goal.characteristic.support) {
+    if (!member && goal.characteristic.support) {
       user.characteristic.support_all += goal.characteristic.support;
       user.characteristic.support = this.expService.getProgress(user.characteristic.support_all);
     }
 
-    if (isOwner && goal.characteristic.motivation) {
+    if (!member && goal.characteristic.motivation) {
       user.characteristic.motivation_all += goal.characteristic.motivation;
     }
 
@@ -57,6 +61,7 @@ export class ConfirmationService {
 
     return this.confirmationRepository.manager.transaction(async (transactionalManager) => {
       await transactionalManager.save(user);
+
       return transactionalManager.save(confirmation);
     });
   }
@@ -65,7 +70,7 @@ export class ConfirmationService {
     const { where, take, skip } = query;
 
     return this.confirmationRepository.find({
-      relations: ['goal', 'goal.characteristic', 'owner'],
+      relations: ['goal', 'goal.characteristic', 'goal.owner'],
       where,
       order: {
         id: 'DESC',

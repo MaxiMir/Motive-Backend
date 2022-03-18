@@ -66,9 +66,10 @@ export class Topic {
   @RelationId((topic: Topic) => topic.day)
   dayId: number;
 
-  @Column('boolean', { nullable: true, default: false })
+  @Column('boolean', { default: false })
   @ApiProperty({
     example: true,
+    description: 'changed by user',
   })
   edited = false;
 }

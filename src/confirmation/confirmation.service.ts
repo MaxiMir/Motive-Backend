@@ -37,6 +37,10 @@ export class ConfirmationService {
     confirmation.user = user;
     confirmation.inherited = !!member;
 
+    if (!member) {
+      confirmation.goal.completed = true;
+    }
+
     if (dto.text) {
       confirmation.text = dto.text;
     }
@@ -60,6 +64,10 @@ export class ConfirmationService {
     user.characteristic.motivation = this.expService.getProgress(user.characteristic.motivation_all);
 
     return this.confirmationRepository.manager.transaction(async (transactionalManager) => {
+      if (member) {
+        await transactionalManager.remove(member);
+      }
+
       await transactionalManager.save(user);
 
       return transactionalManager.save(confirmation);

@@ -1,5 +1,5 @@
 import { ApiProperty } from '@nestjs/swagger';
-import { Column, Entity, JoinColumn, OneToOne } from 'typeorm';
+import { Column, Entity, JoinColumn, ManyToOne } from 'typeorm';
 import { Goal } from 'src/goal/entities/goal.entity';
 import { User } from 'src/user/entities/user.entity';
 import { ConfirmationBase } from './confirmation-base.entity';
@@ -18,11 +18,11 @@ export class Confirmation extends ConfirmationBase {
   })
   end: string;
 
-  @OneToOne(() => Goal, { cascade: true, nullable: false })
+  @ManyToOne(() => Goal, { cascade: true, nullable: false })
   @JoinColumn()
   goal: Goal;
 
-  @OneToOne(() => User, { nullable: false })
+  @ManyToOne(() => User, { nullable: false })
   @JoinColumn()
   user: User;
 

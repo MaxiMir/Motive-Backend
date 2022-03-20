@@ -16,6 +16,7 @@ export class UserBaseDto {
   })
   nickname: string;
 
+  @Index({ unique: true })
   @Column({ length: 100 })
   @ApiProperty({
     example: 'Maxim Minchenko',

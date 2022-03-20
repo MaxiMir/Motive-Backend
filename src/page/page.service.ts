@@ -9,6 +9,7 @@ import { SubscriptionService } from 'src/subscription/subscription.service';
 import { ReactionService } from 'src/reaction/reaction.service';
 import { DayService } from 'src/day/day.service';
 import { GoalService } from 'src/goal/goal.service';
+import { SearchParamsDto } from './dto/search-params.dto';
 
 type ReactionsMap = Record<number, { [k in Characteristic]: number[] }>;
 
@@ -157,5 +158,32 @@ export class PageService {
       .orderBy(`characteristic.${characteristic}`, 'DESC')
       .take(take)
       .getMany();
+  }
+
+  async findSearch(params: SearchParamsDto) {
+    const { q, type } = params;
+    const users = await this.userService.find({ relations: ['characteristic'] });
+
+    return {
+      content: {
+        q: q || '',
+        type,
+        hashtags: [
+          { name: 'motivation', views: Math.trunc(Math.random() * 10000) },
+          { name: 'develop', views: Math.trunc(Math.random() * 10000) },
+          { name: 'health', views: Math.trunc(Math.random() * 10000) },
+          { name: 'typescript', views: Math.trunc(Math.random() * 10000) },
+          { name: 'fitness', views: Math.trunc(Math.random() * 10000) },
+          { name: 'portugal', views: Math.trunc(Math.random() * 10000) },
+          { name: 'slimming', views: Math.trunc(Math.random() * 10000) },
+          { name: 'run', views: Math.trunc(Math.random() * 10000) },
+          { name: 'backend', views: Math.trunc(Math.random() * 10000) },
+          { name: 'frontend', views: Math.trunc(Math.random() * 10000) },
+          { name: 'promotion', views: Math.trunc(Math.random() * 10000) },
+          { name: 'english', views: Math.trunc(Math.random() * 10000) },
+        ],
+        users,
+      },
+    };
   }
 }

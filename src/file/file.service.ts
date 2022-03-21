@@ -1,5 +1,5 @@
 import { join } from 'path';
-import { unlink } from 'fs';
+import { existsSync, unlinkSync } from 'fs';
 import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
 import * as uuid from 'uuid';
 import * as sharp from 'sharp';
@@ -20,9 +20,13 @@ export class FileService {
   }
 
   removeImage(relativePath: string) {
-    return unlink(join(ROOT_FOLDER, relativePath), (e) => {
-      throw new HttpException(e?.message || 'Server error', HttpStatus.INTERNAL_SERVER_ERROR);
-    });
+    const file = join(ROOT_FOLDER, relativePath);
+
+    if (!existsSync(file)) {
+      return;
+    }
+
+    return unlinkSync(file);
   }
 
   private calculateAspectRatio = (width, height) => {

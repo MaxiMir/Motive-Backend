@@ -1,7 +1,5 @@
 import { ApiProperty } from '@nestjs/swagger';
-import { IsString, Length, Validate } from 'class-validator';
-import { User } from 'src/user/entities/user.entity';
-import { Unique } from 'src/validators/unique';
+import { IsString, Length } from 'class-validator';
 
 export class UpdateUserDto {
   @IsString()
@@ -12,7 +10,6 @@ export class UpdateUserDto {
   readonly name: string;
 
   @IsString()
-  @Validate(Unique, [User])
   @Length(3, 100)
   @ApiProperty({
     example: 'maximir',

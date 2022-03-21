@@ -19,7 +19,7 @@ import { AuthGuard } from 'src/guards/auth.guard';
 import { ParseOperationPipe } from 'src/pipes/parse-operation.pipe';
 import { TopicService } from 'src/topic/topic.service';
 import { CreateTopicDto } from './dto/create-topic.dto';
-import { FindQuery } from './dto/find-query';
+import { FindQueryDto } from './dto/find-query.dto';
 import { UpdateTopicDto } from './dto/update-topic.dto';
 import { Topic } from './entities/topic.entity';
 
@@ -39,7 +39,7 @@ export class TopicController {
   @ApiPagination({ name: 'where[day]', example: 10 })
   @ApiOperation({ summary: 'Get topics' })
   @ApiResponse({ status: 200, type: [Topic] })
-  find(@Query() query: FindQuery, @Identify() clientId?: number) {
+  find(@Query() query: FindQueryDto, @Identify() clientId?: number) {
     return this.topicService.find(query, clientId);
   }
 

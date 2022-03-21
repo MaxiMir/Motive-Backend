@@ -67,7 +67,7 @@ export class PageService {
     goalDatesMap?: GoalDayDto[],
     inherited?: boolean,
   ) {
-    const relations = ['tasks', 'feedback'];
+    const relations = ['characteristic', 'tasks', 'feedback'];
 
     return Promise.all(
       goals.map(async (goal) => {
@@ -162,7 +162,7 @@ export class PageService {
 
   async findSearch(params: SearchParamsDto) {
     const { q, type } = params;
-    const users = await this.userService.find({ relations: ['characteristic'] });
+    const users = await this.userService.find({ where: {} }, ['characteristic']);
 
     return {
       content: {

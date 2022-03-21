@@ -5,7 +5,7 @@ import { ApiPagination } from 'src/decorators/api-pagination.decorator';
 import { ApiImageFiles } from 'src/decorators/api-images.decorator';
 import { AuthGuard } from 'src/guards/auth.guard';
 import { CreateConfirmationDto } from './dto/create-confirmation.dto';
-import { FindQuery } from './dto/find-query';
+import { FindQueryDto } from './dto/find-query.dto';
 import { Confirmation } from './entities/confirmation.entity';
 import { ConfirmationService } from './confirmation.service';
 
@@ -48,7 +48,7 @@ export class ConfirmationController {
   @ApiOperation({ summary: 'Get confirmations' })
   @ApiPagination({ name: 'where[user]', example: 1 })
   @ApiResponse({ status: 200, type: [Confirmation] })
-  find(@Query() query: FindQuery) {
+  find(@Query() query: FindQueryDto) {
     return this.confirmationService.find(query);
   }
 }

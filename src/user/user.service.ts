@@ -2,11 +2,11 @@ import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { FindOneOptions } from 'typeorm/find-options/FindOneOptions';
-import { FindManyOptions } from 'typeorm/find-options/FindManyOptions';
 import { FileService } from 'src/file/file.service';
 import { UserCharacteristic } from 'src/user-characteristic/entities/user-characteristic.entity';
 import { UpdateUserDto } from './dto/update-user.dto';
 import { CreateUserDto } from './dto/create-user.dto';
+import { FindQuery } from './dto/find-query.dto';
 import { User } from './entities/user.entity';
 
 @Injectable()
@@ -21,17 +21,7 @@ export class UserService {
     return this.userRepository;
   }
 
-  async createOrFind(dto: CreateUserDto) {
-    const candidate = await this.userRepository.findOne({
-      where: {
-        email: dto.email,
-      },
-    });
-
-    if (candidate) {
-      return candidate;
-    }
-
+  async create(dto: CreateUserDto) {
     const user = this.userRepository.create(dto);
     user.nickname = [dto.name.replace(' ', '_'), '-', dto.sub].join('').toLowerCase();
     user.characteristic = new UserCharacteristic();
@@ -57,8 +47,15 @@ export class UserService {
     return this.userRepository.save(user);
   }
 
-  find(options?: FindManyOptions<User>) {
-    return this.userRepository.find(options);
+  find(query: FindQuery, relations?: string[]) {
+    const { where, take, skip } = query;
+
+    return this.userRepository.find({
+      relations,
+      where,
+      take,
+      skip,
+    });
   }
 
   findByPK(id: number, options?: FindOneOptions<User>) {

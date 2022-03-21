@@ -12,7 +12,7 @@ import { Like } from 'src/like/entities/like.entity';
 import { GoalCharacteristic } from 'src/goal-characteristic/entities/goal-characteristic.entity';
 import { DayCharacteristic } from 'src/day-characteristic/entities/day-characteristic.entity';
 import { CreateTopicDto } from './dto/create-topic.dto';
-import { FindQuery } from './dto/find-query';
+import { FindQueryDto } from './dto/find-query.dto';
 import { TopicTypeDto } from './dto/topic-type.dto';
 import { Topic } from './entities/topic.entity';
 import { UpdateTopicDto } from './dto/update-topic.dto';
@@ -57,7 +57,7 @@ export class TopicService {
     return this.topicRepository.update({ id, user }, { text: dto.text, edited: true });
   }
 
-  async find(query: FindQuery, userId?: number) {
+  async find(query: FindQueryDto, userId?: number) {
     const { where, take, skip } = query;
     const topics = await this.topicRepository.find({
       where: { type: Not(TopicTypeDto.ANSWER), ...where },

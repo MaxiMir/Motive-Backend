@@ -7,7 +7,7 @@ import { GoalService } from 'src/goal/goal.service';
 import { FileService } from 'src/file/file.service';
 import { ExpService } from 'src/exp/exp.service';
 import { CreateConfirmationDto } from './dto/create-confirmation.dto';
-import { FindQuery } from './dto/find-query';
+import { FindQueryDto } from './dto/find-query.dto';
 import { Confirmation } from './entities/confirmation.entity';
 
 @Injectable()
@@ -74,7 +74,7 @@ export class ConfirmationService {
     });
   }
 
-  async find(query: FindQuery) {
+  async find(query: FindQueryDto) {
     const { where, take, skip } = query;
 
     return this.confirmationRepository.find({

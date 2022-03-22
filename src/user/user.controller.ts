@@ -8,9 +8,10 @@ import {
   Patch,
   UseGuards,
   Query,
+  Put,
   ParseIntPipe,
 } from '@nestjs/common';
-import { ApiBody, ApiOperation, ApiParam, ApiResponse, ApiTags } from '@nestjs/swagger';
+import { ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
 import { ApiImageFile } from 'src/decorators/api-image.decorator';
 import { ApiPagination } from 'src/decorators/api-pagination.decorator';
 import { Identify } from 'src/decorators/identify.decorator';
@@ -19,7 +20,6 @@ import { ParseFile } from 'src/pipes/parse-file.pipe';
 import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
 import { FindQuery } from './dto/find-query.dto';
-import { UserDto } from './dto/user.dto';
 import { User } from './entities/user.entity';
 import { UserService } from './user.service';
 
@@ -43,39 +43,24 @@ export class UserController {
     return this.userService.create(dto);
   }
 
-  @Patch(':id')
+  @Put(':id')
   @UseGuards(AuthGuard)
   @ApiOperation({ summary: 'Update user' })
-  @ApiBody({
-    schema: {
-      type: 'object',
-      required: ['name', 'nickname', 'avatar'],
-      properties: {
-        name: { type: 'string', example: 'Maxim Minchenko' },
-        nickname: { type: 'string', example: 'maximir' },
-        avatar: {
-          type: 'string',
-          format: 'binary',
-        },
-      },
-    },
-  })
+  @ApiResponse({ status: 200, type: User })
+  update(@Param('id', ParseIntPipe) id: number, @Body() dto: UpdateUserDto, @Identify() clientId: number) {
+    return this.userService.update(dto, clientId);
+  }
+
+  @Patch(':id/avatar')
+  @UseGuards(AuthGuard)
+  @ApiOperation({ summary: 'Update user avatar' })
   @ApiImageFile('avatar')
   @ApiResponse({ status: 200, type: User })
-  update(
+  updateAvatar(
     @Param('id', ParseIntPipe) id: number,
-    @Body() dto: UpdateUserDto,
     @UploadedFile(ParseFile) file: Express.Multer.File,
     @Identify() clientId: number,
   ) {
-    return this.userService.update(dto, file, clientId);
-  }
-
-  @Get(':nickname')
-  @ApiOperation({ summary: 'Get user by nickname' })
-  @ApiParam({ name: 'nickname', example: 'maximir' })
-  @ApiResponse({ status: 200, type: UserDto })
-  findByNickname(@Param('nickname') nickname: string) {
-    return this.userService.findByNickname(nickname);
+    return this.userService.updateAvatar(file, clientId);
   }
 }

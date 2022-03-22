@@ -29,11 +29,17 @@ export class UserService {
     return this.userRepository.save(user);
   }
 
-  async update(dto: UpdateUserDto, file: Express.Multer.File, userId: number) {
+  async update(dto: UpdateUserDto, userId: number) {
     const user = await this.findByPK(userId);
-    const lastAvatar = user.avatar;
     user.name = dto.name;
     user.nickname = dto.nickname;
+
+    return this.userRepository.save(user);
+  }
+
+  async updateAvatar(file: Express.Multer.File, userId: number) {
+    const user = await this.findByPK(userId);
+    const lastAvatar = user.avatar;
 
     if (file) {
       const avatar = await this.fileService.uploadImage(file, 'avatars', { width: 500 });
@@ -60,9 +66,5 @@ export class UserService {
 
   findByPK(id: number, options?: FindOneOptions<User>) {
     return this.userRepository.findOneOrFail({ id }, options);
-  }
-
-  findByNickname(nickname: string, options?: FindOneOptions<User>) {
-    return this.userRepository.findOneOrFail({ nickname }, options);
   }
 }

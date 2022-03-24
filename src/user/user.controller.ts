@@ -53,8 +53,8 @@ export class UserController {
 
   @Patch(':id/avatar')
   @UseGuards(AuthGuard)
-  @ApiOperation({ summary: 'Update user avatar' })
   @ApiImageFile('avatar')
+  @ApiOperation({ summary: 'Update user avatar' })
   @ApiResponse({ status: 200, type: User })
   updateAvatar(
     @Param('id', ParseIntPipe) id: number,

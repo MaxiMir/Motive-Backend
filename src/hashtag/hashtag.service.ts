@@ -1,8 +1,8 @@
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
-import { FindOneOptions } from 'typeorm/find-options/FindOneOptions';
 import { Hashtag } from './entities/hashtag.entity';
+import { FindManyOptions } from 'typeorm/find-options/FindManyOptions';
 
 @Injectable()
 export class HashtagService {
@@ -11,7 +11,7 @@ export class HashtagService {
     private readonly hashtagRepository: Repository<Hashtag>,
   ) {}
 
-  getByPK(id: number, options?: FindOneOptions<Hashtag>) {
-    return this.hashtagRepository.findOneOrFail({ id }, options);
+  find(options?: FindManyOptions<Hashtag>) {
+    return this.hashtagRepository.find(options);
   }
 }

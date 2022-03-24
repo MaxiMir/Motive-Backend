@@ -17,6 +17,7 @@ export class Hashtag {
   })
   name: string;
 
+  @Index()
   @Column({ default: 0 })
   @ApiProperty({
     example: 13242,

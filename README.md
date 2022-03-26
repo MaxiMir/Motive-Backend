@@ -1,8 +1,8 @@
 ```shell
-docker build -t maximir/2bebetter-backend:1.0 .
-docker run -d -p 6969:6969 maximir/2bebetter-backend:1.0
+docker build -t maxiimir/2bebetter-backend:1.0.1 .
+docker push maxiimir/2bebetter-backend:1.0.1
+docker run -d -p 4000:4000 maxiimir/2bebetter-backend:1.0.1
 
-docker-compose run --rm app
 docker-compose up -d # установка образа с бд
 
 npm i -g @nestjs/cli

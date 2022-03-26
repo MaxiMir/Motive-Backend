@@ -1,11 +1,33 @@
-version: '3.1'
+version: '3.9'
 
 services:
-  db:
+  api:
+    build:
+      dockerfile: Dockerfile
+      context: .
+    depends_on:
+      - postgres
+    environment:
+      - POSTGRES_HOST=postgres
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=example
+      - POSTGRES_DB=bebetter
+      - POSTGRES_PORT=5432
+    volumes:
+      - .:/usr/src/app
+      - /usr/src/app/node_modules
+    restart: unless-stopped
+    ports:
+      - "4000:4000"
+
+  postgres:
+    container_name: postgres
     image: postgres:14.2
     restart: always
     environment:
+      POSTGRES_USER: postgres
       POSTGRES_PASSWORD: example
+      POSTGRES_DB: bebetter
     volumes:
       - ./db:/var/lib/postgresql/data
       - ./postgresql.conf:/etc/postgresql/postgresql.conf

@@ -20,12 +20,14 @@ USER node
 WORKDIR /home/node
 
 COPY package*.json ./
+COPY yarn.lock ./
 
 COPY --chown=node:node . .
-RUN yarn install --production \
-    && yarn build
 
-# ---
+RUN yarn add --platform=linuxmusl --arch=x64 sharp
+
+#RUN yarn install --production
+RUN yarn build
 
 FROM node:16-alpine
 

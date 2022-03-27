@@ -16,7 +16,10 @@ async function bootstrap() {
   app.useGlobalPipes(new ValidationPipe({ transform: true })); // validation for all endpoints
   app.useGlobalFilters(new AllExceptionsFilter());
   useContainer(app.select(AppModule), { fallbackOnErrors: true });
-  app.enableCors({ origin: process.env.CLIENT, credentials: true });
+  app.enableCors({
+    origin: [process.env.CLIENT as string, process.env.CLIENT_NGINX as string],
+    credentials: true,
+  });
   app.use(cookieParser());
   app.use(
     helmet({

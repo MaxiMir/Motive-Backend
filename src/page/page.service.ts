@@ -9,6 +9,7 @@ import { SubscriptionService } from 'src/subscription/subscription.service';
 import { ReactionService } from 'src/reaction/reaction.service';
 import { DayService } from 'src/day/day.service';
 import { GoalService } from 'src/goal/goal.service';
+import { HashtagService } from 'src/hashtag/hashtag.service';
 import { SearchParamsDto } from './dto/search-params.dto';
 
 type ReactionsMap = Record<number, { [k in Characteristic]: number[] }>;
@@ -21,6 +22,7 @@ export class PageService {
     private readonly dayService: DayService,
     private readonly subscriptionService: SubscriptionService,
     private readonly reactionService: ReactionService,
+    private readonly hashtagService: HashtagService,
   ) {}
 
   async findUser(nickname: string, goalDateMap?: GoalDayDto[], userId?: number) {
@@ -42,8 +44,8 @@ export class PageService {
     const following = !userId ? false : await this.subscriptionService.checkOnFollowing(user.id, userId);
     const membership = this.getMembership(user.membership, goalDateMap);
     const reactionsList = await this.findReactionsList([...user.goals, ...membership.goals], userId);
-    const ownerGoals = await this.findGoals(user.goals, reactionsList, goalDateMap);
-    const memberGoals = await this.findGoals(membership.goals, reactionsList, membership.goalDateMap, true);
+    const ownerGoals = await this.findDays(user.goals, reactionsList, goalDateMap);
+    const memberGoals = await this.findDays(membership.goals, reactionsList, membership.goalDateMap, true);
     const goals = [...ownerGoals, ...memberGoals];
 
     return {
@@ -61,7 +63,7 @@ export class PageService {
     };
   }
 
-  private async findGoals(
+  private async findDays(
     goals: Goal[],
     reactionsList: ReactionsMap,
     goalDatesMap?: GoalDayDto[],
@@ -161,12 +163,14 @@ export class PageService {
   }
 
   async findSearch(params: SearchParamsDto) {
-    const { q, type } = params;
-    const users = await this.userService.find({ where: {} }, ['characteristic']);
+    const { q = '', type } = params;
+    const users = await this.findByCharacteristic('motivation', 6);
+    const goal = await this.goalService.findByPK(1, { relations: ['characteristic', 'owner'] });
+    const hashtags = await this.hashtagService.find({ take: 12, order: { views: 'DESC' } });
 
     return {
       content: {
-        q: q || '',
+        q,
         type,
         hashtags: [
           { name: 'motivation', views: Math.trunc(Math.random() * 10000) },
@@ -182,6 +186,7 @@ export class PageService {
           { name: 'promotion', views: Math.trunc(Math.random() * 10000) },
           { name: 'english', views: Math.trunc(Math.random() * 10000) },
         ],
+        goals: [goal],
         users,
       },
     };

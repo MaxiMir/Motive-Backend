@@ -2,13 +2,14 @@ import { BadRequestException, Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { FindOneOptions } from 'typeorm/find-options/FindOneOptions';
-import { Operation } from 'src/abstracts/operation';
 import { Characteristic } from 'src/abstracts/characteristic';
 import { CreateDayDto } from 'src/day/dto/create-day.dto';
 import { DayCharacteristic } from 'src/day-characteristic/entities/day-characteristic.entity';
 import { GoalCharacteristic } from 'src/goal-characteristic/entities/goal-characteristic.entity';
+import { UserCharacteristic } from 'src/user-characteristic/entities/user-characteristic.entity';
 import { Reaction } from 'src/reaction/entities/reaction.entity';
 import { UserService } from 'src/user/user.service';
+import { ExpService } from 'src/exp/exp.service';
 import { DayService } from 'src/day/day.service';
 import { CreateGoalDto } from './dto/create-goal.dto';
 import { UpdateStageDto } from './dto/update-stage.dto';
@@ -21,6 +22,7 @@ export class GoalService {
     private readonly goalRepository: Repository<Goal>,
     private readonly userService: UserService,
     private readonly dayService: DayService,
+    private readonly expService: ExpService,
   ) {}
 
   async save(dto: CreateGoalDto, userId: number) {
@@ -71,13 +73,7 @@ export class GoalService {
     return this.goalRepository.update({ id, owner }, { stage: dto.stage });
   }
 
-  async updateCharacteristic(
-    id: number,
-    dayId: number,
-    characteristic: Characteristic,
-    operation: Operation,
-    userId: number,
-  ) {
+  async updateCharacteristic(id: number, dayId: number, characteristic: Characteristic, userId: number) {
     const user = { id: userId };
     const uniq = this.getUniq(userId, dayId, characteristic);
     const goal = await this.findByPK(id, { relations: ['characteristic'] });
@@ -93,11 +89,25 @@ export class GoalService {
       day.characteristic[characteristic] = 0;
     }
 
-    day.characteristic[characteristic] += operation === 'insert' ? 1 : -1;
-    goal.characteristic[characteristic] += operation === 'insert' ? 1 : -1;
+    day.characteristic[characteristic] += 1;
+    goal.characteristic[characteristic] += 1;
 
     return this.goalRepository.manager.transaction(async (transactionalManager) => {
-      await transactionalManager[operation](Reaction, {
+      if (goal.completed) {
+        const criteria = { user: { id: goal.ownerId } };
+        const userCharacteristic = await transactionalManager
+          .getRepository(UserCharacteristic)
+          .findOneOrFail(criteria);
+        const field = `${characteristic}_all`;
+        const fieldValue = userCharacteristic[field] + 1;
+
+        await transactionalManager.update(UserCharacteristic, criteria, {
+          [field]: fieldValue,
+          [characteristic]: this.expService.getProgress(fieldValue),
+        });
+      }
+
+      await transactionalManager.insert(Reaction, {
         user,
         characteristic,
         goal,

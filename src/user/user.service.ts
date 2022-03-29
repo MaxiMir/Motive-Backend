@@ -42,8 +42,7 @@ export class UserService {
     const lastAvatar = user.avatar;
 
     if (file) {
-      const avatar = await this.fileService.uploadImage(file, 'avatars', { width: 500 });
-      user.avatar = avatar.replace(`/${process.env.STATIC_FOLDER}`, '');
+      user.avatar = await this.fileService.uploadImage(file, 'avatars', { width: 500 });
     }
 
     if (file && lastAvatar) {

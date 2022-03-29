@@ -80,7 +80,7 @@ yarn add @nestjs/serve-static
 В app.module.ts:
 ```typescript
 ServeStaticModule.forRoot({
-  exclude: ['/api*'], // default floder - client
+  exclude: ['/api*'], // default folder - client
 })
 ```
 

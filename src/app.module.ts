@@ -43,7 +43,7 @@ import { MemberModule } from './member/member.module';
       migrations: [join(__dirname, '..', 'migrations/**/*.ts')],
       synchronize: true, // TODO shouldn't be used in production - otherwise you can lose production data
       dropSchema: false,
-      logging: false,
+      logging: true,
       cli: {
         entitiesDir: 'src',
         migrationsDir: 'migrations',

@@ -4,14 +4,14 @@ import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
 import * as uuid from 'uuid';
 import * as sharp from 'sharp';
 
-const ROOT_FOLDER = 'client';
-
 @Injectable()
 export class FileService {
+  static STATIC = join('client', 'static');
+
   async uploadImage(file: Express.Multer.File, folder: string, options: { width?: number; height?: number }) {
     try {
       const fileName = `${uuid.v4()}.webp`;
-      await sharp(file.buffer).resize(options).webp().toFile(join(ROOT_FOLDER, folder, fileName));
+      await sharp(file.buffer).resize(options).webp().toFile(join(FileService.STATIC, folder, fileName));
 
       return join('/', folder, fileName);
     } catch (e) {
@@ -20,7 +20,7 @@ export class FileService {
   }
 
   removeImage(relativePath: string) {
-    const file = join(ROOT_FOLDER, relativePath);
+    const file = join(FileService.STATIC, relativePath);
 
     if (!existsSync(file)) {
       return;

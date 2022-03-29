@@ -25,8 +25,6 @@ COPY yarn.lock ./
 COPY --chown=node:node . .
 
 RUN yarn add --platform=linuxmusl --arch=x64 sharp
-
-#RUN yarn install --production
 RUN yarn build
 
 FROM node:16-alpine

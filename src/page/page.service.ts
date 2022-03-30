@@ -40,7 +40,6 @@ export class PageService {
       .leftJoinAndSelect('membership-goal.owner', 'membership-goal-owner')
       .where('user.nickname = :nickname', { nickname })
       .getOneOrFail();
-
     const following = !userId ? false : await this.subscriptionService.checkOnFollowing(user.id, userId);
     const membership = this.getMembership(user.membership, goalDateMap);
     const reactionsList = await this.findReactionsList([...user.goals, ...membership.goals], userId);

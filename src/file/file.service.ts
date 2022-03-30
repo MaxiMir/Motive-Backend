@@ -6,25 +6,23 @@ import * as sharp from 'sharp';
 
 @Injectable()
 export class FileService {
-  static CLIENT_FOLDER = 'client';
+  static ROOT_FOLDER = 'client';
   static STATIC_FOLDER = 'static';
 
   async uploadImage(file: Express.Multer.File, folder: string, options: { width?: number; height?: number }) {
     try {
       const fileName = `${uuid.v4()}.webp`;
-      await sharp(file.buffer)
-        .resize(options)
-        .webp()
-        .toFile(join(FileService.CLIENT_FOLDER, FileService.STATIC_FOLDER, folder, fileName));
+      const staticPath = join('/', FileService.STATIC_FOLDER, folder, fileName);
+      await sharp(file.buffer).resize(options).webp().toFile(join(FileService.ROOT_FOLDER, staticPath));
 
-      return join('/', FileService.STATIC_FOLDER, folder, fileName);
+      return staticPath;
     } catch (e) {
       throw new HttpException(e.message, HttpStatus.INTERNAL_SERVER_ERROR);
     }
   }
 
   removeImage(relativePath: string) {
-    const file = join(FileService.CLIENT_FOLDER, relativePath);
+    const file = join(FileService.ROOT_FOLDER, relativePath);
 
     if (!existsSync(file)) {
       return;

@@ -2,6 +2,7 @@ import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { FindOneOptions } from 'typeorm/find-options/FindOneOptions';
+import * as uuid from 'uuid';
 import { FileService } from 'src/file/file.service';
 import { UserCharacteristic } from 'src/user-characteristic/entities/user-characteristic.entity';
 import { UpdateUserDto } from './dto/update-user.dto';
@@ -23,7 +24,7 @@ export class UserService {
 
   async create(dto: CreateUserDto) {
     const user = this.userRepository.create(dto);
-    user.nickname = [dto.name.replace(' ', '_'), '-', dto.sub].join('').toLowerCase();
+    user.nickname = uuid.v4();
     user.characteristic = new UserCharacteristic();
 
     return this.userRepository.save(user);

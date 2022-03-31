@@ -115,14 +115,12 @@ export class PageService {
       .createQueryBuilder('reaction')
       .select(['reaction.goal.id as goal_id', 'reaction.day.id as day_id', 'characteristic'])
       .where('reaction.goal.id IN (:...ids)', { ids })
+      .andWhere('reaction.user.id = :userId', { userId })
       .getRawMany();
 
     return reactions.reduce((acc, { goal_id, day_id, characteristic }) => {
       if (!acc[goal_id]) {
-        acc[goal_id] = {
-          motivation: [],
-          creativity: [],
-        };
+        acc[goal_id] = { motivation: [], creativity: [] };
       }
 
       acc[goal_id][characteristic].push(day_id);

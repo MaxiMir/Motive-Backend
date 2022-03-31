@@ -1,14 +1,5 @@
 import { ApiProperty } from '@nestjs/swagger';
-import {
-  Column,
-  Entity,
-  Index,
-  JoinColumn,
-  ManyToOne,
-  OneToOne,
-  PrimaryGeneratedColumn,
-  RelationId,
-} from 'typeorm';
+import { Column, Entity, Index, JoinColumn, ManyToOne, PrimaryGeneratedColumn, RelationId } from 'typeorm';
 import { User } from 'src/user/entities/user.entity';
 import { Goal } from 'src/goal/entities/goal.entity';
 import { Day } from 'src/day/entities/day.entity';
@@ -66,7 +57,7 @@ export class Member {
   @RelationId((member: Member) => member.user)
   userId: number;
 
-  @OneToOne(() => Day, { nullable: false })
+  @ManyToOne(() => Day, { nullable: false })
   @JoinColumn()
   day: Day;
 

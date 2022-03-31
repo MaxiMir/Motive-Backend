@@ -1,13 +1,13 @@
 ```shell
-docker build -t maximir/backend:1.0.0 .
-docker push maximir/backend:1.0.0
+docker build -t maximir/backend:1.0.1 .
+docker push maximir/backend:1.0.1
 docker run -d -p 4000:4000 maximir/backend:1.0.0
 
 docker-compose up -d # установка образа с бд
 
-docker tag <IMAGE_ID> maximir.jfrog.io/default-docker-virtual/backend:1.0.0
-docker push maximir.jfrog.io/default-docker-virtual/backend:1.0.0
-docker pull maximir.jfrog.io/default-docker-virtual/backend:1.0.0
+docker tag <IMAGE_ID> maximir.jfrog.io/default-docker-virtual/backend:1.0.1
+docker push maximir.jfrog.io/default-docker-virtual/backend:1.0.1
+docker pull maximir.jfrog.io/default-docker-virtual/backend:1.0.1
 
 npm i -g @nestjs/cli
 nest new motive-backend

@@ -47,7 +47,6 @@ cli.entitiesDir — директория, куда по умолчанию до�
   "migration:run": "yarn run typeorm migration:run" // запуск миграций
 }
 ```
-
 ```shell
 yarn add @nestjsx/crud class-transformer class-validator
 

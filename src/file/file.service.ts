@@ -50,7 +50,7 @@ export class FileService {
     }
   }
 
-  uploadAndMeasureImages(files: Express.Multer.File[], folder) {
+  uploadAndMeasureImages(files: Express.Multer.File[], folder: string) {
     return Promise.all(
       files.map(async (photo) => {
         const [width, height] = await this.getImageRatio(photo);

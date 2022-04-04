@@ -5,6 +5,7 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 import { ConfigModule } from '@nestjs/config';
 import { Module } from '@nestjs/common';
 import { MulterModule } from '@nestjs/platform-express';
+import { ScheduleModule } from '@nestjs/schedule';
 import { UserModule } from './user/user.module';
 import { GoalModule } from './goal/goal.module';
 import { UserCharacteristicModule } from './user-characteristic/user-characteristic.module';
@@ -26,6 +27,7 @@ import { MemberModule } from './member/member.module';
 
 @Module({
   imports: [
+    ScheduleModule.forRoot(),
     ConfigModule.forRoot({ isGlobal: true }),
     MulterModule.register(),
     ServeStaticModule.forRoot({

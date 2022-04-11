@@ -32,7 +32,7 @@ export class MemberService {
     member.started = dto.started;
     member.day = dto.dayId
       ? await this.dayService.findByPK(dto.dayId)
-      : await this.dayService.findOne({ where: { goal: dto.goalId } });
+      : await this.dayService.findOne({ where: { goal: dto.goalId }, order: { id: 'ASC' } });
 
     return this.memberRepository.manager.transaction(async (transactionalManager) => {
       await transactionalManager.increment(GoalCharacteristic, { goal: member.goal.id }, 'members', 1);

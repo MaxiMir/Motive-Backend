@@ -11,10 +11,11 @@ export class FileService {
 
   async uploadImage(file: Express.Multer.File, folder: string, options: { width?: number; height?: number }) {
     try {
-      const path = join('/', FileService.STATIC_FOLDER, folder, `${uuid.v4()}.webp`);
-      await sharp(file.buffer).resize(options).webp().toFile(join(FileService.ROOT_FOLDER, path));
+      const staticPath = join('/', FileService.STATIC_FOLDER, folder, `${uuid.v4()}.webp`);
+      const rootPath = join(FileService.ROOT_FOLDER, staticPath);
+      await sharp(file.buffer).resize(options).webp().toFile(rootPath);
 
-      return path;
+      return staticPath;
     } catch (e) {
       throw new HttpException(e.message, HttpStatus.INTERNAL_SERVER_ERROR);
     }

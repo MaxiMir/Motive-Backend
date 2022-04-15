@@ -1,6 +1,7 @@
 import { BadRequestException, Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { Repository } from 'typeorm';
+import { Cron } from '@nestjs/schedule';
+import { In, Raw, Repository } from 'typeorm';
 import { FindOneOptions } from 'typeorm/find-options/FindOneOptions';
 import { Characteristic } from 'src/abstracts/characteristic';
 import { CreateDayDto } from 'src/day/dto/create-day.dto';
@@ -11,6 +12,7 @@ import { Reaction } from 'src/reaction/entities/reaction.entity';
 import { UserService } from 'src/user/user.service';
 import { ExpService } from 'src/exp/exp.service';
 import { DayService } from 'src/day/day.service';
+import { FileService } from 'src/file/file.service';
 import { CreateGoalDto } from './dto/create-goal.dto';
 import { UpdateStageDto } from './dto/update-stage.dto';
 import { Goal } from './entities/goal.entity';
@@ -23,7 +25,33 @@ export class GoalService {
     private readonly userService: UserService,
     private readonly dayService: DayService,
     private readonly expService: ExpService,
+    private readonly fileService: FileService,
   ) {}
+
+  @Cron('00 30 02 * * *')
+  async handleCron() {
+    const goals = await this.goalRepository.find({
+      relations: ['owner', 'days', 'days.feedback'],
+      where: {
+        updated: Raw((alias) => `${alias} < CURRENT_DATE - ${process.env.EAT_AFTER_DAYS}`),
+        completed: false,
+      },
+    });
+
+    if (!goals.length) return;
+
+    const owners = goals.map((g) => g.owner.id);
+    const photos = goals
+      .map((g) => g.days.map((d) => d.feedback?.photos?.map((p) => p.src)))
+      .flat(3)
+      .filter(Boolean);
+
+    return this.goalRepository.manager.transaction(async (transactionalManager) => {
+      await transactionalManager.increment(UserCharacteristic, { user: In(owners) }, 'abandoned', 1);
+      await transactionalManager.remove(goals);
+      photos.forEach(this.fileService.removeImage);
+    });
+  }
 
   async save(dto: CreateGoalDto, userId: number) {
     const owner = await this.userService.findByPK(userId);
@@ -31,6 +59,7 @@ export class GoalService {
     const day = this.dayService.create({ date: dto.tasksDate, tasks: dto.tasks }, userId);
     goal.name = dto.name;
     goal.started = dto.started;
+    goal.updated = dto.started;
     goal.characteristic = new GoalCharacteristic();
     goal.hashtags = dto.hashtags;
     goal.stages = dto.stages;
@@ -63,6 +92,7 @@ export class GoalService {
     const day = this.dayService.create(dto, userId);
     day.stage = goal.stage;
     goal.days.push(day);
+    goal.updated = new Date().toISOString();
 
     return this.goalRepository.save(goal);
   }

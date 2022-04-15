@@ -32,6 +32,16 @@ export class Goal {
   })
   started: string;
 
+  @Column({
+    type: 'timestamp with time zone',
+    default: () => "'TODAY'",
+  })
+  @ApiProperty({
+    example: '2022-02-16 00:00:00+03',
+    description: 'user time / server time',
+  })
+  updated: string;
+
   @Column('simple-array')
   @ApiProperty({
     example: ['knowledge', 'education'],

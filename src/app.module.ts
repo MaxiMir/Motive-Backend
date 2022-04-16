@@ -24,6 +24,7 @@ import { LikeModule } from './like/like.module';
 import { ReportModule } from './report/report.module';
 import { ConfirmationModule } from './confirmation/confirmation.module';
 import { MemberModule } from './member/member.module';
+import { SeoModule } from './seo/seo.module';
 
 @Module({
   imports: [
@@ -70,6 +71,7 @@ import { MemberModule } from './member/member.module';
     ReportModule,
     ConfirmationModule,
     MemberModule,
+    SeoModule,
   ],
 })
 export class AppModule {}

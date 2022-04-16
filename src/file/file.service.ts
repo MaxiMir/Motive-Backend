@@ -14,7 +14,7 @@ export class FileService {
       const staticPath = join('/', FileService.STATIC_FOLDER, folder, `${uuid.v4()}.webp`);
       const rootPath = join(FileService.ROOT_FOLDER, staticPath);
       await sharp(file.buffer).resize(options).webp().toFile(rootPath);
-
+      // todo fix
       return staticPath;
     } catch (e) {
       throw new HttpException(e.message, HttpStatus.INTERNAL_SERVER_ERROR);

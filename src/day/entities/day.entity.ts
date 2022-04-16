@@ -54,7 +54,9 @@ export class Day {
   @ApiHideProperty()
   feedback: Feedback;
 
-  @OneToMany(() => Topic, (topic) => topic.day)
+  @OneToMany(() => Topic, (topic) => topic.day, {
+    onDelete: 'CASCADE',
+  })
   @ApiPropertyOptional({ type: () => Topic, isArray: true })
   @ApiHideProperty()
   topics: Topic[];
@@ -67,6 +69,7 @@ export class Day {
 
   @OneToMany(() => Reaction, (reaction) => reaction.day, {
     cascade: true,
+    onDelete: 'CASCADE',
   })
   @ApiHideProperty()
   reactions: Reaction[];

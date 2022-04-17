@@ -21,14 +21,14 @@ export class Reaction {
   })
   characteristic: Characteristic;
 
-  @ManyToOne(() => Goal, { nullable: false })
+  @ManyToOne(() => Goal, { nullable: false, onDelete: 'CASCADE' })
   @JoinColumn()
   goal: Goal;
 
   @RelationId((reaction: Reaction) => reaction.goal)
   goalId: number;
 
-  @ManyToOne(() => Day, { nullable: false })
+  @ManyToOne(() => Day, { nullable: false, onDelete: 'CASCADE' })
   @JoinColumn()
   day: Day;
 

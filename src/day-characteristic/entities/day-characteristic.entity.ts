@@ -29,7 +29,7 @@ export class DayCharacteristic {
   @Column({ default: 0 })
   support: number;
 
-  @OneToOne(() => Day, { nullable: false })
+  @OneToOne(() => Day, { nullable: false, onDelete: 'CASCADE' })
   @JoinColumn()
   day: Day;
 

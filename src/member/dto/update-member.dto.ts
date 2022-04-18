@@ -5,7 +5,7 @@ import { Type } from 'class-transformer';
 export class UpdateMemberDto {
   @IsString()
   @IsDateString()
-  readonly lastEndOfDay: string;
+  readonly updated: string;
 
   @Type(() => Number)
   @IsInt()

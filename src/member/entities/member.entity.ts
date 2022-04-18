@@ -37,11 +37,14 @@ export class Member {
   })
   completedTasks: number[] = [];
 
-  @Column({ nullable: true })
+  @Column({
+    type: 'timestamp with time zone',
+    default: () => "'TODAY'",
+  })
   @ApiProperty({
     example: '2022-02-16 00:00:00+03',
   })
-  lastEndOfDay: string;
+  updated: string;
 
   @ManyToOne(() => Goal, { nullable: false })
   @JoinColumn()

@@ -25,6 +25,7 @@ import { ReportModule } from './report/report.module';
 import { ConfirmationModule } from './confirmation/confirmation.module';
 import { MemberModule } from './member/member.module';
 import { SeoModule } from './seo/seo.module';
+import { NotificationModule } from './notification/notification.module';
 
 @Module({
   imports: [
@@ -72,6 +73,7 @@ import { SeoModule } from './seo/seo.module';
     ConfirmationModule,
     MemberModule,
     SeoModule,
+    NotificationModule,
   ],
 })
 export class AppModule {}

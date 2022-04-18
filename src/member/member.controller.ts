@@ -9,7 +9,7 @@ import {
   Patch,
   ParseIntPipe,
 } from '@nestjs/common';
-import { ApiOperation, ApiResponse } from '@nestjs/swagger';
+import { ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
 import { Identify } from 'src/decorators/identify.decorator';
 import { AuthGuard } from 'src/guards/auth.guard';
 import { CreateMemberDto } from './dto/create-member.dto';
@@ -18,6 +18,7 @@ import { MemberService } from './member.service';
 import { UpdateMemberDto } from './dto/update-member.dto';
 
 @Controller('members')
+@ApiTags('Members')
 export class MemberController {
   constructor(private readonly memberService: MemberService) {}
 

@@ -41,10 +41,6 @@ export class CreateGoalDto {
   })
   readonly stages: string[];
 
-  @IsString()
-  @IsDateString()
-  readonly tasksDate: string;
-
   @IsArray()
   @ArrayMinSize(1)
   @ApiProperty({ type: () => CreateTaskDto, isArray: true })

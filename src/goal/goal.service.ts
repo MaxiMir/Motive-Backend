@@ -56,7 +56,7 @@ export class GoalService {
   async save(dto: CreateGoalDto, userId: number) {
     const owner = await this.userService.findByPK(userId);
     const goal = new Goal();
-    const day = this.dayService.create({ date: dto.tasksDate, tasks: dto.tasks }, userId);
+    const day = this.dayService.create({ date: dto.started, tasks: dto.tasks }, userId);
     goal.name = dto.name;
     goal.started = dto.started;
     goal.updated = dto.started;
@@ -92,7 +92,7 @@ export class GoalService {
     const day = this.dayService.create(dto, userId);
     day.stage = goal.stage;
     goal.days.push(day);
-    goal.updated = new Date().toISOString();
+    goal.updated = dto.date;
 
     return this.goalRepository.save(goal);
   }

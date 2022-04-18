@@ -5,5 +5,5 @@ import { Pagination } from 'src/abstracts/pagination';
 export class FindQueryDto extends Pagination {
   @IsObject()
   @Type(() => Object)
-  where: { email?: string; name?: string };
+  where: { user: string };
 }

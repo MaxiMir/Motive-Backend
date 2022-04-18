@@ -110,6 +110,8 @@ yarn add helmet # для защиты приложения - передает с
 ### Subscribes:
 
 ```typescript
+import { EventSubscriber, EntitySubscriberInterface, InsertEvent } from 'typeorm';
+
 @EventSubscriber()
 export class ReactionSubscriber implements EntitySubscriberInterface<Reaction> {
   listenTo() {

@@ -19,7 +19,7 @@ import { AuthGuard } from 'src/guards/auth.guard';
 import { ParseFile } from 'src/pipes/parse-file.pipe';
 import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
-import { FindQuery } from './dto/find-query.dto';
+import { FindQueryDto } from './dto/find-query.dto';
 import { User } from './entities/user.entity';
 import { UserService } from './user.service';
 
@@ -32,7 +32,7 @@ export class UserController {
   @ApiOperation({ summary: 'Find users' })
   @ApiPagination({ name: 'where[email]', example: 'mmirrev@gmail.com' })
   @ApiResponse({ status: 200, type: [User] })
-  find(@Query() query: FindQuery) {
+  find(@Query() query: FindQueryDto) {
     return this.userService.find(query);
   }
 

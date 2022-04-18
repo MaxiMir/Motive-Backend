@@ -7,7 +7,7 @@ import { FileService } from 'src/file/file.service';
 import { UserCharacteristic } from 'src/user-characteristic/entities/user-characteristic.entity';
 import { UpdateUserDto } from './dto/update-user.dto';
 import { CreateUserDto } from './dto/create-user.dto';
-import { FindQuery } from './dto/find-query.dto';
+import { FindQueryDto } from './dto/find-query.dto';
 import { User } from './entities/user.entity';
 
 @Injectable()
@@ -50,7 +50,7 @@ export class UserService {
     return this.userRepository.save(user);
   }
 
-  find(query: FindQuery, relations?: string[]) {
+  find(query: FindQueryDto, relations?: string[]) {
     const { where, take, skip } = query;
 
     return this.userRepository.find({

@@ -129,3 +129,16 @@ export class ReactionSubscriber implements EntitySubscriberInterface<Reaction> {
   }
 }
 ```
+Сервисы в Subscriber:
+```typescript
+@Injectable()
+@EventSubscriber()
+export class GoalSubscriber implements EntitySubscriberInterface<Goal> {
+  constructor(
+    private readonly connection: Connection,
+    private readonly subscriptionService: SubscriptionService,
+  ) {
+    connection.subscribers.push(this);
+  }
+}
+```

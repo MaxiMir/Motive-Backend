@@ -1,5 +1,5 @@
 import { Goal } from 'src/goal/entities/goal.entity';
-import { Characteristic } from 'src/abstracts/characteristic';
+import { Characteristic } from 'src/common/characteristic';
 import { Day } from 'src/day/entities/day.entity';
 import { CalendarDto } from 'src/goal/dto/calendar.dto';
 

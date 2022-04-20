@@ -1,5 +1,5 @@
 import { Injectable, PipeTransform, BadRequestException, ArgumentMetadata } from '@nestjs/common';
-import { Characteristic, CHARACTERISTICS } from 'src/abstracts/characteristic';
+import { Characteristic, CHARACTERISTICS } from 'src/common/characteristic';
 
 @Injectable()
 export class ParseCharacteristicPipe implements PipeTransform {

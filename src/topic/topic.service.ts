@@ -2,7 +2,7 @@ import { BadRequestException, Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Not, Repository } from 'typeorm';
 import { FindOneOptions } from 'typeorm/find-options/FindOneOptions';
-import { Operation } from 'src/abstracts/operation';
+import { Operation } from 'src/common/operation';
 import { UserService } from 'src/user/user.service';
 import { GoalService } from 'src/goal/goal.service';
 import { DayService } from 'src/day/day.service';

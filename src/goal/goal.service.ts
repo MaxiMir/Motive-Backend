@@ -3,7 +3,7 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { Cron } from '@nestjs/schedule';
 import { In, Raw, Repository } from 'typeorm';
 import { FindOneOptions } from 'typeorm/find-options/FindOneOptions';
-import { Characteristic } from 'src/abstracts/characteristic';
+import { Characteristic } from 'src/common/characteristic';
 import { CreateDayDto } from 'src/day/dto/create-day.dto';
 import { DayCharacteristic } from 'src/day-characteristic/entities/day-characteristic.entity';
 import { GoalCharacteristic } from 'src/goal-characteristic/entities/goal-characteristic.entity';

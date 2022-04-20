@@ -1,7 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
-import { Operation } from 'src/abstracts/operation';
+import { Operation } from 'src/common/operation';
 import { Topic } from 'src/topic/entities/topic.entity';
 import { TopicTypeDto } from 'src/topic/dto/topic-type.dto';
 import { Like } from './entities/like.entity';

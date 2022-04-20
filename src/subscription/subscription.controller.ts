@@ -10,8 +10,8 @@ import {
   ParseIntPipe,
 } from '@nestjs/common';
 import { ApiOperation, ApiQuery, ApiResponse, ApiTags } from '@nestjs/swagger';
-import { Pagination } from 'src/abstracts/pagination';
-import { Operation, OPERATIONS } from 'src/abstracts/operation';
+import { Pagination } from 'src/common/pagination';
+import { Operation, OPERATIONS } from 'src/common/operation';
 import { ApiPagination } from 'src/decorators/api-pagination.decorator';
 import { Identify } from 'src/decorators/identify.decorator';
 import { AuthGuard } from 'src/guards/auth.guard';

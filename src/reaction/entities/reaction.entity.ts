@@ -1,7 +1,7 @@
 import { Column, Entity, Index, JoinColumn, ManyToOne, PrimaryGeneratedColumn, RelationId } from 'typeorm';
 import { ApiProperty } from '@nestjs/swagger';
 import { User } from 'src/user/entities/user.entity';
-import { Characteristic, CHARACTERISTICS } from 'src/abstracts/characteristic';
+import { Characteristic, CHARACTERISTICS } from 'src/common/characteristic';
 import { Day } from 'src/day/entities/day.entity';
 import { Goal } from 'src/goal/entities/goal.entity';
 

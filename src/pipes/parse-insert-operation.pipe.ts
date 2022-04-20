@@ -1,5 +1,5 @@
 import { Injectable, PipeTransform, BadRequestException, ArgumentMetadata } from '@nestjs/common';
-import { Operation, OPERATIONS } from 'src/abstracts/operation';
+import { Operation, OPERATIONS } from 'src/common/operation';
 
 @Injectable()
 export class parseInsertOperationPipe implements PipeTransform {

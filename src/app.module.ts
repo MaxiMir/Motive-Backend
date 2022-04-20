@@ -43,7 +43,6 @@ import { NotificationModule } from './notification/notification.module';
       password: process.env.POSTGRES_PASSWORD,
       database: process.env.POSTGRES_DB,
       entities: [__dirname + '/**/*.entity{.ts,.js}'],
-      subscribers: [__dirname + '/**/*.subscriber{.ts,.js}'],
       migrations: [join(__dirname, '..', 'migrations/**/*.ts')],
       synchronize: true, // TODO shouldn't be used in production - otherwise you can lose production data
       dropSchema: false,

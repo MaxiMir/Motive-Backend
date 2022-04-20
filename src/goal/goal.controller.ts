@@ -11,8 +11,8 @@ import {
   ParseIntPipe,
 } from '@nestjs/common';
 import { ApiOperation, ApiParam, ApiQuery, ApiResponse, ApiTags } from '@nestjs/swagger';
-import { Operation, OPERATIONS } from 'src/abstracts/operation';
-import { Characteristic, CHARACTERISTICS } from 'src/abstracts/characteristic';
+import { Operation, OPERATIONS } from 'src/common/operation';
+import { Characteristic, CHARACTERISTICS } from 'src/common/characteristic';
 import { ParseCharacteristicPipe } from 'src/pipes/parse-characteristic.pipe';
 import { parseInsertOperationPipe } from 'src/pipes/parse-insert-operation.pipe';
 import { Identify } from 'src/decorators/identify.decorator';

@@ -1,8 +1,8 @@
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
-import { Pagination } from 'src/abstracts/pagination';
-import { Operation } from 'src/abstracts/operation';
+import { Pagination } from 'src/common/pagination';
+import { Operation } from 'src/common/operation';
 import { UserService } from 'src/user/user.service';
 import { UpdateSubscriptionDto } from './dto/update-subscription.dto';
 import { Subscription } from './entities/subscription.entity';
@@ -40,7 +40,7 @@ export class SubscriptionService {
     return result.map((item) => item.user);
   }
 
-  async findFollowers(userId: number, pagination: Pagination) {
+  async findFollowers(userId: number, pagination?: Pagination) {
     const result = await this.subscriptionRepository.find({
       where: { user: userId },
       relations: ['follower', 'follower.characteristic'],

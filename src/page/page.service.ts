@@ -1,6 +1,6 @@
 import { Injectable } from '@nestjs/common';
-import { Pagination } from 'src/abstracts/pagination';
-import { Characteristic } from 'src/abstracts/characteristic';
+import { Pagination } from 'src/common/pagination';
+import { Characteristic } from 'src/common/characteristic';
 import { GoalDayDto } from 'src/goal/dto/goal-day.dto';
 import { Goal } from 'src/goal/entities/goal.entity';
 import { Member } from 'src/member/entities/member.entity';

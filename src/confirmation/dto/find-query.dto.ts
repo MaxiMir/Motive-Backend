@@ -1,6 +1,6 @@
 import { IsObject } from 'class-validator';
 import { Transform, Type } from 'class-transformer';
-import { Pagination } from 'src/abstracts/pagination';
+import { Pagination } from 'src/common/pagination';
 
 export class FindQueryDto extends Pagination {
   @IsObject()

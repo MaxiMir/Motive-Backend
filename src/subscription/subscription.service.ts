@@ -54,7 +54,7 @@ export class SubscriptionService {
   }
 
   async update(dto: UpdateSubscriptionDto, operation: Operation, userId: number) {
-    const follower = { id: userId };
+    const follower = await this.userService.findByPK(userId);
     const uniq = this.getUniq(dto.userId, userId);
     const following = await this.userService.findByPK(dto.userId, { relations: ['characteristic'] });
     following.characteristic.followers += operation === 'insert' ? 1 : -1;

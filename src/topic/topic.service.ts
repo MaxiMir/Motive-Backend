@@ -31,7 +31,7 @@ export class TopicService {
 
   async save(dto: CreateTopicDto, userId: number) {
     const user = await this.userService.findByPK(userId);
-    const day = await this.dayService.findByPK(dto.dayId);
+    const day = await this.dayService.findByPK(dto.dayId, { relations: ['goal', 'goal.owner'] });
     const topic = new Topic();
     topic.text = dto.text;
     topic.type = dto.type;

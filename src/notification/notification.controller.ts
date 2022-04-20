@@ -1,9 +1,10 @@
-import { Controller, Get, Query } from '@nestjs/common';
+import { Controller, Get, Param, ParseIntPipe, Patch, Query, UseGuards } from '@nestjs/common';
 import { ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
 import { ApiPagination } from 'src/decorators/api-pagination.decorator';
 import { FindQueryDto } from './dto/find-query.dto';
 import { Notification } from './entities/notification.entity';
 import { NotificationService } from './notification.service';
+import { AuthGuard } from '../guards/auth.guard';
 
 @Controller('notifications')
 @ApiTags('Notifications')
@@ -16,5 +17,13 @@ export class NotificationController {
   @ApiResponse({ status: 200, type: [Notification] })
   find(@Query() query: FindQueryDto) {
     return this.notificationService.find(query);
+  }
+
+  @Patch(':id/read')
+  @UseGuards(AuthGuard)
+  @ApiResponse({ status: 204 })
+  @ApiOperation({ summary: 'Update notification read' })
+  updateRead(@Param('id', ParseIntPipe) id: number) {
+    return this.notificationService.updateRead(id);
   }
 }

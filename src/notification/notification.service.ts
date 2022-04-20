@@ -20,4 +20,8 @@ export class NotificationService {
       skip,
     });
   }
+
+  updateRead(id: number) {
+    return this.notificationRepository.update({ id }, { read: true });
+  }
 }

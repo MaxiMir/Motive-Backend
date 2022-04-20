@@ -104,7 +104,7 @@ export class GoalService {
   }
 
   async updateCharacteristic(id: number, dayId: number, characteristic: Characteristic, userId: number) {
-    const user = { id: userId };
+    const user = await this.userService.findByPK(userId);
     const uniq = this.getUniq(userId, dayId, characteristic);
     const goal = await this.findByPK(id, { relations: ['characteristic'] });
     const day = await this.dayService.findByPK(dayId, { relations: ['characteristic'] });

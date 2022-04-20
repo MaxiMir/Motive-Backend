@@ -1,3 +1,9 @@
-export enum TMPL {
-  GOAL = 'goal',
+export enum TOPICS {
+  NEW_GOAL = 'new-goal',
+  NEW_FOLLOWER = 'new-follower',
+  ADD_MOTIVATION = 'add-motivation',
+  ADD_CREATIVITY = 'add-creativity',
+  NEW_QUESTION = 'new-question',
+  NEW_SUPPORT = 'new-support',
+  NEW_ANSWER = 'new-answer',
 }

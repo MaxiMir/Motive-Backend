@@ -20,7 +20,7 @@ export class ReactionSubscriber implements EntitySubscriberInterface<Reaction> {
 
     const insertData = {
       type: characteristic === 'motivation' ? TOPICS.ADD_MOTIVATION : TOPICS.ADD_CREATIVITY,
-      details: { id: goal.id, day: day.id, user },
+      details: { id: goal.id, name: goal.name, day: day.id, user },
       recipient: { id: goal.ownerId },
     };
 

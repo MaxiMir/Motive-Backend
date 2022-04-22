@@ -20,11 +20,11 @@ export class GoalSubscriber implements EntitySubscriberInterface<Goal> {
   }
 
   async afterInsert(event: InsertEvent<Goal>) {
-    const { id, days, owner } = event.entity;
+    const { id, name, days, owner } = event.entity;
     const followers = await this.subscriptionService.findFollowers(owner.id);
     const insertData = followers.map((recipient) => ({
       type: TOPICS.NEW_GOAL,
-      details: { id, day: days[0].id, user: owner },
+      details: { id, day: days[0].id, name, user: owner },
       recipient,
     }));
 

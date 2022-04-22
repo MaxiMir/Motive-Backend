@@ -16,7 +16,7 @@ export class TopicSubscriber implements EntitySubscriberInterface<Topic> {
   }
 
   async afterInsert(event: InsertEvent<Topic>) {
-    const { type, goalId, day, user } = event.entity;
+    const { type, goalId, day, user, text } = event.entity;
 
     const insertData =
       type === 'answer'
@@ -27,7 +27,7 @@ export class TopicSubscriber implements EntitySubscriberInterface<Topic> {
           }
         : {
             type: type === 'question' ? TOPICS.NEW_QUESTION : TOPICS.NEW_SUPPORT,
-            details: { id: goalId, day: day.id, user },
+            details: { id: goalId, day: day.id, name: text, user },
             recipient: day.goal.owner,
           };
 

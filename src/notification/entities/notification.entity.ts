@@ -21,7 +21,7 @@ export class Notification {
   type: TOPICS;
 
   @Column('simple-json')
-  public details: { id?: number; day?: number; user: UserBaseDto };
+  public details: { id?: number; day?: number; name?: string; user: UserBaseDto };
 
   @CreateDateColumn({ type: 'timestamp with time zone', default: () => 'CURRENT_TIMESTAMP(6)' })
   public created: Date;

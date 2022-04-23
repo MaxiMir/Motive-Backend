@@ -4,7 +4,11 @@ import { TOPICS } from 'src/common/notification';
 import { User } from 'src/user/entities/user.entity';
 import { UserBaseDto } from 'src/user/dto/user-base.dto';
 
-@Entity('notifications')
+@Entity('notifications', {
+  orderBy: {
+    id: 'DESC',
+  },
+})
 export class Notification {
   @PrimaryGeneratedColumn()
   @ApiProperty({

@@ -16,7 +16,7 @@ export class FeedbackService {
   ) {}
 
   async save(dto: CreateFeedbackDto, photos: Express.Multer.File[]) {
-    const day = await this.dayService.findByPK(dto.dayId);
+    const day = await this.dayService.findByPK(dto.dayId, { relations: ['goal', 'goal.owner'] });
     const feedback = new Feedback();
     feedback.day = day;
 

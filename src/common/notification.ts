@@ -1,4 +1,4 @@
-export enum TOPICS {
+export enum NOTIFICATION {
   NEW_GOAL = 'new-goal',
   NEW_FOLLOWER = 'new-follower',
   ADD_MOTIVATION = 'add-motivation',
@@ -6,4 +6,5 @@ export enum TOPICS {
   NEW_QUESTION = 'new-question',
   NEW_SUPPORT = 'new-support',
   NEW_ANSWER = 'new-answer',
+  NEW_FEEDBACK = 'new-feedback',
 }

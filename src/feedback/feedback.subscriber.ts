@@ -3,11 +3,11 @@ import { EventSubscriber, EntitySubscriberInterface, InsertEvent, Connection } f
 import { NOTIFICATION } from 'src/common/notification';
 import { SubscriptionService } from 'src/subscription/subscription.service';
 import { Notification } from 'src/notification/entities/notification.entity';
-import { Goal } from './entities/goal.entity';
+import { Feedback } from './entities/feedback.entity';
 
 @Injectable()
 @EventSubscriber()
-export class GoalSubscriber implements EntitySubscriberInterface<Goal> {
+export class FeedbackSubscriber implements EntitySubscriberInterface<Feedback> {
   constructor(
     private readonly connection: Connection,
     private readonly subscriptionService: SubscriptionService,
@@ -16,15 +16,16 @@ export class GoalSubscriber implements EntitySubscriberInterface<Goal> {
   }
 
   listenTo() {
-    return Goal;
+    return Feedback;
   }
 
-  async afterInsert(event: InsertEvent<Goal>) {
-    const { id, name, days, owner } = event.entity;
+  async afterInsert(event: InsertEvent<Feedback>) {
+    const { day } = event.entity;
+    const { id, owner } = day.goal;
     const followers = await this.subscriptionService.findFollowers(owner.id);
     const insertData = followers.map((recipient) => ({
-      type: NOTIFICATION.NEW_GOAL,
-      details: { id, day: days[0].id, name, user: owner },
+      type: NOTIFICATION.NEW_FEEDBACK,
+      details: { id, day: day.id, user: owner },
       recipient,
     }));
 

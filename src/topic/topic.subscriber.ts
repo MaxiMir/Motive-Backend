@@ -1,6 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { Connection, EntitySubscriberInterface, EventSubscriber, InsertEvent } from 'typeorm';
-import { TOPICS } from 'src/common/notification';
+import { NOTIFICATION } from 'src/common/notification';
 import { Notification } from 'src/notification/entities/notification.entity';
 import { Topic } from './entities/topic.entity';
 
@@ -21,12 +21,12 @@ export class TopicSubscriber implements EntitySubscriberInterface<Topic> {
     const insertData =
       type === 'answer'
         ? {
-            type: TOPICS.NEW_ANSWER,
+            type: NOTIFICATION.NEW_ANSWER,
             details: { id: goalId, day: day.id, user: day.goal.owner },
             recipient: user,
           }
         : {
-            type: type === 'question' ? TOPICS.NEW_QUESTION : TOPICS.NEW_SUPPORT,
+            type: type === 'question' ? NOTIFICATION.NEW_QUESTION : NOTIFICATION.NEW_SUPPORT,
             details: { id: goalId, day: day.id, name: text, user },
             recipient: day.goal.owner,
           };

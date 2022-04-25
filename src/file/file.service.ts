@@ -11,11 +11,11 @@ export class FileService {
 
   async uploadImage(file: Express.Multer.File, folder: string, options: { width?: number; height?: number }) {
     try {
-      const staticPath = join('/', FileService.STATIC_FOLDER, folder, `${uuid.v4()}.webp`);
-      const rootPath = join(FileService.ROOT_FOLDER, staticPath);
-      await sharp(file.buffer).resize(options).webp().toFile(rootPath);
-      // todo fix
-      return staticPath;
+      const src = join('/', FileService.STATIC_FOLDER, folder, `${uuid.v4()}.webp`);
+      const rootPath = join(FileService.ROOT_FOLDER, src);
+      const meta = await sharp(file.buffer).rotate().resize(options).webp().toFile(rootPath);
+
+      return { src, meta };
     } catch (e) {
       throw new HttpException(e.message, HttpStatus.INTERNAL_SERVER_ERROR);
     }
@@ -41,21 +41,11 @@ export class FileService {
     return [width / divisor, height / divisor];
   };
 
-  async getImageRatio(file: Express.Multer.File) {
-    try {
-      const meta = await sharp(file.buffer).metadata();
-
-      return this.calculateAspectRatio(meta.width, meta.height);
-    } catch (e) {
-      throw new HttpException(e.message, HttpStatus.INTERNAL_SERVER_ERROR);
-    }
-  }
-
   uploadAndMeasureImages(files: Express.Multer.File[], folder: string) {
     return Promise.all(
       files.map(async (photo) => {
-        const [width, height] = await this.getImageRatio(photo);
-        const src = await this.uploadImage(photo, folder, { width: 1280 });
+        const { src, meta } = await this.uploadImage(photo, folder, { width: 1280 });
+        const [width, height] = this.calculateAspectRatio(meta.width, meta.height);
 
         return { src, width, height };
       }),

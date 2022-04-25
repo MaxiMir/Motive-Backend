@@ -41,7 +41,8 @@ export class UserService {
   async updateAvatar(file: Express.Multer.File, userId: number) {
     const user = await this.findByPK(userId);
     const lastAvatar = user.avatar;
-    user.avatar = await this.fileService.uploadImage(file, 'avatars', { width: 500 });
+    const uploadedAvatar = await this.fileService.uploadImage(file, 'avatars', { width: 500 });
+    user.avatar = uploadedAvatar.src;
 
     if (lastAvatar) {
       this.fileService.removeImage(lastAvatar);

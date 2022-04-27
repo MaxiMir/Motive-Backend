@@ -6,9 +6,13 @@ import * as cookieParser from 'cookie-parser';
 import { useContainer } from 'class-validator';
 import { AppModule } from './app.module';
 import { AllExceptionsFilter } from './filters/all-exceptions.filter';
+import { RedisIoAdapter } from './adapters/redis-io.adapter';
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
+  const redisIoAdapter = new RedisIoAdapter(app);
+  await redisIoAdapter.connectToRedis();
+  app.useWebSocketAdapter(redisIoAdapter);
   app.setGlobalPrefix('/api/v1');
   app.useGlobalPipes(new ValidationPipe({ transform: true })); // validation for all endpoints
   app.useGlobalFilters(new AllExceptionsFilter());

@@ -2,7 +2,7 @@ import { ApiProperty } from '@nestjs/swagger';
 import { Column, CreateDateColumn, Entity, JoinColumn, ManyToOne, PrimaryGeneratedColumn } from 'typeorm';
 import { NOTIFICATION } from 'src/common/notification';
 import { User } from 'src/user/entities/user.entity';
-import { UserBaseDto } from 'src/user/dto/user-base.dto';
+import { DetailsDto } from 'src/notification/dto/details.dto';
 
 @Entity('notifications', {
   orderBy: {
@@ -25,7 +25,7 @@ export class Notification {
   type: NOTIFICATION;
 
   @Column('simple-json')
-  public details: { id?: number; day?: number; name?: string; user: UserBaseDto };
+  public details: DetailsDto;
 
   @CreateDateColumn({ type: 'timestamp with time zone', default: () => 'CURRENT_TIMESTAMP(6)' })
   public created: Date;

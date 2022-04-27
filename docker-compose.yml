@@ -15,8 +15,15 @@ services:
       - /etc/localtime:/etc/localtime:ro
     ports:
       - "5432:5432"
+
   adminer:
     image: adminer
     restart: always
     ports:
       - "8080:8080"
+
+  redis:
+    image: redis:6.2.5-alpine
+    ports:
+      - "6379:6379"
+

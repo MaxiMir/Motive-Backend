@@ -17,7 +17,6 @@ export class ConfirmationController {
   @Post()
   @UseGuards(AuthGuard)
   @ApiOperation({ summary: 'Create confirmation' })
-  @UseGuards(AuthGuard)
   @ApiBody({
     schema: {
       type: 'object',

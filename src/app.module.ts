@@ -26,6 +26,7 @@ import { ConfirmationModule } from './confirmation/confirmation.module';
 import { MemberModule } from './member/member.module';
 import { SeoModule } from './seo/seo.module';
 import { NotificationModule } from './notification/notification.module';
+import { EventsGateway } from './events/events.gateway';
 
 @Module({
   imports: [
@@ -44,7 +45,7 @@ import { NotificationModule } from './notification/notification.module';
       database: process.env.POSTGRES_DB,
       entities: [__dirname + '/**/*.entity{.ts,.js}'],
       migrations: [join(__dirname, '..', 'migrations/**/*.ts')],
-      synchronize: true, // TODO shouldn't be used in production - otherwise you can lose production data
+      synchronize: true,
       dropSchema: false,
       logging: false,
       cli: {
@@ -74,5 +75,6 @@ import { NotificationModule } from './notification/notification.module';
     SeoModule,
     NotificationModule,
   ],
+  providers: [EventsGateway],
 })
 export class AppModule {}

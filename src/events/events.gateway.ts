@@ -9,9 +9,8 @@ import {
   OnGatewayInit,
 } from '@nestjs/websockets';
 import { Logger } from '@nestjs/common';
-import { from, Observable } from 'rxjs';
-import { map } from 'rxjs/operators';
 import { Server, Socket } from 'socket.io';
+import { from, map, Observable } from 'rxjs';
 import { DetailsDto } from 'src/notification/dto/details.dto';
 
 @WebSocketGateway({
@@ -53,11 +52,6 @@ export class EventsGateway implements OnGatewayInit, OnGatewayConnection, OnGate
     if (!room) return;
 
     this.server.to(room).emit('notification', payload);
-  }
-
-  @SubscribeMessage('msgToServer')
-  handleMessage(socket: Socket, payload: string): void {
-    this.server.emit('msgToClient', payload);
   }
 
   @SubscribeMessage('events')

@@ -1,9 +1,9 @@
 ```shell
-docker build -t maximir/backend:1.0.38 .
+docker build -t maximir/backend:1.0.39 .
 # artifactory:
-docker tag <IMAGE_ID> maximir.jfrog.io/default-docker-virtual/backend:1.0.38
-docker push maximir.jfrog.io/default-docker-virtual/backend:1.0.38
-docker pull maximir.jfrog.io/default-docker-virtual/backend:1.0.38
+docker tag <IMAGE_ID> maximir.jfrog.io/default-docker-virtual/backend:1.0.39
+docker push maximir.jfrog.io/default-docker-virtual/backend:1.0.39
+docker pull maximir.jfrog.io/default-docker-virtual/backend:1.0.39
 
 docker-compose up -d # установка образа с бд
 

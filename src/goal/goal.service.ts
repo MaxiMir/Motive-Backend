@@ -12,6 +12,7 @@ import { Reaction } from 'src/reaction/entities/reaction.entity';
 import { UserService } from 'src/user/user.service';
 import { ExpService } from 'src/exp/exp.service';
 import { DayService } from 'src/day/day.service';
+import { Member } from 'src/member/entities/member.entity';
 import { FileService } from 'src/file/file.service';
 import { CreateGoalDto } from './dto/create-goal.dto';
 import { UpdateStageDto } from './dto/update-stage.dto';
@@ -48,6 +49,7 @@ export class GoalService {
 
     return this.goalRepository.manager.transaction(async (transactionalManager) => {
       await transactionalManager.increment(UserCharacteristic, { user: In(owners) }, 'abandoned', 1);
+      await transactionalManager.delete(Member, { goal: In(owners) });
       await transactionalManager.remove(goals);
       photos.forEach(this.fileService.removeImage);
     });

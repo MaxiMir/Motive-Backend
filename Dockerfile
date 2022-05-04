@@ -24,6 +24,7 @@ COPY yarn.lock ./
 
 COPY --chown=node:node . .
 
+USER root
 RUN yarn add --platform=linuxmusl --arch=x64 sharp
 RUN yarn build
 
@@ -31,7 +32,6 @@ FROM node:16-alpine
 
 ENV NODE_ENV production
 
-USER node
 WORKDIR /home/node
 
 COPY --from=builder --chown=node:node /home/node/package*.json ./

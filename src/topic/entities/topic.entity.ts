@@ -50,6 +50,7 @@ export class Topic {
 
   @OneToOne(() => Topic, {
     cascade: true,
+    onDelete: 'CASCADE',
   })
   @JoinColumn()
   answer: Topic;
@@ -60,7 +61,7 @@ export class Topic {
   @Column()
   goalId: number;
 
-  @ManyToOne(() => Day, { cascade: true, nullable: false })
+  @ManyToOne(() => Day, { cascade: true, nullable: false, onDelete: 'CASCADE' })
   day: Day;
 
   @RelationId((topic: Topic) => topic.day)

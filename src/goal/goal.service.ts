@@ -29,7 +29,7 @@ export class GoalService {
     private readonly fileService: FileService,
   ) {}
 
-  @Cron('00 30 02 * * *')
+  @Cron('00 30 23 * * *')
   async handleCron() {
     const goals = await this.goalRepository.find({
       relations: ['owner', 'days', 'days.feedback'],
@@ -40,7 +40,7 @@ export class GoalService {
     });
 
     if (!goals.length) return;
-
+    // TODO count abandoned
     const owners = goals.map((g) => g.owner.id);
     const photos = goals
       .map((g) => g.days.map((d) => d.feedback?.photos?.map((p) => p.src)))

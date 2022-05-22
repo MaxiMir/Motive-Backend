@@ -12,7 +12,7 @@ export class Like {
   })
   id: number;
 
-  @ManyToOne(() => Topic, { nullable: false })
+  @ManyToOne(() => Topic, { nullable: false, onDelete: 'CASCADE' })
   @JoinColumn()
   topic: Topic;
 

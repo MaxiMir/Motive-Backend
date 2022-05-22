@@ -56,7 +56,7 @@ export class GoalService {
       await transactionalManager.increment(UserCharacteristic, { user: In(owners) }, 'abandoned', 1);
       await Promise.all(
         abandonedList.map(([id, value]) =>
-          transactionalManager.increment(UserCharacteristic, { user: Number(id) }, 'abandoned', value),
+          transactionalManager.increment(UserCharacteristic, { user: Number(id) }, 'abandoned', value - 1),
         ),
       );
       await transactionalManager.delete(Member, { goal: In(owners) });

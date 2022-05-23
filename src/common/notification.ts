@@ -7,4 +7,5 @@ export enum NOTIFICATION {
   NEW_SUPPORT = 'new-support',
   NEW_ANSWER = 'new-answer',
   NEW_FEEDBACK = 'new-feedback',
+  WEB_COVERAGE = 'web-coverage',
 }

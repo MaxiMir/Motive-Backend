@@ -17,6 +17,7 @@ import { GoalSubscriber } from './goal.subscriber';
     TypeOrmModule.forFeature([Goal]),
     UserModule,
     DayModule,
+    SubscriptionModule,
     ExpModule,
     FileModule,
     SubscriptionModule,

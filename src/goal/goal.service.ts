@@ -3,12 +3,14 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { Cron } from '@nestjs/schedule';
 import { In, Raw, Repository } from 'typeorm';
 import { FindOneOptions } from 'typeorm/find-options/FindOneOptions';
+import { NOTIFICATION } from 'src/common/notification';
 import { Characteristic } from 'src/common/characteristic';
 import { CreateDayDto } from 'src/day/dto/create-day.dto';
 import { DayCharacteristic } from 'src/day-characteristic/entities/day-characteristic.entity';
 import { GoalCharacteristic } from 'src/goal-characteristic/entities/goal-characteristic.entity';
 import { UserCharacteristic } from 'src/user-characteristic/entities/user-characteristic.entity';
 import { Reaction } from 'src/reaction/entities/reaction.entity';
+import { SubscriptionService } from 'src/subscription/subscription.service';
 import { UserService } from 'src/user/user.service';
 import { ExpService } from 'src/exp/exp.service';
 import { DayService } from 'src/day/day.service';
@@ -25,12 +27,58 @@ export class GoalService {
     private readonly goalRepository: Repository<Goal>,
     private readonly userService: UserService,
     private readonly dayService: DayService,
+    private readonly subscriptionService: SubscriptionService,
     private readonly expService: ExpService,
     private readonly fileService: FileService,
   ) {}
 
+  @Cron('00 45 23 * * *')
+  async handleWebCoverage() {
+    const goals = await this.goalRepository.find({
+      relations: ['owner'],
+      where: {
+        updated: Raw((alias) => `${alias} = CURRENT_DATE - ${process.env.SHOW_WEB_AFTER_DAYS}`),
+        completed: false,
+      },
+    });
+
+    if (!goals.length) return;
+
+    const followersMap = await goals.reduce(async (promise, { owner }) => {
+      return promise.then(async (acc) => {
+        if (acc.has(owner.id)) {
+          return acc;
+        }
+
+        const followers = await this.subscriptionService.findFollowers(owner.id);
+
+        return acc.set(owner.id, followers);
+      });
+    }, Promise.resolve(new Map()));
+    const insertData = goals.reduce(
+      (acc, goal) => [
+        ...acc,
+        ...followersMap.get(goal.owner.id).map((recipient) => ({
+          type: NOTIFICATION.WEB_COVERAGE,
+          details: { id: goal.id, name: goal.name, user: goal.owner },
+          recipient,
+        })),
+      ],
+      [],
+    );
+
+    return this.goalRepository.manager.transaction(async (transactionalManager) => {
+      await transactionalManager
+        .createQueryBuilder()
+        .insert()
+        .into(Notification)
+        .values(insertData)
+        .execute();
+    });
+  }
+
   @Cron('00 30 23 * * *')
-  async handleCron() {
+  async handleAbandoned() {
     const goals = await this.goalRepository.find({
       relations: ['owner', 'days', 'days.feedback'],
       where: {
@@ -46,7 +94,7 @@ export class GoalService {
       (acc, id) => acc.set(id, 1 + (acc.get(id) || 0)),
       new Map(),
     );
-    const abandonedList = Object.entries(Object.fromEntries(ownersMap)).filter(([, v]) => v > 1);
+    const ownersWithExtraGoals = Object.entries(Object.fromEntries(ownersMap)).filter(([, v]) => v > 1);
     const photos = goals
       .map((g) => g.days.map((d) => d.feedback?.photos?.map((p) => p.src)))
       .flat(3)
@@ -55,7 +103,7 @@ export class GoalService {
     return this.goalRepository.manager.transaction(async (transactionalManager) => {
       await transactionalManager.increment(UserCharacteristic, { user: In(owners) }, 'abandoned', 1);
       await Promise.all(
-        abandonedList.map(([id, value]) =>
+        ownersWithExtraGoals.map(([id, value]) =>
           transactionalManager.increment(UserCharacteristic, { user: Number(id) }, 'abandoned', value - 1),
         ),
       );

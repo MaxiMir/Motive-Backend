@@ -9,6 +9,7 @@ import { Logger } from '@nestjs/common';
 import { Server, Socket } from 'socket.io';
 import { DetailsDto } from 'src/notification/dto/details.dto';
 import { NOTIFICATION } from 'src/common/notification';
+import { UserService } from 'src/user/user.service';
 
 @WebSocketGateway({
   cors: {
@@ -18,34 +19,42 @@ import { NOTIFICATION } from 'src/common/notification';
 })
 export class EventsGateway implements OnGatewayInit, OnGatewayConnection, OnGatewayDisconnect {
   @WebSocketServer()
-  server: Server;
-  usersMap = new Map();
-
+  private server: Server;
+  private usersMap = new Map();
   private logger: Logger = new Logger('AppGateway');
+
+  constructor(private userService: UserService) {}
 
   afterInit() {
     this.logger.log('EventsGateway init');
   }
 
-  handleConnection(socket: Socket) {
-    const id = socket.handshake.auth.id;
+  async handleConnection(socket: Socket) {
+    const { id, mobile } = socket.handshake.auth;
+    const device = mobile ? 'mobile' : 'desktop';
 
     if (!id) {
       return socket.disconnect(true);
     }
 
+    await this.userService.getRepository().update({ id }, { status: 'online', device });
     this.usersMap.set(id, socket.id);
   }
 
-  handleDisconnect(socket: Socket) {
+  async handleDisconnect(socket: Socket) {
+    const [id] = [...this.usersMap.entries()].find(([, userId]) => userId === socket.id) || [];
+
+    if (!id) return;
+
+    await this.userService.getRepository().update({ id }, { status: new Date().toISOString });
     this.usersMap.delete(socket.id);
   }
 
   handleNotification(id: number, payload: { type: NOTIFICATION; details: DetailsDto }) {
-    const room = this.usersMap.get(id);
+    const socketId = this.usersMap.get(id);
 
-    if (!room) return;
+    if (!socketId) return;
 
-    this.server.to(room).emit('notification', payload);
+    this.server.to(socketId).emit('notification', payload);
   }
 }

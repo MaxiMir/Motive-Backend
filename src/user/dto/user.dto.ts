@@ -21,4 +21,16 @@ export class UserDto extends UserBaseDto {
     example: 'Github',
   })
   provider: string;
+
+  @Column({ nullable: true })
+  @ApiProperty({
+    example: 'online',
+  })
+  status: string;
+
+  @Column({ nullable: true })
+  @ApiProperty({
+    example: 'mobile',
+  })
+  device: string;
 }

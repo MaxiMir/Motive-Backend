@@ -22,11 +22,17 @@ export class UserDto extends UserBaseDto {
   })
   provider: string;
 
-  @Column({ nullable: true })
+  @Column('boolean', { nullable: true })
   @ApiProperty({
-    example: 'online',
+    example: true,
   })
-  status: string;
+  online: boolean;
+
+  @Column({ type: 'timestamp with time zone', nullable: true })
+  @ApiProperty({
+    example: '2022-02-16 00:00:00+03',
+  })
+  lastSeen: string;
 
   @Column({ nullable: true })
   @ApiProperty({

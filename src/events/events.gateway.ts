@@ -29,7 +29,7 @@ export class EventsGateway implements OnGatewayInit, OnGatewayConnection, OnGate
     this.logger.log('EventsGateway init');
   }
 
-  async handleConnection(socket: Socket) {
+  handleConnection(socket: Socket) {
     const { id, mobile } = socket.handshake.auth;
     const device = mobile ? 'mobile' : 'desktop';
 
@@ -37,17 +37,17 @@ export class EventsGateway implements OnGatewayInit, OnGatewayConnection, OnGate
       return socket.disconnect(true);
     }
 
-    await this.userService.getRepository().update({ id }, { status: 'online', device });
     this.usersMap.set(id, socket.id);
+    this.userService.getRepository().update({ id }, { online: true, device });
   }
 
-  async handleDisconnect(socket: Socket) {
-    const [id] = [...this.usersMap.entries()].find(([, userId]) => userId === socket.id) || [];
+  handleDisconnect(socket: Socket) {
+    const [id] = [...this.usersMap.entries()].find(([, socketId]) => socketId === socket.id) || [];
 
     if (!id) return;
 
-    await this.userService.getRepository().update({ id }, { status: new Date().toISOString });
     this.usersMap.delete(socket.id);
+    this.userService.getRepository().update({ id }, { online: false, lastSeen: new Date().toISOString() });
   }
 
   handleNotification(id: number, payload: { type: NOTIFICATION; details: DetailsDto }) {

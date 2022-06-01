@@ -32,6 +32,42 @@ export class GoalService {
     private readonly fileService: FileService,
   ) {}
 
+  @Cron('00 30 23 * * *')
+  async handleAbandoned() {
+    const goals = await this.goalRepository.find({
+      relations: ['owner', 'days', 'days.feedback'],
+      where: {
+        updated: Raw((alias) => `${alias} < CURRENT_DATE - ${process.env.EAT_AFTER_DAYS}`),
+        completed: false,
+      },
+    });
+
+    if (!goals.length) return;
+
+    const owners = goals.map((g) => g.owner.id);
+    const ownersMap = owners.reduce<Map<number, number>>(
+      (acc, id) => acc.set(id, 1 + (acc.get(id) || 0)),
+      new Map(),
+    );
+    const ownersWithExtraGoals = Object.entries(Object.fromEntries(ownersMap)).filter(([, v]) => v > 1);
+    const photos = goals
+      .map((g) => g.days.map((d) => d.feedback?.photos?.map((p) => p.src)))
+      .flat(3)
+      .filter(Boolean);
+
+    return this.goalRepository.manager.transaction(async (transactionalManager) => {
+      await transactionalManager.increment(UserCharacteristic, { user: In(owners) }, 'abandoned', 1);
+      await Promise.all(
+        ownersWithExtraGoals.map(([id, value]) =>
+          transactionalManager.increment(UserCharacteristic, { user: Number(id) }, 'abandoned', value - 1),
+        ),
+      );
+      await transactionalManager.delete(Member, { goal: In(owners) });
+      await transactionalManager.remove(goals);
+      photos.forEach(this.fileService.removeImage);
+    });
+  }
+
   @Cron('00 45 23 * * *')
   async handleWebCoverage() {
     const goals = await this.goalRepository.find({
@@ -74,42 +110,6 @@ export class GoalService {
         .into(Notification)
         .values(insertData)
         .execute();
-    });
-  }
-
-  @Cron('00 30 23 * * *')
-  async handleAbandoned() {
-    const goals = await this.goalRepository.find({
-      relations: ['owner', 'days', 'days.feedback'],
-      where: {
-        updated: Raw((alias) => `${alias} < CURRENT_DATE - ${process.env.EAT_AFTER_DAYS}`),
-        completed: false,
-      },
-    });
-
-    if (!goals.length) return;
-
-    const owners = goals.map((g) => g.owner.id);
-    const ownersMap = owners.reduce<Map<number, number>>(
-      (acc, id) => acc.set(id, 1 + (acc.get(id) || 0)),
-      new Map(),
-    );
-    const ownersWithExtraGoals = Object.entries(Object.fromEntries(ownersMap)).filter(([, v]) => v > 1);
-    const photos = goals
-      .map((g) => g.days.map((d) => d.feedback?.photos?.map((p) => p.src)))
-      .flat(3)
-      .filter(Boolean);
-
-    return this.goalRepository.manager.transaction(async (transactionalManager) => {
-      await transactionalManager.increment(UserCharacteristic, { user: In(owners) }, 'abandoned', 1);
-      await Promise.all(
-        ownersWithExtraGoals.map(([id, value]) =>
-          transactionalManager.increment(UserCharacteristic, { user: Number(id) }, 'abandoned', value - 1),
-        ),
-      );
-      await transactionalManager.delete(Member, { goal: In(owners) });
-      await transactionalManager.remove(goals);
-      photos.forEach(this.fileService.removeImage);
     });
   }
 
@@ -168,7 +168,7 @@ export class GoalService {
     const uniq = this.getUniq(userId, dayId, characteristic);
     const goal = await this.findByPK(id, { relations: ['characteristic'] });
     const day = await this.dayService.findByPK(dayId, { relations: ['characteristic'] });
-    const canReact = this.checkCanReact(goal, userId);
+    const canReact = this.checkCanChange(goal, userId);
 
     if (!canReact) {
       throw new BadRequestException();
@@ -197,13 +197,7 @@ export class GoalService {
         });
       }
 
-      await transactionalManager.insert(Reaction, {
-        user,
-        characteristic,
-        goal,
-        day,
-        uniq,
-      });
+      await transactionalManager.insert(Reaction, { user, characteristic, goal, day, uniq });
       await transactionalManager.save(day);
       await transactionalManager.save(goal);
     });
@@ -213,7 +207,7 @@ export class GoalService {
     return [userId, dayId, characteristic].join(':');
   }
 
-  checkCanReact(goal: Goal, userId: number) {
+  checkCanChange(goal: Goal, userId: number) {
     return goal.ownerId !== userId;
   }
 }

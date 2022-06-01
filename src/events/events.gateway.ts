@@ -30,8 +30,7 @@ export class EventsGateway implements OnGatewayInit, OnGatewayConnection, OnGate
   }
 
   handleConnection(socket: Socket) {
-    const { id, mobile } = socket.handshake.auth;
-    const device = mobile ? 'mobile' : 'desktop';
+    const { id, device } = socket.handshake.auth;
 
     if (!id) {
       return socket.disconnect(true);

@@ -45,11 +45,11 @@ export class GoalService {
     if (!goals.length) return;
 
     const owners = goals.map((g) => g.owner.id);
-    const ownersMap = owners.reduce<Map<number, number>>(
+    const ownersCount = owners.reduce<Map<number, number>>(
       (acc, id) => acc.set(id, 1 + (acc.get(id) || 0)),
       new Map(),
     );
-    const ownersWithExtraGoals = Object.entries(Object.fromEntries(ownersMap)).filter(([, v]) => v > 1);
+    const multipleOwnersCount = Object.entries(Object.fromEntries(ownersCount)).filter(([, v]) => v > 1);
     const photos = goals
       .map((g) => g.days.map((d) => d.feedback?.photos?.map((p) => p.src)))
       .flat(3)
@@ -58,7 +58,7 @@ export class GoalService {
     return this.goalRepository.manager.transaction(async (transactionalManager) => {
       await transactionalManager.increment(UserCharacteristic, { user: In(owners) }, 'abandoned', 1);
       await Promise.all(
-        ownersWithExtraGoals.map(([id, value]) =>
+        multipleOwnersCount.map(([id, value]) =>
           transactionalManager.increment(UserCharacteristic, { user: Number(id) }, 'abandoned', value - 1),
         ),
       );

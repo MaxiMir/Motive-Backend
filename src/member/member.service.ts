@@ -33,9 +33,21 @@ export class MemberService {
 
     if (!members.length) return;
 
-    const users = members.map((g) => g.user.id);
+    const users = members.map((m) => m.user.id);
+    const goals = members.map((m) => m.goalId);
+    const goalsCount = goals.reduce<Map<number, number>>(
+      (acc, id) => acc.set(id, 1 + (acc.get(id) || 0)),
+      new Map(),
+    );
+    const multipleGoalsCount = Object.entries(Object.fromEntries(goalsCount)).filter(([, v]) => v > 1);
 
     return this.memberRepository.manager.transaction(async (transactionalManager) => {
+      await transactionalManager.decrement(GoalCharacteristic, { id: In(goals) }, 'members', 1);
+      await Promise.all(
+        multipleGoalsCount.map(([id, value]) =>
+          transactionalManager.decrement(GoalCharacteristic, { id: Number(id) }, 'members', value - 1),
+        ),
+      );
       await transactionalManager.increment(UserCharacteristic, { user: In(users) }, 'abandoned', 1);
       await transactionalManager.remove(members);
     });

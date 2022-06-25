@@ -1,12 +1,21 @@
+### DEVELOPING:
+```shell
+docker-compose up -d # установка образа с бд
+yarn start:dev
+```
+
+### ARTIFACTORY:
 ```shell
 docker build -t maximir/backend:1.0.45 .
-# artifactory:
+
 docker tag <IMAGE_ID> maximir.jfrog.io/default-docker-virtual/backend:1.0.45
 docker push maximir.jfrog.io/default-docker-virtual/backend:1.0.45
 docker pull maximir.jfrog.io/default-docker-virtual/backend:1.0.45
+```
 
-docker-compose up -d # установка образа с бд
+### INSTALL
 
+```shell
 npm i -g @nestjs/cli
 nest new motive-backend
 yarn add typeorm @nestjs/typeorm pg
@@ -20,7 +29,8 @@ yarn add typeorm @nestjs/typeorm pg
 yarn add -D ts-node #  CLI написана на javascript и запускается в среде nodejs. Однако все наши модели и миграции будут написаны на typescript. Поэтому необходимо провести транспиляцию наших миграций и моделей до использования CLI. Для этого нам понадобится пакет ts-node:
 ```
 
-**В TypeOrmModule.forRoot:** 
+
+### TypeOrm
 
 **synchronize** — указывает, должна ли схема базы данных автоматически создаваться при запуске приложения.
 Будьте внимательны с данной опцией и не используйте ее в production, в противном случае вы потеряете данные.
@@ -54,7 +64,7 @@ yarn add @nestjsx/crud class-transformer class-validator
 # @nestjsx/crud-typeorm — пакет для интеграции с TypeORM, предоставляющий базовый сервис TypeOrmCrudService с CRUD методами работы с сущностями в БД.
 ```
 
-**JOB**
+### COMMANDS
 
 ```shell
 yarn start # запуск проекта
@@ -69,7 +79,7 @@ yarn run migration:generate -- CreateUserTable # создать миграцию
 yarn run migration:run # накатить миграцию
 ```
 
-**STATIC FILES:**
+### STATIC FILES
 
 ```shell
 yarn add @nestjs/serve-static
@@ -81,7 +91,7 @@ ServeStaticModule.forRoot({
 })
 ```
 
-**VALIDATION**
+### VALIDATION
 
 ```shell
 yarn add class-validator class-transformer # https://docs.nestjs.com/techniques/validation
@@ -106,8 +116,7 @@ yarn add -D @types/multer # Nest uses multer for handling file uploads using the
 yarn add helmet # для защиты приложения - передает специальные HTTP заголовки
 ```
 
-
-### Subscribes:
+### SUBSCRIBERS:
 
 ```typescript
 import { EventSubscriber, EntitySubscriberInterface, InsertEvent } from 'typeorm';
@@ -129,7 +138,9 @@ export class ReactionSubscriber implements EntitySubscriberInterface<Reaction> {
   }
 }
 ```
-Сервисы в Subscriber:
+
+#### SERVICES IN SUBSCRIBER
+
 ```typescript
 @Injectable()
 @EventSubscriber()

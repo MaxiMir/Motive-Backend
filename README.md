@@ -1,4 +1,4 @@
-### DEVELOPING:
+### DEVELOP:
 ```shell
 docker-compose up -d # установка образа с бд
 yarn start:dev

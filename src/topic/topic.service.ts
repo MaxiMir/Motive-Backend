@@ -2,7 +2,7 @@ import { BadRequestException, Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Not, Repository } from 'typeorm';
 import { FindOneOptions } from 'typeorm/find-options/FindOneOptions';
-import { Operation } from 'src/common/operation';
+import { OperationDto } from 'src/common/operation.dto';
 import { UserService } from 'src/user/user.service';
 import { GoalService } from 'src/goal/goal.service';
 import { DayService } from 'src/day/day.service';
@@ -60,7 +60,7 @@ export class TopicService {
   async find(query: FindQueryDto, userId?: number) {
     const { where, take, skip } = query;
     const topics = await this.topicRepository.find({
-      where: { type: Not(TopicTypeDto.ANSWER), ...where },
+      where: { type: Not(TopicTypeDto.Answer), ...where },
       relations: ['answer'],
       order: {
         id: 'DESC',
@@ -87,7 +87,7 @@ export class TopicService {
     return await this.topicRepository.findOneOrFail({ id }, options);
   }
 
-  async updateLikes(id: number, operation: Operation, userId: number) {
+  async updateLikes(id: number, operation: OperationDto, userId: number) {
     const user = { id: userId };
     const topic = await this.findByPK(id, { relations: ['user', 'user.characteristic'] });
     const uniq = this.likeService.getUniq(userId, topic.id);
@@ -102,11 +102,11 @@ export class TopicService {
       await transactionalManager[operation](Like, { user, topic, uniq });
 
       switch (topic.type) {
-        case TopicTypeDto.ANSWER:
+        case TopicTypeDto.Answer:
           await transactionalManager.increment(DayCharacteristic, { day: topic.dayId }, 'support', 1);
           await transactionalManager.increment(GoalCharacteristic, { goal: topic.goalId }, 'support', 1);
           break;
-        case TopicTypeDto.SUPPORT:
+        case TopicTypeDto.Support:
           topic.user.characteristic.support_all += 1;
           topic.user.characteristic.support = this.expService.getProgress(
             topic.user.characteristic.support_all,

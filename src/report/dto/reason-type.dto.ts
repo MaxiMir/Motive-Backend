@@ -1,7 +1,7 @@
 export enum ReasonTypeDto {
-  NUDITY = 'Nudity',
-  VIOLENCE = 'Violence',
-  TERRORISM = 'Terrorism',
-  SPAM = 'Spam',
-  SOMETHING_ELSE = 'Something else',
+  Nudity = 'Nudity',
+  Violence = 'Violence',
+  Terrorism = 'Terrorism',
+  Spam = 'Spam',
+  SomethingElse = 'Something else',
 }

@@ -12,7 +12,7 @@ import {
   ParseIntPipe,
 } from '@nestjs/common';
 import { ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
-import { Operation } from 'src/common/operation';
+import { OperationDto } from 'src/common/operation.dto';
 import { ApiPagination } from 'src/decorators/api-pagination.decorator';
 import { Identify } from 'src/decorators/identify.decorator';
 import { AuthGuard } from 'src/guards/auth.guard';
@@ -58,7 +58,7 @@ export class TopicController {
   @ApiResponse({ status: 204 })
   updateLikes(
     @Param('id', ParseIntPipe) id: number,
-    @Query('operation', ParseOperationPipe) operation: Operation,
+    @Query('operation', ParseOperationPipe) operation: OperationDto,
     @Identify() clientId: number,
   ) {
     return this.topicService.updateLikes(id, operation, clientId);

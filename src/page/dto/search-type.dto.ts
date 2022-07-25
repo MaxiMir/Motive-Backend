@@ -1,3 +1,3 @@
 export enum SearchTypeDto {
-  TAG = 'tag',
+  Tag = 'tag',
 }

@@ -11,8 +11,8 @@ import {
   ParseIntPipe,
 } from '@nestjs/common';
 import { ApiOperation, ApiParam, ApiQuery, ApiResponse, ApiTags } from '@nestjs/swagger';
-import { Operation, OPERATIONS } from 'src/common/operation';
-import { Characteristic, CHARACTERISTICS } from 'src/common/characteristic';
+import { OperationDto, OPERATIONS } from 'src/common/operation.dto';
+import { CharacteristicDto, CHARACTERISTICS } from 'src/common/characteristic.dto';
 import { ParseCharacteristicPipe } from 'src/pipes/parse-characteristic.pipe';
 import { parseInsertOperationPipe } from 'src/pipes/parse-insert-operation.pipe';
 import { Identify } from 'src/decorators/identify.decorator';
@@ -83,8 +83,8 @@ export class GoalController {
   updateCharacteristic(
     @Param('id', ParseIntPipe) id: number,
     @Param('dayId', ParseIntPipe) dayId: number,
-    @Param('characteristic', ParseCharacteristicPipe) characteristic: Characteristic,
-    @Query('operation', parseInsertOperationPipe) operation: Operation,
+    @Param('characteristic', ParseCharacteristicPipe) characteristic: CharacteristicDto,
+    @Query('operation', parseInsertOperationPipe) operation: OperationDto,
     @Identify() clientId: number,
   ) {
     return this.goalService.updateCharacteristic(id, dayId, characteristic, clientId);

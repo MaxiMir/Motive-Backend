@@ -1,6 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { Repository } from 'typeorm';
+import { Cron } from '@nestjs/schedule';
+import { Raw, Repository } from 'typeorm';
 import { FindQueryDto } from './dto/find-query.dto';
 import { Notification } from './entities/notification.entity';
 
@@ -10,6 +11,13 @@ export class NotificationService {
     @InjectRepository(Notification)
     private readonly notificationRepository: Repository<Notification>,
   ) {}
+
+  @Cron('00 15 01 * * *')
+  async handleOutdated() {
+    await this.notificationRepository.delete({
+      created: Raw((alias) => `${alias} < CURRENT_DATE - ${process.env.CLEAN_NOTIFICATIONS_AFTER_DAYS}`),
+    });
+  }
 
   find(query: FindQueryDto) {
     const { where, take, skip } = query;

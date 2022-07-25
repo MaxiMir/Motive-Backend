@@ -1,7 +1,7 @@
 import { Column, Entity, Index, JoinColumn, ManyToOne, PrimaryGeneratedColumn, RelationId } from 'typeorm';
 import { ApiProperty } from '@nestjs/swagger';
 import { User } from 'src/user/entities/user.entity';
-import { Characteristic, CHARACTERISTICS } from 'src/common/characteristic';
+import { CharacteristicDto, CHARACTERISTICS } from 'src/common/characteristic.dto';
 import { Day } from 'src/day/entities/day.entity';
 import { Goal } from 'src/goal/entities/goal.entity';
 
@@ -19,7 +19,7 @@ export class Reaction {
     enum: CHARACTERISTICS,
     nullable: false,
   })
-  characteristic: Characteristic;
+  characteristic: CharacteristicDto;
 
   @ManyToOne(() => Goal, { nullable: false, onDelete: 'CASCADE' })
   @JoinColumn()

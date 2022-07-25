@@ -1,5 +1,5 @@
 export enum TopicTypeDto {
-  QUESTION = 'question',
-  ANSWER = 'answer',
-  SUPPORT = 'support',
+  Question = 'question',
+  Answer = 'answer',
+  Support = 'support',
 }

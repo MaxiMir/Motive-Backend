@@ -1,11 +1,11 @@
 import { Goal } from 'src/goal/entities/goal.entity';
-import { Characteristic } from 'src/common/characteristic';
+import { CharacteristicDto } from 'src/common/characteristic.dto';
 import { Day } from 'src/day/entities/day.entity';
 import { CalendarDto } from 'src/goal/dto/calendar.dto';
 
 export class UserPageGoal extends Goal {
   inherited: boolean;
   calendar: CalendarDto[];
-  reactions: Record<Characteristic, number[]>;
+  reactions: Record<CharacteristicDto, number[]>;
   day: Day;
 }

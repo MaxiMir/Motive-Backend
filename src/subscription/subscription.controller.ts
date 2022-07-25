@@ -10,8 +10,8 @@ import {
   ParseIntPipe,
 } from '@nestjs/common';
 import { ApiOperation, ApiQuery, ApiResponse, ApiTags } from '@nestjs/swagger';
-import { Pagination } from 'src/common/pagination';
-import { Operation, OPERATIONS } from 'src/common/operation';
+import { PaginationDto } from 'src/common/pagination.dto';
+import { OperationDto, OPERATIONS } from 'src/common/operation.dto';
 import { ApiPagination } from 'src/decorators/api-pagination.decorator';
 import { Identify } from 'src/decorators/identify.decorator';
 import { AuthGuard } from 'src/guards/auth.guard';
@@ -29,7 +29,7 @@ export class SubscriptionController {
   @ApiOperation({ summary: 'Get followers' })
   @ApiPagination()
   @ApiResponse({ status: 200, type: [UserWithCharacteristicDto] })
-  getFollowers(@Param('id', ParseIntPipe) id: number, @Query() query: Pagination) {
+  getFollowers(@Param('id', ParseIntPipe) id: number, @Query() query: PaginationDto) {
     return this.subscriptionService.findFollowers(id, query);
   }
 
@@ -37,7 +37,7 @@ export class SubscriptionController {
   @ApiOperation({ summary: 'Get following' })
   @ApiPagination()
   @ApiResponse({ status: 200, type: [UserWithCharacteristicDto] })
-  getFollowing(@Param('id', ParseIntPipe) id: number, @Query() query: Pagination) {
+  getFollowing(@Param('id', ParseIntPipe) id: number, @Query() query: PaginationDto) {
     return this.subscriptionService.findFollowing(id, query);
   }
 
@@ -49,7 +49,7 @@ export class SubscriptionController {
   @ApiResponse({ status: 204 })
   update(
     @Body() dto: UpdateSubscriptionDto,
-    @Query('operation', ParseOperationPipe) operation: Operation,
+    @Query('operation', ParseOperationPipe) operation: OperationDto,
     @Identify() clientId: number,
   ) {
     return this.subscriptionService.update(dto, operation, clientId);

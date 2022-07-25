@@ -1,6 +1,6 @@
 import { Injectable } from '@nestjs/common';
-import { Pagination } from 'src/common/pagination';
-import { Characteristic } from 'src/common/characteristic';
+import { PaginationDto } from 'src/common/pagination.dto';
+import { CharacteristicDto } from 'src/common/characteristic.dto';
 import { GoalDayDto } from 'src/goal/dto/goal-day.dto';
 import { Goal } from 'src/goal/entities/goal.entity';
 import { Member } from 'src/member/entities/member.entity';
@@ -12,7 +12,7 @@ import { GoalService } from 'src/goal/goal.service';
 import { HashtagService } from 'src/hashtag/hashtag.service';
 import { SearchParamsDto } from './dto/search-params.dto';
 
-type ReactionsMap = Record<number, { [k in Characteristic]: number[] }>;
+type ReactionsMap = Record<number, { [k in CharacteristicDto]: number[] }>;
 
 @Injectable()
 export class PageService {
@@ -132,7 +132,7 @@ export class PageService {
     }, {});
   }
 
-  async findFollowing(pagination: Pagination, userId?: number) {
+  async findFollowing(pagination: PaginationDto, userId?: number) {
     const following = !userId ? [] : await this.subscriptionService.findFollowing(userId, pagination);
 
     return { content: following };

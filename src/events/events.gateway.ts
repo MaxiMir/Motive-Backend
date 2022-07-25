@@ -8,7 +8,7 @@ import {
 import { Logger } from '@nestjs/common';
 import { Server, Socket } from 'socket.io';
 import { DetailsDto } from 'src/notification/dto/details.dto';
-import { NOTIFICATION } from 'src/common/notification';
+import { NotificationDto } from 'src/common/notification.dto';
 import { UserService } from 'src/user/user.service';
 
 @WebSocketGateway({
@@ -49,7 +49,7 @@ export class EventsGateway implements OnGatewayInit, OnGatewayConnection, OnGate
     this.userService.getRepository().update({ id }, { online: false, lastSeen: new Date().toISOString() });
   }
 
-  handleNotification(id: number, payload: { type: NOTIFICATION; details: DetailsDto }) {
+  handleNotification(id: number, payload: { type: NotificationDto; details: DetailsDto }) {
     const socketId = this.usersMap.get(id);
 
     if (!socketId) return;

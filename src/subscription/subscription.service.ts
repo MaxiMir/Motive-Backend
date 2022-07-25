@@ -1,8 +1,8 @@
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
-import { Pagination } from 'src/common/pagination';
-import { Operation } from 'src/common/operation';
+import { PaginationDto } from 'src/common/pagination.dto';
+import { OperationDto } from 'src/common/operation.dto';
 import { UserService } from 'src/user/user.service';
 import { UpdateSubscriptionDto } from './dto/update-subscription.dto';
 import { Subscription } from './entities/subscription.entity';
@@ -27,7 +27,7 @@ export class SubscriptionService {
     return !!result;
   }
 
-  async findFollowing(userId: number, pagination: Pagination) {
+  async findFollowing(userId: number, pagination: PaginationDto) {
     const result = await this.subscriptionRepository.find({
       where: { follower: userId },
       relations: ['user', 'user.characteristic'],
@@ -40,7 +40,7 @@ export class SubscriptionService {
     return result.map((item) => item.user);
   }
 
-  async findFollowers(userId: number, pagination?: Pagination) {
+  async findFollowers(userId: number, pagination?: PaginationDto) {
     const result = await this.subscriptionRepository.find({
       where: { user: userId },
       relations: ['follower', 'follower.characteristic'],
@@ -53,7 +53,7 @@ export class SubscriptionService {
     return result.map((item) => item.follower);
   }
 
-  async update(dto: UpdateSubscriptionDto, operation: Operation, userId: number) {
+  async update(dto: UpdateSubscriptionDto, operation: OperationDto, userId: number) {
     const follower = await this.userService.findByPK(userId);
     const uniq = this.getUniq(dto.userId, userId);
     const following = await this.userService.findByPK(dto.userId, { relations: ['characteristic'] });

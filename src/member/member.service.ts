@@ -22,8 +22,8 @@ export class MemberService {
     private readonly dayService: DayService,
   ) {}
 
-  @Cron('00 30 03 * * *')
-  async handleCron() {
+  @Cron('00 00 01 * * *')
+  async handleAbandoned() {
     const members = await this.memberRepository.find({
       relations: ['user'],
       where: {

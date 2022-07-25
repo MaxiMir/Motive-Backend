@@ -3,8 +3,8 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { Cron } from '@nestjs/schedule';
 import { In, Raw, Repository } from 'typeorm';
 import { FindOneOptions } from 'typeorm/find-options/FindOneOptions';
-import { NOTIFICATION } from 'src/common/notification';
-import { Characteristic } from 'src/common/characteristic';
+import { NotificationDto } from 'src/common/notification.dto';
+import { CharacteristicDto } from 'src/common/characteristic.dto';
 import { CreateDayDto } from 'src/day/dto/create-day.dto';
 import { DayCharacteristic } from 'src/day-characteristic/entities/day-characteristic.entity';
 import { GoalCharacteristic } from 'src/goal-characteristic/entities/goal-characteristic.entity';
@@ -95,7 +95,7 @@ export class GoalService {
       (acc, goal) => [
         ...acc,
         ...followersMap.get(goal.owner.id).map((recipient) => ({
-          type: NOTIFICATION.WEB_COVERAGE,
+          type: NotificationDto.WebCoverage,
           details: { id: goal.id, name: goal.name, user: goal.owner },
           recipient,
         })),
@@ -163,7 +163,7 @@ export class GoalService {
     return this.goalRepository.update({ id, owner }, { stage: dto.stage });
   }
 
-  async updateCharacteristic(id: number, dayId: number, characteristic: Characteristic, userId: number) {
+  async updateCharacteristic(id: number, dayId: number, characteristic: CharacteristicDto, userId: number) {
     const user = await this.userService.findByPK(userId);
     const uniq = this.getUniq(userId, dayId, characteristic);
     const goal = await this.findByPK(id, { relations: ['characteristic'] });
@@ -203,7 +203,7 @@ export class GoalService {
     });
   }
 
-  getUniq(userId: number, dayId: number, characteristic: Characteristic) {
+  getUniq(userId: number, dayId: number, characteristic: CharacteristicDto) {
     return [userId, dayId, characteristic].join(':');
   }
 

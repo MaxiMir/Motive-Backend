@@ -1,6 +1,6 @@
 import { ApiProperty } from '@nestjs/swagger';
 import { Column, CreateDateColumn, Entity, JoinColumn, ManyToOne, PrimaryGeneratedColumn } from 'typeorm';
-import { NOTIFICATION } from 'src/common/notification';
+import { NotificationDto as NotificationGuide } from 'src/common/notification.dto';
 import { User } from 'src/user/entities/user.entity';
 import { DetailsDto } from 'src/notification/dto/details.dto';
 
@@ -19,10 +19,10 @@ export class Notification {
 
   @Column({
     type: 'enum',
-    enum: NOTIFICATION,
+    enum: NotificationGuide,
     nullable: false,
   })
-  type: NOTIFICATION;
+  type: NotificationGuide;
 
   @Column('simple-json')
   public details: DetailsDto;

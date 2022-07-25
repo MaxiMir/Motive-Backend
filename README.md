@@ -6,11 +6,11 @@ yarn start:dev
 
 ### ARTIFACTORY:
 ```shell
-docker build -t maximir/backend:1.0.45 .
+docker build -t maximir/backend:1.0.46 .
 
-docker tag <IMAGE_ID> maximir.jfrog.io/default-docker-virtual/backend:1.0.45
-docker push maximir.jfrog.io/default-docker-virtual/backend:1.0.45
-docker pull maximir.jfrog.io/default-docker-virtual/backend:1.0.45
+docker tag <IMAGE_ID> maximir.jfrog.io/default-docker-virtual/backend:1.0.46
+docker push maximir.jfrog.io/default-docker-virtual/backend:1.0.46
+docker pull maximir.jfrog.io/default-docker-virtual/backend:1.0.46
 ```
 
 ### INSTALL
@@ -139,7 +139,7 @@ export class ReactionSubscriber implements EntitySubscriberInterface<Reaction> {
 }
 ```
 
-#### SERVICES IN SUBSCRIBER
+### SERVICES IN SUBSCRIBERS
 
 ```typescript
 @Injectable()

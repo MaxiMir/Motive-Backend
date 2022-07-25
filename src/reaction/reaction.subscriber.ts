@@ -1,6 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { Connection, EntitySubscriberInterface, EventSubscriber, InsertEvent } from 'typeorm';
-import { NOTIFICATION } from 'src/common/notification';
+import { NotificationDto } from 'src/common/notification.dto';
 import { Notification } from 'src/notification/entities/notification.entity';
 import { Reaction } from './entities/reaction.entity';
 
@@ -19,7 +19,7 @@ export class ReactionSubscriber implements EntitySubscriberInterface<Reaction> {
     const { characteristic, user, goal, day } = event.entity;
 
     const insertData = {
-      type: characteristic === 'motivation' ? NOTIFICATION.ADD_MOTIVATION : NOTIFICATION.ADD_CREATIVITY,
+      type: characteristic === 'motivation' ? NotificationDto.AddMotivation : NotificationDto.AddCreativity,
       details: { id: goal.id, name: goal.name, day: day.id, user },
       recipient: { id: goal.ownerId },
     };

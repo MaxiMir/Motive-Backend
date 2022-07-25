@@ -1,6 +1,6 @@
 import { Controller, Param, Query, Get } from '@nestjs/common';
 import { ApiOperation, ApiParam, ApiQuery, ApiResponse, ApiTags } from '@nestjs/swagger';
-import { Pagination } from 'src/common/pagination';
+import { PaginationDto } from 'src/common/pagination.dto';
 import { ApiPagination } from 'src/decorators/api-pagination.decorator';
 import { Identify } from 'src/decorators/identify.decorator';
 import { ParseGoalDateMapPipe } from 'src/pipes/parse-goal-date-map.pipe';
@@ -39,7 +39,7 @@ export class PageController {
   @ApiOperation({ summary: 'Get following page' })
   @ApiPagination()
   @ApiResponse({ status: 200, type: FollowingDto })
-  async getFollowing(@Query() query: Pagination, @Identify() clientId?: number) {
+  async getFollowing(@Query() query: PaginationDto, @Identify() clientId?: number) {
     return this.pageService.findFollowing(query, clientId);
   }
 

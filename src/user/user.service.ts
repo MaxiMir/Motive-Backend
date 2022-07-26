@@ -54,12 +54,7 @@ export class UserService {
   find(query: FindQueryDto, relations?: string[]) {
     const { where, take, skip } = query;
 
-    return this.userRepository.find({
-      relations,
-      where,
-      take,
-      skip,
-    });
+    return this.userRepository.find({ relations, where, take, skip });
   }
 
   findByPK(id: number, options?: FindOneOptions<User>) {

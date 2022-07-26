@@ -22,11 +22,7 @@ export class NotificationService {
   find(query: FindQueryDto) {
     const { where, take, skip } = query;
 
-    return this.notificationRepository.find({
-      where,
-      take,
-      skip,
-    });
+    return this.notificationRepository.find({ where, take, skip });
   }
 
   updateRead(id: number) {

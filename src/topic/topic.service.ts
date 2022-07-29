@@ -48,7 +48,7 @@ export class TopicService {
     topic.parentId = dto.topicId;
     question.answer = topic;
 
-    return this.topicRepository.save(question);
+    return this.topicRepository.save(question, { data: question.user });
   }
 
   async update(id: number, dto: UpdateTopicDto, userId: number) {

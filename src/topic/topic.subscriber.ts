@@ -17,13 +17,13 @@ export class TopicSubscriber implements EntitySubscriberInterface<Topic> {
 
   async afterInsert(event: InsertEvent<Topic>) {
     const { type, goalId, day, user, text } = event.entity;
-
+    const { data } = event.queryRunner;
     const insertData =
       type === 'answer'
         ? {
             type: NotificationDto.NewAnswer,
             details: { id: goalId, day: day.id, user: day.goal.owner },
-            recipient: user,
+            recipient: data,
           }
         : {
             type: type === 'question' ? NotificationDto.NewQuestion : NotificationDto.NewSupport,

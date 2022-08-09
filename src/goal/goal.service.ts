@@ -1,11 +1,12 @@
 import { BadRequestException, Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { Cron } from '@nestjs/schedule';
+import { Cron, CronExpression } from '@nestjs/schedule';
 import { In, Raw, Repository } from 'typeorm';
 import { FindOneOptions } from 'typeorm/find-options/FindOneOptions';
 import { NotificationDto } from 'src/common/notification.dto';
 import { CharacteristicDto } from 'src/common/characteristic.dto';
 import { CreateDayDto } from 'src/day/dto/create-day.dto';
+import { Notification } from 'src/notification/entities/notification.entity';
 import { DayCharacteristic } from 'src/day-characteristic/entities/day-characteristic.entity';
 import { GoalCharacteristic } from 'src/goal-characteristic/entities/goal-characteristic.entity';
 import { UserCharacteristic } from 'src/user-characteristic/entities/user-characteristic.entity';
@@ -68,7 +69,7 @@ export class GoalService {
     });
   }
 
-  @Cron('00 45 23 * * *')
+  @Cron(CronExpression.EVERY_5_SECONDS)
   async handleWebCoverage() {
     const goals = await this.goalRepository.find({
       relations: ['owner'],

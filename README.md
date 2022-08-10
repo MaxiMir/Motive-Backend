@@ -6,11 +6,11 @@ yarn start:dev
 
 ### ARTIFACTORY:
 ```shell
-docker build -t maximir/backend:1.0.47 .
+docker build -t maximir/backend:1.0.48 .
 
-docker tag <IMAGE_ID> maximir.jfrog.io/default-docker-virtual/backend:1.0.47
-docker push maximir.jfrog.io/default-docker-virtual/backend:1.0.47
-docker pull maximir.jfrog.io/default-docker-virtual/backend:1.0.47
+docker tag <IMAGE_ID> maximir.jfrog.io/default-docker-virtual/backend:1.0.48
+docker push maximir.jfrog.io/default-docker-virtual/backend:1.0.48
+docker pull maximir.jfrog.io/default-docker-virtual/backend:1.0.48
 ```
 
 ### INSTALL

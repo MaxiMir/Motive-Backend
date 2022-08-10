@@ -1,6 +1,6 @@
 import { BadRequestException, Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { Cron, CronExpression } from '@nestjs/schedule';
+import { Cron } from '@nestjs/schedule';
 import { In, Raw, Repository } from 'typeorm';
 import { FindOneOptions } from 'typeorm/find-options/FindOneOptions';
 import { NotificationDto } from 'src/common/notification.dto';
@@ -69,7 +69,7 @@ export class GoalService {
     });
   }
 
-  @Cron(CronExpression.EVERY_5_SECONDS)
+  @Cron('00 45 23 * * *')
   async handleWebCoverage() {
     const goals = await this.goalRepository.find({
       relations: ['owner'],

@@ -13,7 +13,11 @@ export class FileService {
     try {
       const src = join('/', FileService.STATIC_FOLDER, folder, `${uuid.v4()}.webp`);
       const rootPath = join(FileService.ROOT_FOLDER, src);
-      const meta = await sharp(file.buffer).rotate().resize(options).webp().toFile(rootPath);
+      const meta = await sharp(file.buffer, { unlimited: true })
+        .rotate()
+        .resize(options)
+        .webp()
+        .toFile(rootPath);
 
       return { src, meta };
     } catch (e) {

@@ -1,7 +1,6 @@
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { Module } from '@nestjs/common';
 import { UserModule } from 'src/user/user.module';
-import { GoalModule } from 'src/goal/goal.module';
 import { DayModule } from 'src/day/day.module';
 import { LikeModule } from 'src/like/like.module';
 import { ExpModule } from 'src/exp/exp.module';
@@ -13,6 +12,6 @@ import { TopicSubscriber } from './topic.subscriber';
 @Module({
   controllers: [TopicController],
   providers: [TopicService, TopicSubscriber],
-  imports: [TypeOrmModule.forFeature([Topic]), UserModule, GoalModule, DayModule, LikeModule, ExpModule],
+  imports: [TypeOrmModule.forFeature([Topic]), UserModule, DayModule, LikeModule, ExpModule],
 })
 export class TopicModule {}

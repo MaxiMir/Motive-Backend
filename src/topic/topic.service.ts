@@ -4,7 +4,6 @@ import { Not, Repository } from 'typeorm';
 import { FindOneOptions } from 'typeorm/find-options/FindOneOptions';
 import { OperationDto } from 'src/common/operation.dto';
 import { UserService } from 'src/user/user.service';
-import { GoalService } from 'src/goal/goal.service';
 import { DayService } from 'src/day/day.service';
 import { LikeService } from 'src/like/like.service';
 import { ExpService } from 'src/exp/exp.service';
@@ -23,7 +22,6 @@ export class TopicService {
     @InjectRepository(Topic)
     private readonly topicRepository: Repository<Topic>,
     private readonly userService: UserService,
-    private readonly goalService: GoalService,
     private readonly dayService: DayService,
     private readonly likeService: LikeService,
     private readonly expService: ExpService,

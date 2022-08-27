@@ -1,10 +1,10 @@
 import { ApiProperty } from '@nestjs/swagger';
 import { Column, Entity, Index, JoinColumn, ManyToOne, PrimaryGeneratedColumn, RelationId } from 'typeorm';
-import { User } from 'src/user/entities/user.entity';
-import { Topic } from 'src/topic/entities/topic.entity';
+import { UserEntity } from 'src/user/entities/user.entity';
+import { TopicEntity } from 'src/topic/entities/topic.entity';
 
 @Entity('likes')
-export class Like {
+export class LikeEntity {
   @PrimaryGeneratedColumn()
   @ApiProperty({
     example: 1,
@@ -12,18 +12,18 @@ export class Like {
   })
   id: number;
 
-  @ManyToOne(() => Topic, { nullable: false, onDelete: 'CASCADE' })
+  @ManyToOne(() => TopicEntity, { nullable: false, onDelete: 'CASCADE' })
   @JoinColumn()
-  topic: Topic;
+  topic: TopicEntity;
 
-  @RelationId((like: Like) => like.topic)
+  @RelationId((like: LikeEntity) => like.topic)
   topicId: number;
 
-  @ManyToOne(() => User, { nullable: false })
+  @ManyToOne(() => UserEntity, { nullable: false })
   @JoinColumn()
-  user: User;
+  user: UserEntity;
 
-  @RelationId((like: Like) => like.user)
+  @RelationId((like: LikeEntity) => like.user)
   userId: number;
 
   @Index({ unique: true })

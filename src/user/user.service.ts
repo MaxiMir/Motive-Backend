@@ -4,17 +4,17 @@ import { Repository } from 'typeorm';
 import { FindOneOptions } from 'typeorm/find-options/FindOneOptions';
 import * as uuid from 'uuid';
 import { FileService } from 'src/file/file.service';
-import { UserCharacteristic } from 'src/user-characteristic/entities/user-characteristic.entity';
+import { UserCharacteristicEntity } from 'src/user-characteristic/entities/user-characteristic.entity';
 import { UpdateUserDto } from './dto/update-user.dto';
 import { CreateUserDto } from './dto/create-user.dto';
 import { FindQueryDto } from './dto/find-query.dto';
-import { User } from './entities/user.entity';
+import { UserEntity } from './entities/user.entity';
 
 @Injectable()
 export class UserService {
   constructor(
-    @InjectRepository(User)
-    private readonly userRepository: Repository<User>,
+    @InjectRepository(UserEntity)
+    private readonly userRepository: Repository<UserEntity>,
     private readonly fileService: FileService,
   ) {}
 
@@ -25,7 +25,7 @@ export class UserService {
   async create(dto: CreateUserDto) {
     const user = this.userRepository.create(dto);
     user.nickname = uuid.v4();
-    user.characteristic = new UserCharacteristic();
+    user.characteristic = new UserCharacteristicEntity();
 
     return this.userRepository.save(user);
   }
@@ -57,7 +57,7 @@ export class UserService {
     return this.userRepository.find({ relations, where, take, skip });
   }
 
-  findByPK(id: number, options?: FindOneOptions<User>) {
+  findByPK(id: number, options?: FindOneOptions<UserEntity>) {
     return this.userRepository.findOneOrFail({ id }, options);
   }
 }

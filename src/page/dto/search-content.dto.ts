@@ -1,7 +1,7 @@
 import { ApiProperty } from '@nestjs/swagger';
-import { UserWithCharacteristicDto } from 'src/user/dto/user-with-characteristic.dto';
-import { Goal } from 'src/goal/entities/goal.entity';
-import { Hashtag } from 'src/hashtag/entities/hashtag.entity';
+import { UserWithCharacteristicEntity } from 'src/user/entities/user-with-characteristic.entity';
+import { GoalEntity } from 'src/goal/entities/goal.entity';
+import { HashtagEntity } from 'src/hashtag/entities/hashtag.entity';
 
 export class SearchContentDto {
   @ApiProperty({
@@ -10,12 +10,12 @@ export class SearchContentDto {
   })
   readonly q: string;
 
-  @ApiProperty({ type: () => Hashtag, isArray: true })
-  readonly hashtags: Hashtag[];
+  @ApiProperty({ type: () => HashtagEntity, isArray: true })
+  readonly hashtags: HashtagEntity[];
 
-  @ApiProperty({ type: () => Goal, isArray: true })
-  readonly goals: Goal[];
+  @ApiProperty({ type: () => GoalEntity, isArray: true })
+  readonly goals: GoalEntity[];
 
-  @ApiProperty({ type: () => UserWithCharacteristicDto, isArray: true })
-  readonly users: UserWithCharacteristicDto[];
+  @ApiProperty({ type: () => UserWithCharacteristicEntity, isArray: true })
+  readonly users: UserWithCharacteristicEntity[];
 }

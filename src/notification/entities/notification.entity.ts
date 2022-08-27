@@ -1,7 +1,7 @@
 import { ApiProperty } from '@nestjs/swagger';
 import { Column, CreateDateColumn, Entity, JoinColumn, ManyToOne, PrimaryGeneratedColumn } from 'typeorm';
 import { NotificationDto as NotificationGuide } from 'src/common/notification.dto';
-import { User } from 'src/user/entities/user.entity';
+import { UserEntity } from 'src/user/entities/user.entity';
 import { DetailsDto } from 'src/notification/dto/details.dto';
 
 @Entity('notifications', {
@@ -9,7 +9,7 @@ import { DetailsDto } from 'src/notification/dto/details.dto';
     id: 'DESC',
   },
 })
-export class Notification {
+export class NotificationEntity {
   @PrimaryGeneratedColumn()
   @ApiProperty({
     example: 1,
@@ -30,9 +30,9 @@ export class Notification {
   @CreateDateColumn({ type: 'timestamp with time zone', default: () => 'CURRENT_TIMESTAMP(6)' })
   public created: Date;
 
-  @ManyToOne(() => User, { nullable: false })
+  @ManyToOne(() => UserEntity, { nullable: false })
   @JoinColumn()
-  recipient: User;
+  recipient: UserEntity;
 
   @Column('boolean', { default: false })
   read = false;

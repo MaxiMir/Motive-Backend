@@ -3,17 +3,17 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { FindOneOptions } from 'typeorm/find-options/FindOneOptions';
 import { MemberService } from 'src/member/member.service';
-import { Task } from './entities/task.entity';
+import { TaskEntity } from './entities/task.entity';
 
 @Injectable()
 export class TaskService {
   constructor(
-    @InjectRepository(Task)
-    private readonly taskRepository: Repository<Task>,
+    @InjectRepository(TaskEntity)
+    private readonly taskRepository: Repository<TaskEntity>,
     private readonly memberService: MemberService,
   ) {}
 
-  findByPK(id: number, options?: FindOneOptions<Task>) {
+  findByPK(id: number, options?: FindOneOptions<TaskEntity>) {
     return this.taskRepository.findOneOrFail({ id }, options);
   }
 

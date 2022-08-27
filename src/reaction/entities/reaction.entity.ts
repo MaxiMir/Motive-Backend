@@ -1,12 +1,12 @@
 import { Column, Entity, Index, JoinColumn, ManyToOne, PrimaryGeneratedColumn, RelationId } from 'typeorm';
 import { ApiProperty } from '@nestjs/swagger';
-import { User } from 'src/user/entities/user.entity';
+import { UserEntity } from 'src/user/entities/user.entity';
 import { CharacteristicDto, CHARACTERISTICS } from 'src/common/characteristic.dto';
-import { Day } from 'src/day/entities/day.entity';
-import { Goal } from 'src/goal/entities/goal.entity';
+import { DayEntity } from 'src/day/entities/day.entity';
+import { GoalEntity } from 'src/goal/entities/goal.entity';
 
 @Entity('reactions')
-export class Reaction {
+export class ReactionEntity {
   @PrimaryGeneratedColumn()
   @ApiProperty({
     example: 1,
@@ -21,20 +21,20 @@ export class Reaction {
   })
   characteristic: CharacteristicDto;
 
-  @ManyToOne(() => Goal, { nullable: false, onDelete: 'CASCADE' })
+  @ManyToOne(() => GoalEntity, { nullable: false, onDelete: 'CASCADE' })
   @JoinColumn()
-  goal: Goal;
+  goal: GoalEntity;
 
-  @RelationId((reaction: Reaction) => reaction.goal)
+  @RelationId((reaction: ReactionEntity) => reaction.goal)
   goalId: number;
 
-  @ManyToOne(() => Day, { nullable: false, onDelete: 'CASCADE' })
+  @ManyToOne(() => DayEntity, { nullable: false, onDelete: 'CASCADE' })
   @JoinColumn()
-  day: Day;
+  day: DayEntity;
 
-  @ManyToOne(() => User, { nullable: false })
+  @ManyToOne(() => UserEntity, { nullable: false })
   @JoinColumn()
-  user: User;
+  user: UserEntity;
 
   @Index({ unique: true })
   @Column()

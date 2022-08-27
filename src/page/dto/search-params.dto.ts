@@ -4,9 +4,9 @@ import { SearchTypeDto } from './search-type.dto';
 export class SearchParamsDto {
   @IsOptional()
   @IsString()
-  q?: string;
+  readonly q?: string;
 
   @IsOptional()
   @IsEnum(SearchTypeDto)
-  type?: SearchTypeDto;
+  readonly type?: SearchTypeDto;
 }

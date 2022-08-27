@@ -6,7 +6,7 @@ import { ApiImageFiles } from 'src/decorators/api-images.decorator';
 import { AuthGuard } from 'src/guards/auth.guard';
 import { CreateConfirmationDto } from './dto/create-confirmation.dto';
 import { FindQueryDto } from './dto/find-query.dto';
-import { Confirmation } from './entities/confirmation.entity';
+import { ConfirmationEntity } from './entities/confirmation.entity';
 import { ConfirmationService } from './confirmation.service';
 
 @Controller('confirmations')
@@ -34,7 +34,7 @@ export class ConfirmationController {
     },
   })
   @ApiImageFiles('photos')
-  @ApiResponse({ status: 201, type: Confirmation })
+  @ApiResponse({ status: 201, type: ConfirmationEntity })
   save(
     @Body() dto: CreateConfirmationDto,
     @UploadedFiles() files: Express.Multer.File[],
@@ -46,7 +46,7 @@ export class ConfirmationController {
   @Get()
   @ApiOperation({ summary: 'Get confirmations' })
   @ApiPagination({ name: 'where[user]', example: 1 })
-  @ApiResponse({ status: 200, type: [Confirmation] })
+  @ApiResponse({ status: 200, type: [ConfirmationEntity] })
   find(@Query() query: FindQueryDto) {
     return this.confirmationService.find(query);
   }

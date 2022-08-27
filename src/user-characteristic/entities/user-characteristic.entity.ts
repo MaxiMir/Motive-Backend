@@ -1,9 +1,9 @@
 import { ApiHideProperty, ApiProperty } from '@nestjs/swagger';
 import { Column, Entity, JoinColumn, OneToOne, PrimaryGeneratedColumn } from 'typeorm';
-import { User } from 'src/user/entities/user.entity';
+import { UserEntity } from 'src/user/entities/user.entity';
 
 @Entity('user-characteristics')
-export class UserCharacteristic {
+export class UserCharacteristicEntity {
   @PrimaryGeneratedColumn()
   @ApiProperty({
     example: 1,
@@ -68,8 +68,8 @@ export class UserCharacteristic {
   })
   followers: number;
 
-  @OneToOne(() => User, { nullable: false })
+  @OneToOne(() => UserEntity, { nullable: false })
   @JoinColumn()
   @ApiHideProperty()
-  user: User;
+  user: UserEntity;
 }

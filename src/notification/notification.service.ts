@@ -3,13 +3,13 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { Cron } from '@nestjs/schedule';
 import { Raw, Repository } from 'typeorm';
 import { FindQueryDto } from './dto/find-query.dto';
-import { Notification } from './entities/notification.entity';
+import { NotificationEntity } from './entities/notification.entity';
 
 @Injectable()
 export class NotificationService {
   constructor(
-    @InjectRepository(Notification)
-    private readonly notificationRepository: Repository<Notification>,
+    @InjectRepository(NotificationEntity)
+    private readonly notificationRepository: Repository<NotificationEntity>,
   ) {}
 
   @Cron('00 15 01 * * *')

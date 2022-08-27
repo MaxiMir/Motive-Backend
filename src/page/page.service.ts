@@ -2,8 +2,8 @@ import { Injectable } from '@nestjs/common';
 import { PaginationDto } from 'src/common/pagination.dto';
 import { CharacteristicDto } from 'src/common/characteristic.dto';
 import { GoalDayDto } from 'src/goal/dto/goal-day.dto';
-import { Goal } from 'src/goal/entities/goal.entity';
-import { Member } from 'src/member/entities/member.entity';
+import { GoalEntity } from 'src/goal/entities/goal.entity';
+import { MemberEntity } from 'src/member/entities/member.entity';
 import { UserService } from 'src/user/user.service';
 import { SubscriptionService } from 'src/subscription/subscription.service';
 import { ReactionService } from 'src/reaction/reaction.service';
@@ -66,7 +66,7 @@ export class PageService {
   }
 
   private async findDays(
-    goals: Goal[],
+    goals: GoalEntity[],
     reactionsList: ReactionsMap,
     goalDatesMap?: GoalDayDto[],
     inherited?: boolean,
@@ -93,7 +93,7 @@ export class PageService {
     );
   }
 
-  private getMembership(membership: Member[], goalDateMap: GoalDayDto[] = []) {
+  private getMembership(membership: MemberEntity[], goalDateMap: GoalDayDto[] = []) {
     return membership.reduce(
       (acc, { goal, goalId, dayId }) => {
         const goalIdExist = acc.goalDateMap.some((d) => d.goalId === goalId);

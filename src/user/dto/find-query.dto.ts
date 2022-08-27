@@ -5,5 +5,5 @@ import { PaginationDto } from 'src/common/pagination.dto';
 export class FindQueryDto extends PaginationDto {
   @IsObject()
   @Type(() => Object)
-  where: { email?: string; name?: string };
+  readonly where: { email?: string; name?: string };
 }

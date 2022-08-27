@@ -2,15 +2,15 @@ import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { OperationDto } from 'src/common/operation.dto';
-import { Topic } from 'src/topic/entities/topic.entity';
+import { TopicEntity } from 'src/topic/entities/topic.entity';
 import { TopicTypeDto } from 'src/topic/dto/topic-type.dto';
-import { Like } from './entities/like.entity';
+import { LikeEntity } from './entities/like.entity';
 
 @Injectable()
 export class LikeService {
   constructor(
-    @InjectRepository(Like)
-    private readonly topicRepository: Repository<Like>,
+    @InjectRepository(LikeEntity)
+    private readonly topicRepository: Repository<LikeEntity>,
   ) {}
 
   async findLikedTopics(userId: number, topicIds: number[]) {
@@ -28,7 +28,7 @@ export class LikeService {
     return [userId, topicId].join(':');
   }
 
-  checkCanLike(userId: number, topic: Topic, operation: OperationDto) {
+  checkCanLike(userId: number, topic: TopicEntity, operation: OperationDto) {
     const isLikeSelf = topic.user.id === userId;
     const isDeleteSupport = topic.type === TopicTypeDto.Support && operation === 'delete';
 

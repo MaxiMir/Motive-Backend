@@ -8,13 +8,13 @@ import { FileService } from 'src/file/file.service';
 import { ExpService } from 'src/exp/exp.service';
 import { CreateConfirmationDto } from './dto/create-confirmation.dto';
 import { FindQueryDto } from './dto/find-query.dto';
-import { Confirmation } from './entities/confirmation.entity';
+import { ConfirmationEntity } from './entities/confirmation.entity';
 
 @Injectable()
 export class ConfirmationService {
   constructor(
-    @InjectRepository(Confirmation)
-    private readonly confirmationRepository: Repository<Confirmation>,
+    @InjectRepository(ConfirmationEntity)
+    private readonly confirmationRepository: Repository<ConfirmationEntity>,
     private readonly userService: UserService,
     private readonly memberService: MemberService,
     private readonly goalService: GoalService,
@@ -29,7 +29,7 @@ export class ConfirmationService {
       goal.ownerId === userId
         ? null
         : await this.memberService.findOne({ where: { user: user.id, goal: goal.id } });
-    const confirmation = new Confirmation();
+    const confirmation = new ConfirmationEntity();
     confirmation.started = member?.started || goal.started;
     confirmation.end = dto.end;
     confirmation.photos = await this.fileService.uploadAndMeasureImages(photos, 'confirmation');

@@ -1,13 +1,13 @@
 import { ApiProperty } from '@nestjs/swagger';
-import { UserWithCharacteristicDto } from 'src/user/dto/user-with-characteristic.dto';
+import { UserWithCharacteristicEntity } from 'src/user/entities/user-with-characteristic.entity';
 
 export class RatingContentDto {
-  @ApiProperty({ type: () => UserWithCharacteristicDto, isArray: true })
-  readonly motivation: UserWithCharacteristicDto[];
+  @ApiProperty({ type: () => UserWithCharacteristicEntity, isArray: true })
+  readonly motivation: UserWithCharacteristicEntity[];
 
-  @ApiProperty({ type: () => UserWithCharacteristicDto, isArray: true })
-  readonly creativity: UserWithCharacteristicDto[];
+  @ApiProperty({ type: () => UserWithCharacteristicEntity, isArray: true })
+  readonly creativity: UserWithCharacteristicEntity[];
 
-  @ApiProperty({ type: () => UserWithCharacteristicDto, isArray: true })
-  readonly support: UserWithCharacteristicDto[];
+  @ApiProperty({ type: () => UserWithCharacteristicEntity, isArray: true })
+  readonly support: UserWithCharacteristicEntity[];
 }

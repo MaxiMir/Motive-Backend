@@ -6,17 +6,17 @@ import { FindOneOptions } from 'typeorm/find-options/FindOneOptions';
 import { UserService } from 'src/user/user.service';
 import { GoalService } from 'src/goal/goal.service';
 import { DayService } from 'src/day/day.service';
-import { GoalCharacteristic } from 'src/goal-characteristic/entities/goal-characteristic.entity';
-import { UserCharacteristic } from 'src/user-characteristic/entities/user-characteristic.entity';
+import { GoalCharacteristicEntity } from 'src/goal-characteristic/entities/goal-characteristic.entity';
+import { UserCharacteristicEntity } from 'src/user-characteristic/entities/user-characteristic.entity';
 import { CreateMemberDto } from './dto/create-member.dto';
-import { Member } from './entities/member.entity';
+import { MemberEntity } from './entities/member.entity';
 import { UpdateMemberDto } from './dto/update-member.dto';
 
 @Injectable()
 export class MemberService {
   constructor(
-    @InjectRepository(Member)
-    private readonly memberRepository: Repository<Member>,
+    @InjectRepository(MemberEntity)
+    private readonly memberRepository: Repository<MemberEntity>,
     private readonly userService: UserService,
     private readonly goalService: GoalService,
     private readonly dayService: DayService,
@@ -42,23 +42,23 @@ export class MemberService {
     const multipleGoalsCount = Object.entries(Object.fromEntries(goalsCount)).filter(([, v]) => v > 1);
 
     return this.memberRepository.manager.transaction(async (transactionalManager) => {
-      await transactionalManager.decrement(GoalCharacteristic, { id: In(goals) }, 'members', 1);
+      await transactionalManager.decrement(GoalCharacteristicEntity, { id: In(goals) }, 'members', 1);
       await Promise.all(
         multipleGoalsCount.map(([id, value]) =>
-          transactionalManager.decrement(GoalCharacteristic, { id: Number(id) }, 'members', value - 1),
+          transactionalManager.decrement(GoalCharacteristicEntity, { id: Number(id) }, 'members', value - 1),
         ),
       );
-      await transactionalManager.increment(UserCharacteristic, { user: In(users) }, 'abandoned', 1);
+      await transactionalManager.increment(UserCharacteristicEntity, { user: In(users) }, 'abandoned', 1);
       await transactionalManager.remove(members);
     });
   }
 
-  findOne(options?: FindOneOptions<Member>) {
+  findOne(options?: FindOneOptions<MemberEntity>) {
     return this.memberRepository.findOneOrFail(options);
   }
 
   async save(dto: CreateMemberDto, userId: number) {
-    const member = new Member();
+    const member = new MemberEntity();
     member.uniq = this.getUniq(userId, dto.goalId);
     member.user = await this.userService.findByPK(userId);
     member.goal = await this.goalService.findByPK(dto.goalId);
@@ -69,7 +69,7 @@ export class MemberService {
       : await this.dayService.findOne({ where: { goal: dto.goalId }, order: { id: 'ASC' } });
 
     return this.memberRepository.manager.transaction(async (transactionalManager) => {
-      await transactionalManager.increment(GoalCharacteristic, { goal: member.goal.id }, 'members', 1);
+      await transactionalManager.increment(GoalCharacteristicEntity, { goal: member.goal.id }, 'members', 1);
 
       return transactionalManager.save(member);
     });
@@ -87,7 +87,7 @@ export class MemberService {
     const member = await this.findOne({ where: { id, user: userId } });
 
     return this.memberRepository.manager.transaction(async (transactionalManager) => {
-      await transactionalManager.decrement(GoalCharacteristic, { goal: member.goalId }, 'members', 1);
+      await transactionalManager.decrement(GoalCharacteristicEntity, { goal: member.goalId }, 'members', 1);
       await transactionalManager.remove(member);
     });
   }

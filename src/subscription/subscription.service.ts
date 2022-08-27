@@ -5,13 +5,13 @@ import { PaginationDto } from 'src/common/pagination.dto';
 import { OperationDto } from 'src/common/operation.dto';
 import { UserService } from 'src/user/user.service';
 import { UpdateSubscriptionDto } from './dto/update-subscription.dto';
-import { Subscription } from './entities/subscription.entity';
+import { SubscriptionEntity } from './entities/subscription.entity';
 
 @Injectable()
 export class SubscriptionService {
   constructor(
-    @InjectRepository(Subscription)
-    private readonly subscriptionRepository: Repository<Subscription>,
+    @InjectRepository(SubscriptionEntity)
+    private readonly subscriptionRepository: Repository<SubscriptionEntity>,
     private readonly userService: UserService,
   ) {}
 
@@ -60,7 +60,7 @@ export class SubscriptionService {
     following.characteristic.followers += operation === 'insert' ? 1 : -1;
 
     return this.subscriptionRepository.manager.transaction(async (transactionalManager) => {
-      await transactionalManager[operation](Subscription, { user: following, follower, uniq });
+      await transactionalManager[operation](SubscriptionEntity, { user: following, follower, uniq });
       await transactionalManager.save(following);
     });
   }

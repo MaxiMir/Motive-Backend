@@ -1,11 +1,11 @@
 import { ApiProperty } from '@nestjs/swagger';
 import { Column, Entity, JoinColumn, ManyToOne, OneToOne, PrimaryGeneratedColumn, RelationId } from 'typeorm';
-import { Day } from 'src/day/entities/day.entity';
-import { User } from 'src/user/entities/user.entity';
+import { DayEntity } from 'src/day/entities/day.entity';
+import { UserEntity } from 'src/user/entities/user.entity';
 import { TopicTypeDto } from 'src/topic/dto/topic-type.dto';
 
 @Entity('topics')
-export class Topic {
+export class TopicEntity {
   @PrimaryGeneratedColumn()
   @ApiProperty({
     example: 1,
@@ -35,10 +35,10 @@ export class Topic {
   })
   text: string;
 
-  @ManyToOne(() => User, { cascade: true, eager: true, nullable: false })
-  user: User;
+  @ManyToOne(() => UserEntity, { cascade: true, eager: true, nullable: false })
+  user: UserEntity;
 
-  @RelationId((topic: Topic) => topic.user)
+  @RelationId((topic: TopicEntity) => topic.user)
   userId: number;
 
   @Column({
@@ -48,12 +48,12 @@ export class Topic {
   })
   type: TopicTypeDto;
 
-  @OneToOne(() => Topic, {
+  @OneToOne(() => TopicEntity, {
     cascade: true,
     onDelete: 'CASCADE',
   })
   @JoinColumn()
-  answer: Topic;
+  answer: TopicEntity;
 
   @Column({ nullable: true })
   parentId: number;
@@ -61,10 +61,10 @@ export class Topic {
   @Column()
   goalId: number;
 
-  @ManyToOne(() => Day, { cascade: true, nullable: false, onDelete: 'CASCADE' })
-  day: Day;
+  @ManyToOne(() => DayEntity, { cascade: true, nullable: false, onDelete: 'CASCADE' })
+  day: DayEntity;
 
-  @RelationId((topic: Topic) => topic.day)
+  @RelationId((topic: TopicEntity) => topic.day)
   dayId: number;
 
   @Column('boolean', { default: false })

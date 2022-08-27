@@ -1,17 +1,17 @@
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
-import { Hashtag } from './entities/hashtag.entity';
+import { HashtagEntity } from './entities/hashtag.entity';
 import { FindManyOptions } from 'typeorm/find-options/FindManyOptions';
 
 @Injectable()
 export class HashtagService {
   constructor(
-    @InjectRepository(Hashtag)
-    private readonly hashtagRepository: Repository<Hashtag>,
+    @InjectRepository(HashtagEntity)
+    private readonly hashtagRepository: Repository<HashtagEntity>,
   ) {}
 
-  find(options?: FindManyOptions<Hashtag>) {
+  find(options?: FindManyOptions<HashtagEntity>) {
     return this.hashtagRepository.find(options);
   }
 }

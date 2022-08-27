@@ -2,12 +2,12 @@ import { Injectable } from '@nestjs/common';
 import { EventSubscriber, EntitySubscriberInterface, InsertEvent, Connection } from 'typeorm';
 import { NotificationDto } from 'src/common/notification.dto';
 import { SubscriptionService } from 'src/subscription/subscription.service';
-import { Notification } from 'src/notification/entities/notification.entity';
-import { Feedback } from './entities/feedback.entity';
+import { NotificationEntity } from 'src/notification/entities/notification.entity';
+import { FeedbackEntity } from './entities/feedback.entity';
 
 @Injectable()
 @EventSubscriber()
-export class FeedbackSubscriber implements EntitySubscriberInterface<Feedback> {
+export class FeedbackSubscriber implements EntitySubscriberInterface<FeedbackEntity> {
   constructor(
     private readonly connection: Connection,
     private readonly subscriptionService: SubscriptionService,
@@ -16,10 +16,10 @@ export class FeedbackSubscriber implements EntitySubscriberInterface<Feedback> {
   }
 
   listenTo() {
-    return Feedback;
+    return FeedbackEntity;
   }
 
-  async afterInsert(event: InsertEvent<Feedback>) {
+  async afterInsert(event: InsertEvent<FeedbackEntity>) {
     const { day } = event.entity;
     const { id, owner } = day.goal;
     const followers = await this.subscriptionService.findFollowers(owner.id);
@@ -29,6 +29,6 @@ export class FeedbackSubscriber implements EntitySubscriberInterface<Feedback> {
       recipient,
     }));
 
-    await event.manager.createQueryBuilder().insert().into(Notification).values(insertData).execute();
+    await event.manager.createQueryBuilder().insert().into(NotificationEntity).values(insertData).execute();
   }
 }

@@ -1,15 +1,15 @@
 import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
 import { Column, Entity, ManyToOne, OneToMany, OneToOne, PrimaryGeneratedColumn, RelationId } from 'typeorm';
-import { User } from 'src/user/entities/user.entity';
-import { Day } from 'src/day/entities/day.entity';
-import { GoalCharacteristic } from 'src/goal-characteristic/entities/goal-characteristic.entity';
+import { UserEntity } from 'src/user/entities/user.entity';
+import { DayEntity } from 'src/day/entities/day.entity';
+import { GoalCharacteristicEntity } from 'src/goal-characteristic/entities/goal-characteristic.entity';
 
 @Entity('goals', {
   orderBy: {
     id: 'ASC',
   },
 })
-export class Goal {
+export class GoalEntity {
   @PrimaryGeneratedColumn()
   @ApiProperty({
     example: 1,
@@ -57,15 +57,15 @@ export class Goal {
   @Column({ default: 0 })
   stage: number;
 
-  @OneToOne(() => GoalCharacteristic, (characteristic) => characteristic.goal, {
+  @OneToOne(() => GoalCharacteristicEntity, (characteristic) => characteristic.goal, {
     cascade: true,
   })
-  @ApiPropertyOptional({ type: () => GoalCharacteristic })
-  characteristic: GoalCharacteristic;
+  @ApiPropertyOptional({ type: () => GoalCharacteristicEntity })
+  characteristic: GoalCharacteristicEntity;
 
-  @OneToMany(() => Day, (day) => day.goal, { cascade: true })
-  @ApiPropertyOptional({ type: () => Day, isArray: true })
-  days: Day[];
+  @OneToMany(() => DayEntity, (day) => day.goal, { cascade: true })
+  @ApiPropertyOptional({ type: () => DayEntity, isArray: true })
+  days: DayEntity[];
 
   @Column('boolean', { default: false })
   @ApiProperty({
@@ -74,12 +74,12 @@ export class Goal {
   })
   completed = false;
 
-  @ManyToOne(() => User, (user) => user.goals, {
+  @ManyToOne(() => UserEntity, (user) => user.goals, {
     nullable: false,
     cascade: true,
   })
-  owner: User;
+  owner: UserEntity;
 
-  @RelationId((goal: Goal) => goal.owner)
+  @RelationId((goal: GoalEntity) => goal.owner)
   ownerId: number;
 }

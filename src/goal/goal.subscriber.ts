@@ -2,12 +2,12 @@ import { Injectable } from '@nestjs/common';
 import { EventSubscriber, EntitySubscriberInterface, InsertEvent, Connection } from 'typeorm';
 import { NotificationDto } from 'src/common/notification.dto';
 import { SubscriptionService } from 'src/subscription/subscription.service';
-import { Notification } from 'src/notification/entities/notification.entity';
-import { Goal } from './entities/goal.entity';
+import { NotificationEntity } from 'src/notification/entities/notification.entity';
+import { GoalEntity } from './entities/goal.entity';
 
 @Injectable()
 @EventSubscriber()
-export class GoalSubscriber implements EntitySubscriberInterface<Goal> {
+export class GoalSubscriber implements EntitySubscriberInterface<GoalEntity> {
   constructor(
     private readonly connection: Connection,
     private readonly subscriptionService: SubscriptionService,
@@ -16,10 +16,10 @@ export class GoalSubscriber implements EntitySubscriberInterface<Goal> {
   }
 
   listenTo() {
-    return Goal;
+    return GoalEntity;
   }
 
-  async afterInsert(event: InsertEvent<Goal>) {
+  async afterInsert(event: InsertEvent<GoalEntity>) {
     const { id, name, days, owner } = event.entity;
     const followers = await this.subscriptionService.findFollowers(owner.id);
     const insertData = followers.map((recipient) => ({
@@ -28,6 +28,6 @@ export class GoalSubscriber implements EntitySubscriberInterface<Goal> {
       recipient,
     }));
 
-    await event.manager.createQueryBuilder().insert().into(Notification).values(insertData).execute();
+    await event.manager.createQueryBuilder().insert().into(NotificationEntity).values(insertData).execute();
   }
 }

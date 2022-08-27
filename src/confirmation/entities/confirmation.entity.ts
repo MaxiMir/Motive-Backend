@@ -1,11 +1,11 @@
 import { ApiProperty } from '@nestjs/swagger';
 import { Column, Entity, JoinColumn, ManyToOne } from 'typeorm';
-import { Goal } from 'src/goal/entities/goal.entity';
-import { User } from 'src/user/entities/user.entity';
-import { ConfirmationBase } from './confirmation-base.entity';
+import { GoalEntity } from 'src/goal/entities/goal.entity';
+import { UserEntity } from 'src/user/entities/user.entity';
+import { ConfirmationBaseEntity } from './confirmation-base.entity';
 
 @Entity('confirmations')
-export class Confirmation extends ConfirmationBase {
+export class ConfirmationEntity extends ConfirmationBaseEntity {
   @Column({ type: 'timestamp with time zone' })
   @ApiProperty({
     example: '2022-02-16 00:00:00+03',
@@ -18,13 +18,13 @@ export class Confirmation extends ConfirmationBase {
   })
   end: string;
 
-  @ManyToOne(() => Goal, { cascade: true, nullable: false })
+  @ManyToOne(() => GoalEntity, { cascade: true, nullable: false })
   @JoinColumn()
-  goal: Goal;
+  goal: GoalEntity;
 
-  @ManyToOne(() => User, { nullable: false })
+  @ManyToOne(() => UserEntity, { nullable: false })
   @JoinColumn()
-  user: User;
+  user: UserEntity;
 
   @Column('boolean')
   @ApiProperty({

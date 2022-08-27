@@ -13,7 +13,7 @@ import { ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
 import { Identify } from 'src/decorators/identify.decorator';
 import { AuthGuard } from 'src/guards/auth.guard';
 import { CreateMemberDto } from './dto/create-member.dto';
-import { Member } from './entities/member.entity';
+import { MemberEntity } from './entities/member.entity';
 import { MemberService } from './member.service';
 import { UpdateMemberDto } from './dto/update-member.dto';
 
@@ -25,7 +25,7 @@ export class MemberController {
   @Post()
   @UseGuards(AuthGuard)
   @ApiOperation({ summary: 'Create member' })
-  @ApiResponse({ status: 201, type: Member })
+  @ApiResponse({ status: 201, type: MemberEntity })
   save(@Body() dto: CreateMemberDto, @Identify() clientId: number) {
     return this.memberService.save(dto, clientId);
   }
@@ -33,7 +33,7 @@ export class MemberController {
   @Patch(':id')
   @UseGuards(AuthGuard)
   @ApiOperation({ summary: 'Update member' })
-  @ApiResponse({ status: 201, type: Member })
+  @ApiResponse({ status: 201, type: MemberEntity })
   update(@Param('id', ParseIntPipe) id: number, @Body() dto: UpdateMemberDto, @Identify() clientId: number) {
     return this.memberService.update(id, dto, clientId);
   }

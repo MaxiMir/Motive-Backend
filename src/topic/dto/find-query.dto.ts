@@ -8,5 +8,5 @@ export class FindQueryDto extends PaginationDto {
     toClassOnly: true,
   })
   @Type(() => Object)
-  where: { day: number };
+  readonly where: { day: number };
 }

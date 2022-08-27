@@ -1,7 +1,7 @@
 import { ApiProperty } from '@nestjs/swagger';
 import { Column, PrimaryGeneratedColumn } from 'typeorm';
 
-export class ConfirmationBase {
+export class ConfirmationBaseEntity {
   @PrimaryGeneratedColumn()
   @ApiProperty({
     example: 1,

@@ -1,9 +1,9 @@
 import { ApiProperty } from '@nestjs/swagger';
 import { Column, Entity, JoinColumn, OneToOne, PrimaryGeneratedColumn, RelationId } from 'typeorm';
-import { Day } from 'src/day/entities/day.entity';
+import { DayEntity } from 'src/day/entities/day.entity';
 
 @Entity('day-characteristics')
-export class DayCharacteristic {
+export class DayCharacteristicEntity {
   @PrimaryGeneratedColumn()
   @ApiProperty({
     example: 1,
@@ -29,10 +29,10 @@ export class DayCharacteristic {
   @Column({ default: 0 })
   support: number;
 
-  @OneToOne(() => Day, { nullable: false, onDelete: 'CASCADE' })
+  @OneToOne(() => DayEntity, { nullable: false, onDelete: 'CASCADE' })
   @JoinColumn()
-  day: Day;
+  day: DayEntity;
 
-  @RelationId((characteristic: DayCharacteristic) => characteristic.day)
+  @RelationId((characteristic: DayCharacteristicEntity) => characteristic.day)
   dayId: number;
 }

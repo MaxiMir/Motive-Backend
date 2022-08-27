@@ -1,7 +1,7 @@
 import { ApiProperty } from '@nestjs/swagger';
 import { Column, Index, PrimaryGeneratedColumn } from 'typeorm';
 
-export class UserBaseDto {
+export class UserBaseEntity {
   @PrimaryGeneratedColumn()
   @ApiProperty({
     example: 1,

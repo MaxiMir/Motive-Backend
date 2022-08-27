@@ -7,12 +7,12 @@ import { FileModule } from 'src/file/file.module';
 import { ExpModule } from 'src/exp/exp.module';
 import { ConfirmationService } from './confirmation.service';
 import { ConfirmationController } from './confirmation.controller';
-import { Confirmation } from './entities/confirmation.entity';
+import { ConfirmationEntity } from './entities/confirmation.entity';
 
 @Module({
   controllers: [ConfirmationController],
   imports: [
-    TypeOrmModule.forFeature([Confirmation]),
+    TypeOrmModule.forFeature([ConfirmationEntity]),
     UserModule,
     GoalModule,
     MemberModule,

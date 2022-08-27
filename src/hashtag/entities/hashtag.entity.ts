@@ -2,7 +2,7 @@ import { Column, Entity, Index, PrimaryGeneratedColumn } from 'typeorm';
 import { ApiProperty } from '@nestjs/swagger';
 
 @Entity('hashtags')
-export class Hashtag {
+export class HashtagEntity {
   @PrimaryGeneratedColumn()
   @ApiProperty({
     example: 1,

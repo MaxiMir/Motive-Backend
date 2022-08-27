@@ -5,7 +5,7 @@ import { DayModule } from 'src/day/day.module';
 import { ExpModule } from 'src/exp/exp.module';
 import { FileModule } from 'src/file/file.module';
 import { SubscriptionModule } from 'src/subscription/subscription.module';
-import { Goal } from './entities/goal.entity';
+import { GoalEntity } from './entities/goal.entity';
 import { GoalController } from './goal.controller';
 import { GoalService } from './goal.service';
 import { GoalSubscriber } from './goal.subscriber';
@@ -14,7 +14,7 @@ import { GoalSubscriber } from './goal.subscriber';
   controllers: [GoalController],
   providers: [GoalService, GoalSubscriber],
   imports: [
-    TypeOrmModule.forFeature([Goal]),
+    TypeOrmModule.forFeature([GoalEntity]),
     UserModule,
     DayModule,
     SubscriptionModule,

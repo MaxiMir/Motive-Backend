@@ -1,10 +1,10 @@
 import { Controller, Param, Get, Patch, Post, HttpCode, Body, UseGuards, ParseIntPipe } from '@nestjs/common';
 import { ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
 import { Identify } from 'src/decorators/identify.decorator';
-import { Goal } from 'src/goal/entities/goal.entity';
+import { GoalEntity } from 'src/goal/entities/goal.entity';
 import { AuthGuard } from 'src/guards/auth.guard';
 import { CreateDayDto } from './dto/create-day.dto';
-import { Day } from './entities/day.entity';
+import { DayEntity } from './entities/day.entity';
 import { DayService } from './day.service';
 
 @Controller('days')
@@ -16,14 +16,14 @@ export class DayController {
   @UseGuards(AuthGuard)
   @HttpCode(201)
   @ApiOperation({ summary: 'Add day' })
-  @ApiResponse({ status: 200, type: Goal })
+  @ApiResponse({ status: 200, type: GoalEntity })
   create(@Body() dto: CreateDayDto, @Identify() clientId: number) {
     return this.dayService.create(dto, clientId);
   }
 
   @Get(':id')
   @ApiOperation({ summary: 'Get day' })
-  @ApiResponse({ status: 200, type: Day })
+  @ApiResponse({ status: 200, type: DayEntity })
   getByPK(@Param('id', ParseIntPipe) id: number) {
     return this.dayService.findByPK(id, { relations: ['characteristic', 'tasks', 'feedback'] });
   }

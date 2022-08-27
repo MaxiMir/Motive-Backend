@@ -2,9 +2,9 @@ import { Controller, Get, Param, ParseIntPipe, Patch, Query, UseGuards } from '@
 import { ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
 import { ApiPagination } from 'src/decorators/api-pagination.decorator';
 import { FindQueryDto } from './dto/find-query.dto';
-import { Notification } from './entities/notification.entity';
+import { NotificationEntity } from './entities/notification.entity';
 import { NotificationService } from './notification.service';
-import { AuthGuard } from '../guards/auth.guard';
+import { AuthGuard } from 'src/guards/auth.guard';
 
 @Controller('notifications')
 @ApiTags('Notifications')
@@ -14,7 +14,7 @@ export class NotificationController {
   @Get()
   @ApiOperation({ summary: 'Find notifications' })
   @ApiPagination({ name: 'where[user]', example: 1 })
-  @ApiResponse({ status: 200, type: [Notification] })
+  @ApiResponse({ status: 200, type: [NotificationEntity] })
   find(@Query() query: FindQueryDto) {
     return this.notificationService.find(query);
   }

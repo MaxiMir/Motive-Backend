@@ -2,7 +2,7 @@ import { Controller, Param, Get, Patch, UseGuards, ParseIntPipe } from '@nestjs/
 import { ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
 import { Identify } from 'src/decorators/identify.decorator';
 import { AuthGuard } from 'src/guards/auth.guard';
-import { Task } from './entities/task.entity';
+import { TaskEntity } from './entities/task.entity';
 import { TaskService } from './task.service';
 
 @Controller('tasks')
@@ -12,7 +12,7 @@ export class TaskController {
 
   @Get(':id')
   @ApiOperation({ summary: 'Get task' })
-  @ApiResponse({ status: 200, type: Task })
+  @ApiResponse({ status: 200, type: TaskEntity })
   findOne(@Param('id', ParseIntPipe) id: number) {
     return this.taskService.findByPK(id);
   }
@@ -20,7 +20,7 @@ export class TaskController {
   @Patch(':id/completed')
   @UseGuards(AuthGuard)
   @ApiOperation({ summary: 'Set a task complete' })
-  @ApiResponse({ status: 200, type: Task })
+  @ApiResponse({ status: 200, type: TaskEntity })
   updateCompleted(@Param('id', ParseIntPipe) id: number, @Identify() clientId: number) {
     return this.taskService.updateCompleted(id, clientId);
   }

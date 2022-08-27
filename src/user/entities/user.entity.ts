@@ -1,17 +1,17 @@
 import { ApiPropertyOptional } from '@nestjs/swagger';
 import { Entity, JoinTable, OneToMany } from 'typeorm';
-import { Goal } from 'src/goal/entities/goal.entity';
-import { Member } from 'src/member/entities/member.entity';
-import { UserWithCharacteristicDto } from 'src/user/dto/user-with-characteristic.dto';
+import { GoalEntity } from 'src/goal/entities/goal.entity';
+import { MemberEntity } from 'src/member/entities/member.entity';
+import { UserWithCharacteristicEntity } from 'src/user/entities/user-with-characteristic.entity';
 
 @Entity('users')
-export class User extends UserWithCharacteristicDto {
-  @OneToMany(() => Goal, (goal) => goal.owner)
-  @ApiPropertyOptional({ type: () => Goal, isArray: true })
-  goals: Goal[];
+export class UserEntity extends UserWithCharacteristicEntity {
+  @OneToMany(() => GoalEntity, (goal) => goal.owner)
+  @ApiPropertyOptional({ type: () => GoalEntity, isArray: true })
+  goals: GoalEntity[];
 
-  @OneToMany(() => Member, (member) => member.user)
+  @OneToMany(() => MemberEntity, (member) => member.user)
   @JoinTable()
-  @ApiPropertyOptional({ type: () => Member, isArray: true })
-  membership: Member[];
+  @ApiPropertyOptional({ type: () => MemberEntity, isArray: true })
+  membership: MemberEntity[];
 }

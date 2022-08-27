@@ -1,10 +1,10 @@
 import { Entity, JoinColumn, OneToOne } from 'typeorm';
-import { Day } from 'src/day/entities/day.entity';
-import { ConfirmationBase } from 'src/confirmation/entities/confirmation-base.entity';
+import { DayEntity } from 'src/day/entities/day.entity';
+import { ConfirmationBaseEntity } from 'src/confirmation/entities/confirmation-base.entity';
 
 @Entity('feedback')
-export class Feedback extends ConfirmationBase {
-  @OneToOne(() => Day, { cascade: true, nullable: false, onDelete: 'CASCADE' })
+export class FeedbackEntity extends ConfirmationBaseEntity {
+  @OneToOne(() => DayEntity, { cascade: true, nullable: false, onDelete: 'CASCADE' })
   @JoinColumn()
-  day: Day;
+  day: DayEntity;
 }

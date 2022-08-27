@@ -1,11 +1,11 @@
 import { Column, Entity, JoinColumn, ManyToOne, PrimaryGeneratedColumn } from 'typeorm';
 import { ApiProperty } from '@nestjs/swagger';
-import { User } from 'src/user/entities/user.entity';
+import { UserEntity } from 'src/user/entities/user.entity';
 import { ReportTypeDto } from 'src/report/dto/report-type.dto';
 import { ReasonTypeDto } from 'src/report/dto/reason-type.dto';
 
 @Entity('reports')
-export class Report {
+export class ReportEntity {
   @PrimaryGeneratedColumn()
   @ApiProperty({
     example: 1,
@@ -40,7 +40,7 @@ export class Report {
   })
   date: string;
 
-  @ManyToOne(() => User, { nullable: false })
+  @ManyToOne(() => UserEntity, { nullable: false })
   @JoinColumn()
-  user: User;
+  user: UserEntity;
 }

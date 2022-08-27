@@ -1,7 +1,7 @@
 import { ApiProperty } from '@nestjs/swagger';
-import { UserWithCharacteristicDto } from 'src/user/dto/user-with-characteristic.dto';
+import { UserWithCharacteristicEntity } from 'src/user/entities/user-with-characteristic.entity';
 
 export class FollowingDto {
-  @ApiProperty({ type: () => UserWithCharacteristicDto, isArray: true })
-  readonly content: UserWithCharacteristicDto[];
+  @ApiProperty({ type: () => UserWithCharacteristicEntity, isArray: true })
+  readonly content: UserWithCharacteristicEntity[];
 }

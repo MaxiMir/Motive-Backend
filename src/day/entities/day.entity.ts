@@ -1,14 +1,14 @@
 import { ApiHideProperty, ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
 import { Column, Entity, ManyToOne, OneToMany, OneToOne, PrimaryGeneratedColumn, RelationId } from 'typeorm';
-import { Goal } from 'src/goal/entities/goal.entity';
-import { Task } from 'src/task/entities/task.entity';
-import { DayCharacteristic } from 'src/day-characteristic/entities/day-characteristic.entity';
-import { Feedback } from 'src/feedback/entities/feedback.entity';
-import { Topic } from 'src/topic/entities/topic.entity';
-import { Reaction } from 'src/reaction/entities/reaction.entity';
+import { GoalEntity } from 'src/goal/entities/goal.entity';
+import { TaskEntity } from 'src/task/entities/task.entity';
+import { DayCharacteristicEntity } from 'src/day-characteristic/entities/day-characteristic.entity';
+import { FeedbackEntity } from 'src/feedback/entities/feedback.entity';
+import { TopicEntity } from 'src/topic/entities/topic.entity';
+import { ReactionEntity } from 'src/reaction/entities/reaction.entity';
 
 @Entity('days')
-export class Day {
+export class DayEntity {
   @PrimaryGeneratedColumn()
   @ApiProperty({
     example: 1,
@@ -29,17 +29,17 @@ export class Day {
   @Column({ default: 0 })
   stage: number;
 
-  @OneToOne(() => DayCharacteristic, (characteristic) => characteristic.day, {
+  @OneToOne(() => DayCharacteristicEntity, (characteristic) => characteristic.day, {
     cascade: true,
   })
-  @ApiProperty({ type: () => DayCharacteristic })
-  characteristic: DayCharacteristic;
+  @ApiProperty({ type: () => DayCharacteristicEntity })
+  characteristic: DayCharacteristicEntity;
 
-  @OneToMany(() => Task, (task) => task.day, {
+  @OneToMany(() => TaskEntity, (task) => task.day, {
     cascade: true,
   })
-  @ApiProperty({ type: () => Task, isArray: true })
-  tasks: Task[];
+  @ApiProperty({ type: () => TaskEntity, isArray: true })
+  tasks: TaskEntity[];
 
   @Column({ default: 0 })
   @ApiProperty({
@@ -47,19 +47,19 @@ export class Day {
   })
   views: number;
 
-  @OneToOne(() => Feedback, (feedback) => feedback.day, {
+  @OneToOne(() => FeedbackEntity, (feedback) => feedback.day, {
     onDelete: 'CASCADE',
   })
-  @ApiProperty({ type: () => Feedback })
+  @ApiProperty({ type: () => FeedbackEntity })
   @ApiHideProperty()
-  feedback: Feedback;
+  feedback: FeedbackEntity;
 
-  @OneToMany(() => Topic, (topic) => topic.day, {
+  @OneToMany(() => TopicEntity, (topic) => topic.day, {
     onDelete: 'CASCADE',
   })
-  @ApiPropertyOptional({ type: () => Topic, isArray: true })
+  @ApiPropertyOptional({ type: () => TopicEntity, isArray: true })
   @ApiHideProperty()
-  topics: Topic[];
+  topics: TopicEntity[];
 
   @Column({ default: 0 })
   @ApiProperty({
@@ -67,20 +67,20 @@ export class Day {
   })
   topicCount: number;
 
-  @OneToMany(() => Reaction, (reaction) => reaction.day, {
+  @OneToMany(() => ReactionEntity, (reaction) => reaction.day, {
     cascade: true,
     onDelete: 'CASCADE',
   })
   @ApiHideProperty()
-  reactions: Reaction[];
+  reactions: ReactionEntity[];
 
-  @ManyToOne(() => Goal, (goal) => goal.days, {
+  @ManyToOne(() => GoalEntity, (goal) => goal.days, {
     nullable: false,
     onDelete: 'CASCADE',
   })
   @ApiHideProperty()
-  goal: Goal;
+  goal: GoalEntity;
 
-  @RelationId((day: Day) => day.goal)
+  @RelationId((day: DayEntity) => day.goal)
   goalId: number;
 }

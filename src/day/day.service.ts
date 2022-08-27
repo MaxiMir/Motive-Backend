@@ -2,15 +2,15 @@ import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { FindOneOptions } from 'typeorm/find-options/FindOneOptions';
-import { Task } from 'src/task/entities/task.entity';
+import { TaskEntity } from 'src/task/entities/task.entity';
 import { CreateDayDto } from './dto/create-day.dto';
-import { Day } from './entities/day.entity';
+import { DayEntity } from './entities/day.entity';
 
 @Injectable()
 export class DayService {
   constructor(
-    @InjectRepository(Day)
-    private readonly dayRepository: Repository<Day>,
+    @InjectRepository(DayEntity)
+    private readonly dayRepository: Repository<DayEntity>,
   ) {}
 
   getRepository() {
@@ -21,7 +21,7 @@ export class DayService {
     return this.dayRepository.create({
       date: dto.date,
       tasks: dto.tasks.map(({ name, date }) => {
-        const task = new Task();
+        const task = new TaskEntity();
         task.name = name;
 
         if (date) {
@@ -35,11 +35,11 @@ export class DayService {
     });
   }
 
-  findOne(options?: FindOneOptions<Day>) {
+  findOne(options?: FindOneOptions<DayEntity>) {
     return this.dayRepository.findOneOrFail(options);
   }
 
-  findByPK(id: number, options?: FindOneOptions<Day>) {
+  findByPK(id: number, options?: FindOneOptions<DayEntity>) {
     return this.dayRepository.findOneOrFail({ id }, options);
   }
 

@@ -1,22 +1,22 @@
 import { ApiProperty } from '@nestjs/swagger';
-import { UserCharacteristic } from 'src/user-characteristic/entities/user-characteristic.entity';
-import { UserBaseDto } from 'src/user/dto/user-base.dto';
-import { Member } from 'src/member/entities/member.entity';
+import { UserCharacteristicEntity } from 'src/user-characteristic/entities/user-characteristic.entity';
+import { UserBaseEntity } from 'src/user/entities/user-base.entity';
+import { MemberEntity } from 'src/member/entities/member.entity';
 import { UserPageGoal } from './user-page-goal.dto';
 
-export class UserContentDto extends UserBaseDto {
+export class UserContentDto extends UserBaseEntity {
   @ApiProperty({ type: 'boolean' })
   readonly following: boolean;
 
-  @ApiProperty({ type: () => UserCharacteristic })
-  readonly characteristic: UserCharacteristic;
+  @ApiProperty({ type: () => UserCharacteristicEntity })
+  readonly characteristic: UserCharacteristicEntity;
 
   @ApiProperty({ type: () => UserPageGoal, isArray: true })
   readonly goals: UserPageGoal[];
 
-  @ApiProperty({ type: () => Member, isArray: true })
-  readonly userMembership: Member[];
+  @ApiProperty({ type: () => MemberEntity, isArray: true })
+  readonly userMembership: MemberEntity[];
 
-  @ApiProperty({ type: () => Member, isArray: true })
-  readonly clientMembership: Member[];
+  @ApiProperty({ type: () => MemberEntity, isArray: true })
+  readonly clientMembership: MemberEntity[];
 }

@@ -1,21 +1,21 @@
 import { Injectable } from '@nestjs/common';
 import { Connection, EntitySubscriberInterface, EventSubscriber, InsertEvent } from 'typeorm';
 import { NotificationDto } from 'src/common/notification.dto';
-import { Notification } from 'src/notification/entities/notification.entity';
-import { Topic } from './entities/topic.entity';
+import { NotificationEntity } from 'src/notification/entities/notification.entity';
+import { TopicEntity } from './entities/topic.entity';
 
 @Injectable()
 @EventSubscriber()
-export class TopicSubscriber implements EntitySubscriberInterface<Topic> {
+export class TopicSubscriber implements EntitySubscriberInterface<TopicEntity> {
   constructor(private readonly connection: Connection) {
     connection.subscribers.push(this);
   }
 
   listenTo() {
-    return Topic;
+    return TopicEntity;
   }
 
-  async afterInsert(event: InsertEvent<Topic>) {
+  async afterInsert(event: InsertEvent<TopicEntity>) {
     const { type, goalId, day, user, text } = event.entity;
     const { data } = event.queryRunner;
     const insertData =
@@ -31,6 +31,6 @@ export class TopicSubscriber implements EntitySubscriberInterface<Topic> {
             recipient: day.goal.owner,
           };
 
-    await event.manager.createQueryBuilder().insert().into(Notification).values(insertData).execute();
+    await event.manager.createQueryBuilder().insert().into(NotificationEntity).values(insertData).execute();
   }
 }

@@ -21,7 +21,7 @@ import { TopicService } from 'src/topic/topic.service';
 import { CreateTopicDto } from './dto/create-topic.dto';
 import { FindQueryDto } from './dto/find-query.dto';
 import { UpdateTopicDto } from './dto/update-topic.dto';
-import { Topic } from './entities/topic.entity';
+import { TopicEntity } from './entities/topic.entity';
 
 @Controller('topics')
 @ApiTags('Topics')
@@ -30,7 +30,7 @@ export class TopicController {
 
   @Post()
   @ApiOperation({ summary: 'Create topic' })
-  @ApiResponse({ status: 200, type: Topic })
+  @ApiResponse({ status: 200, type: TopicEntity })
   save(@Body() dto: CreateTopicDto, @Identify() clientId: number) {
     return this.topicService.save(dto, clientId);
   }
@@ -38,7 +38,7 @@ export class TopicController {
   @Get()
   @ApiPagination({ name: 'where[day]', example: 10 })
   @ApiOperation({ summary: 'Get topics' })
-  @ApiResponse({ status: 200, type: [Topic] })
+  @ApiResponse({ status: 200, type: [TopicEntity] })
   find(@Query() query: FindQueryDto, @Identify() clientId?: number) {
     return this.topicService.find(query, clientId);
   }

@@ -6,26 +6,26 @@ import { FindOneOptions } from 'typeorm/find-options/FindOneOptions';
 import { NotificationDto } from 'src/common/notification.dto';
 import { CharacteristicDto } from 'src/common/characteristic.dto';
 import { CreateDayDto } from 'src/day/dto/create-day.dto';
-import { Notification } from 'src/notification/entities/notification.entity';
-import { DayCharacteristic } from 'src/day-characteristic/entities/day-characteristic.entity';
-import { GoalCharacteristic } from 'src/goal-characteristic/entities/goal-characteristic.entity';
-import { UserCharacteristic } from 'src/user-characteristic/entities/user-characteristic.entity';
-import { Reaction } from 'src/reaction/entities/reaction.entity';
+import { NotificationEntity } from 'src/notification/entities/notification.entity';
+import { DayCharacteristicEntity } from 'src/day-characteristic/entities/day-characteristic.entity';
+import { GoalCharacteristicEntity } from 'src/goal-characteristic/entities/goal-characteristic.entity';
+import { UserCharacteristicEntity } from 'src/user-characteristic/entities/user-characteristic.entity';
+import { ReactionEntity } from 'src/reaction/entities/reaction.entity';
 import { SubscriptionService } from 'src/subscription/subscription.service';
 import { UserService } from 'src/user/user.service';
 import { ExpService } from 'src/exp/exp.service';
 import { DayService } from 'src/day/day.service';
-import { Member } from 'src/member/entities/member.entity';
+import { MemberEntity } from 'src/member/entities/member.entity';
 import { FileService } from 'src/file/file.service';
 import { CreateGoalDto } from './dto/create-goal.dto';
 import { UpdateStageDto } from './dto/update-stage.dto';
-import { Goal } from './entities/goal.entity';
+import { GoalEntity } from './entities/goal.entity';
 
 @Injectable()
 export class GoalService {
   constructor(
-    @InjectRepository(Goal)
-    private readonly goalRepository: Repository<Goal>,
+    @InjectRepository(GoalEntity)
+    private readonly goalRepository: Repository<GoalEntity>,
     private readonly userService: UserService,
     private readonly dayService: DayService,
     private readonly subscriptionService: SubscriptionService,
@@ -57,13 +57,18 @@ export class GoalService {
       .filter(Boolean);
 
     return this.goalRepository.manager.transaction(async (transactionalManager) => {
-      await transactionalManager.increment(UserCharacteristic, { user: In(owners) }, 'abandoned', 1);
+      await transactionalManager.increment(UserCharacteristicEntity, { user: In(owners) }, 'abandoned', 1);
       await Promise.all(
         multipleOwnersCount.map(([id, value]) =>
-          transactionalManager.increment(UserCharacteristic, { user: Number(id) }, 'abandoned', value - 1),
+          transactionalManager.increment(
+            UserCharacteristicEntity,
+            { user: Number(id) },
+            'abandoned',
+            value - 1,
+          ),
         ),
       );
-      await transactionalManager.delete(Member, { goal: In(owners) });
+      await transactionalManager.delete(MemberEntity, { goal: In(owners) });
       await transactionalManager.remove(goals);
       photos.forEach(this.fileService.removeImage);
     });
@@ -108,7 +113,7 @@ export class GoalService {
       await transactionalManager
         .createQueryBuilder()
         .insert()
-        .into(Notification)
+        .into(NotificationEntity)
         .values(insertData)
         .execute();
     });
@@ -116,12 +121,12 @@ export class GoalService {
 
   async save(dto: CreateGoalDto, userId: number) {
     const owner = await this.userService.findByPK(userId);
-    const goal = new Goal();
+    const goal = new GoalEntity();
     const day = this.dayService.create({ date: dto.started, tasks: dto.tasks }, userId);
     goal.name = dto.name;
     goal.started = dto.started;
     goal.updated = dto.started;
-    goal.characteristic = new GoalCharacteristic();
+    goal.characteristic = new GoalCharacteristicEntity();
     goal.hashtags = dto.hashtags;
     goal.stages = dto.stages;
     goal.days = [day];
@@ -130,7 +135,7 @@ export class GoalService {
     return this.goalRepository.save(goal);
   }
 
-  findByPK(id: number, options?: FindOneOptions<Goal>) {
+  findByPK(id: number, options?: FindOneOptions<GoalEntity>) {
     return this.goalRepository.findOneOrFail({ id }, options);
   }
 
@@ -176,7 +181,7 @@ export class GoalService {
     }
 
     if (!day.characteristic) {
-      day.characteristic = new DayCharacteristic();
+      day.characteristic = new DayCharacteristicEntity();
       day.characteristic[characteristic] = 0;
     }
 
@@ -187,18 +192,18 @@ export class GoalService {
       if (goal.completed) {
         const criteria = { user: { id: goal.ownerId } };
         const userCharacteristic = await transactionalManager
-          .getRepository(UserCharacteristic)
+          .getRepository(UserCharacteristicEntity)
           .findOneOrFail(criteria);
         const field = `${characteristic}_all`;
         const fieldValue = userCharacteristic[field] + 1;
 
-        await transactionalManager.update(UserCharacteristic, criteria, {
+        await transactionalManager.update(UserCharacteristicEntity, criteria, {
           [field]: fieldValue,
           [characteristic]: this.expService.getProgress(fieldValue),
         });
       }
 
-      await transactionalManager.insert(Reaction, { user, characteristic, goal, day, uniq });
+      await transactionalManager.insert(ReactionEntity, { user, characteristic, goal, day, uniq });
       await transactionalManager.save(day);
       await transactionalManager.save(goal);
     });
@@ -208,7 +213,7 @@ export class GoalService {
     return [userId, dayId, characteristic].join(':');
   }
 
-  checkCanChange(goal: Goal, userId: number) {
+  checkCanChange(goal: GoalEntity, userId: number) {
     return goal.ownerId !== userId;
   }
 }

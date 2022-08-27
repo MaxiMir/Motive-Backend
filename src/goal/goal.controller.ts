@@ -21,7 +21,7 @@ import { CreateDayDto } from 'src/day/dto/create-day.dto';
 import { CreateGoalDto } from './dto/create-goal.dto';
 import { CalendarDto } from './dto/calendar.dto';
 import { UpdateStageDto } from './dto/update-stage.dto';
-import { Goal } from './entities/goal.entity';
+import { GoalEntity } from './entities/goal.entity';
 import { GoalService } from './goal.service';
 
 @Controller('goals')
@@ -32,14 +32,14 @@ export class GoalController {
   @Post()
   @UseGuards(AuthGuard)
   @ApiOperation({ summary: 'Create goal' })
-  @ApiResponse({ status: 201, type: Goal })
+  @ApiResponse({ status: 201, type: GoalEntity })
   save(@Body() dto: CreateGoalDto, @Identify() clientId: number) {
     return this.goalService.save(dto, clientId);
   }
 
   @Get(':id')
   @ApiOperation({ summary: 'Get goal' })
-  @ApiResponse({ status: 200, type: Goal })
+  @ApiResponse({ status: 200, type: GoalEntity })
   getByPK(@Param('id', ParseIntPipe) id: number) {
     return this.goalService.findByPK(id);
   }
@@ -55,7 +55,7 @@ export class GoalController {
   @UseGuards(AuthGuard)
   @HttpCode(201)
   @ApiOperation({ summary: 'Add day' })
-  @ApiResponse({ status: 200, type: Goal })
+  @ApiResponse({ status: 200, type: GoalEntity })
   addDay(@Param('id', ParseIntPipe) id: number, @Body() dto: CreateDayDto, @Identify() clientId: number) {
     return this.goalService.addDay(id, dto, clientId);
   }

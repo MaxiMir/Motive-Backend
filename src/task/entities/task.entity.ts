@@ -1,13 +1,13 @@
 import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
 import { Column, Entity, ManyToOne, PrimaryGeneratedColumn } from 'typeorm';
-import { Day } from 'src/day/entities/day.entity';
+import { DayEntity } from 'src/day/entities/day.entity';
 
 @Entity('tasks', {
   orderBy: {
     id: 'ASC',
   },
 })
-export class Task {
+export class TaskEntity {
   @PrimaryGeneratedColumn()
   @ApiProperty({
     example: 1,
@@ -48,9 +48,9 @@ export class Task {
   })
   completedByOther = false;
 
-  @ManyToOne(() => Day, (day) => day.tasks, {
+  @ManyToOne(() => DayEntity, (day) => day.tasks, {
     nullable: false,
     onDelete: 'CASCADE',
   })
-  day: Day;
+  day: DayEntity;
 }

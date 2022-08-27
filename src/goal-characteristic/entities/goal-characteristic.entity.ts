@@ -1,9 +1,9 @@
 import { ApiProperty } from '@nestjs/swagger';
 import { Column, Entity, JoinColumn, OneToOne, PrimaryGeneratedColumn, RelationId } from 'typeorm';
-import { Goal } from 'src/goal/entities/goal.entity';
+import { GoalEntity } from 'src/goal/entities/goal.entity';
 
 @Entity('goal-characteristics')
-export class GoalCharacteristic {
+export class GoalCharacteristicEntity {
   @PrimaryGeneratedColumn()
   @ApiProperty({
     example: 1,
@@ -36,13 +36,13 @@ export class GoalCharacteristic {
   @Column({ default: 0 })
   members: number;
 
-  @OneToOne(() => Goal, {
+  @OneToOne(() => GoalEntity, {
     nullable: false,
     onDelete: 'CASCADE',
   })
   @JoinColumn()
-  goal: Goal;
+  goal: GoalEntity;
 
-  @RelationId((characteristic: GoalCharacteristic) => characteristic.goal)
+  @RelationId((characteristic: GoalCharacteristicEntity) => characteristic.goal)
   goalId: number;
 }

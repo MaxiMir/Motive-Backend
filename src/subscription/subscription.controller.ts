@@ -16,7 +16,7 @@ import { ApiPagination } from 'src/decorators/api-pagination.decorator';
 import { Identify } from 'src/decorators/identify.decorator';
 import { AuthGuard } from 'src/guards/auth.guard';
 import { ParseOperationPipe } from 'src/pipes/parse-operation.pipe';
-import { UserWithCharacteristicDto } from 'src/user/dto/user-with-characteristic.dto';
+import { UserWithCharacteristicEntity } from 'src/user/entities/user-with-characteristic.entity';
 import { SubscriptionService } from './subscription.service';
 import { UpdateSubscriptionDto } from './dto/update-subscription.dto';
 
@@ -28,7 +28,7 @@ export class SubscriptionController {
   @Get(':id/followers')
   @ApiOperation({ summary: 'Get followers' })
   @ApiPagination()
-  @ApiResponse({ status: 200, type: [UserWithCharacteristicDto] })
+  @ApiResponse({ status: 200, type: [UserWithCharacteristicEntity] })
   getFollowers(@Param('id', ParseIntPipe) id: number, @Query() query: PaginationDto) {
     return this.subscriptionService.findFollowers(id, query);
   }
@@ -36,7 +36,7 @@ export class SubscriptionController {
   @Get(':id/following')
   @ApiOperation({ summary: 'Get following' })
   @ApiPagination()
-  @ApiResponse({ status: 200, type: [UserWithCharacteristicDto] })
+  @ApiResponse({ status: 200, type: [UserWithCharacteristicEntity] })
   getFollowing(@Param('id', ParseIntPipe) id: number, @Query() query: PaginationDto) {
     return this.subscriptionService.findFollowing(id, query);
   }

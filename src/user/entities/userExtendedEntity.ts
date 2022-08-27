@@ -1,8 +1,8 @@
 import { ApiProperty } from '@nestjs/swagger';
 import { Column, Index } from 'typeorm';
-import { UserBaseDto } from './user-base.dto';
+import { UserBaseEntity } from './user-base.entity';
 
-export class UserDto extends UserBaseDto {
+export class UserExtendedEntity extends UserBaseEntity {
   @Column({ select: false, nullable: true })
   @Index({ unique: true })
   @ApiProperty({

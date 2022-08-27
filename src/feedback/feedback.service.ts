@@ -4,20 +4,20 @@ import { Repository } from 'typeorm';
 import { DayService } from 'src/day/day.service';
 import { FileService } from 'src/file/file.service';
 import { CreateFeedbackDto } from './dto/create-feedback.dto';
-import { Feedback } from './entities/feedback.entity';
+import { FeedbackEntity } from './entities/feedback.entity';
 
 @Injectable()
 export class FeedbackService {
   constructor(
-    @InjectRepository(Feedback)
-    private readonly feedbackRepository: Repository<Feedback>,
+    @InjectRepository(FeedbackEntity)
+    private readonly feedbackRepository: Repository<FeedbackEntity>,
     private readonly dayService: DayService,
     private readonly fileService: FileService,
   ) {}
 
   async save(dto: CreateFeedbackDto, photos: Express.Multer.File[]) {
     const day = await this.dayService.findByPK(dto.dayId, { relations: ['goal', 'goal.owner'] });
-    const feedback = new Feedback();
+    const feedback = new FeedbackEntity();
     feedback.day = day;
 
     if (dto.text) {

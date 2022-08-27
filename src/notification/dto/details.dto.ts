@@ -1,8 +1,8 @@
-import { UserBaseDto } from '../../user/dto/user-base.dto';
+import { UserBaseEntity } from 'src/user/entities/user-base.entity';
 
 export class DetailsDto {
-  id?: number;
-  day?: number;
-  name?: string;
-  user: UserBaseDto;
+  readonly id?: number;
+  readonly day?: number;
+  readonly name?: string;
+  readonly user: UserBaseEntity;
 }

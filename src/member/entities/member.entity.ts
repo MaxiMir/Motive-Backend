@@ -1,11 +1,11 @@
 import { ApiProperty } from '@nestjs/swagger';
 import { Column, Entity, Index, JoinColumn, ManyToOne, PrimaryGeneratedColumn, RelationId } from 'typeorm';
-import { User } from 'src/user/entities/user.entity';
-import { Goal } from 'src/goal/entities/goal.entity';
-import { Day } from 'src/day/entities/day.entity';
+import { UserEntity } from 'src/user/entities/user.entity';
+import { GoalEntity } from 'src/goal/entities/goal.entity';
+import { DayEntity } from 'src/day/entities/day.entity';
 
 @Entity('members')
-export class Member {
+export class MemberEntity {
   @PrimaryGeneratedColumn()
   @ApiProperty({
     example: 1,
@@ -46,24 +46,24 @@ export class Member {
   })
   updated: string;
 
-  @ManyToOne(() => Goal, { nullable: false })
+  @ManyToOne(() => GoalEntity, { nullable: false })
   @JoinColumn()
-  goal: Goal;
+  goal: GoalEntity;
 
-  @RelationId((member: Member) => member.goal)
+  @RelationId((member: MemberEntity) => member.goal)
   goalId: number;
 
-  @ManyToOne(() => User, { nullable: false })
+  @ManyToOne(() => UserEntity, { nullable: false })
   @JoinColumn()
-  user: User;
+  user: UserEntity;
 
-  @RelationId((member: Member) => member.user)
+  @RelationId((member: MemberEntity) => member.user)
   userId: number;
 
-  @ManyToOne(() => Day, { nullable: false })
+  @ManyToOne(() => DayEntity, { nullable: false })
   @JoinColumn()
-  day: Day;
+  day: DayEntity;
 
-  @RelationId((member: Member) => member.day)
+  @RelationId((member: MemberEntity) => member.day)
   dayId: number;
 }

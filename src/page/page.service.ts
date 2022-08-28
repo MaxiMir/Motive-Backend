@@ -63,7 +63,7 @@ export class PageService {
         characteristic: user.characteristic,
         userMembership: user.membership,
         clientMembership: client?.membership || [],
-        confirmations: user.confirmations,
+        confirmations: user.confirmations.reverse(),
         following,
         goals,
       },

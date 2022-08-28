@@ -13,7 +13,7 @@ docker push maximir.jfrog.io/default-docker-virtual/backend:1.0.49
 docker pull maximir.jfrog.io/default-docker-virtual/backend:1.0.49
 ```
 
-### INSTALL
+### INSTALL:
 
 ```shell
 npm i -g @nestjs/cli
@@ -30,7 +30,7 @@ yarn add -D ts-node #  CLI написана на javascript и запускае�
 ```
 
 
-### TypeOrm
+### TypeOrm:
 
 **synchronize** — указывает, должна ли схема базы данных автоматически создаваться при запуске приложения.
 Будьте внимательны с данной опцией и не используйте ее в production, в противном случае вы потеряете данные.
@@ -64,7 +64,7 @@ yarn add @nestjsx/crud class-transformer class-validator
 # @nestjsx/crud-typeorm — пакет для интеграции с TypeORM, предоставляющий базовый сервис TypeOrmCrudService с CRUD методами работы с сущностями в БД.
 ```
 
-### COMMANDS
+### COMMANDS:
 
 ```shell
 yarn start # запуск проекта
@@ -79,7 +79,7 @@ yarn run migration:generate -- CreateUserTable # создать миграцию
 yarn run migration:run # накатить миграцию
 ```
 
-### STATIC FILES
+### STATIC FILES:
 
 ```shell
 yarn add @nestjs/serve-static
@@ -91,7 +91,7 @@ ServeStaticModule.forRoot({
 })
 ```
 
-### VALIDATION
+### VALIDATION:
 
 ```shell
 yarn add class-validator class-transformer # https://docs.nestjs.com/techniques/validation
@@ -110,7 +110,7 @@ yarn add -D @types/multer # Nest uses multer for handling file uploads using the
 
 [Type-safe File Uploads](https://notiz.dev/blog/type-safe-file-uploads)
 
-### HELMET
+### HELMET:
 
 ```shell
 yarn add helmet # для защиты приложения - передает специальные HTTP заголовки
@@ -139,7 +139,7 @@ export class ReactionSubscriber implements EntitySubscriberInterface<Reaction> {
 }
 ```
 
-### SERVICES IN SUBSCRIBERS
+### SERVICES IN SUBSCRIBERS:
 
 ```typescript
 @Injectable()

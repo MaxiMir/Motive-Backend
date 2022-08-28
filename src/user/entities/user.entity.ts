@@ -3,6 +3,7 @@ import { Entity, JoinTable, OneToMany } from 'typeorm';
 import { GoalEntity } from 'src/goal/entities/goal.entity';
 import { MemberEntity } from 'src/member/entities/member.entity';
 import { UserWithCharacteristicEntity } from 'src/user/entities/user-with-characteristic.entity';
+import { ConfirmationEntity } from 'src/confirmation/entities/confirmation.entity';
 
 @Entity('users')
 export class UserEntity extends UserWithCharacteristicEntity {
@@ -14,4 +15,8 @@ export class UserEntity extends UserWithCharacteristicEntity {
   @JoinTable()
   @ApiPropertyOptional({ type: () => MemberEntity, isArray: true })
   membership: MemberEntity[];
+
+  @OneToMany(() => ConfirmationEntity, (c) => c.user)
+  @ApiPropertyOptional({ type: () => ConfirmationEntity, isArray: true })
+  confirmations: ConfirmationEntity[];
 }

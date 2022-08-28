@@ -38,6 +38,10 @@ export class PageService {
       .leftJoinAndSelect('membership.goal', 'membership-goal')
       .leftJoinAndSelect('membership-goal.characteristic', 'membership-goal-characteristic')
       .leftJoinAndSelect('membership-goal.owner', 'membership-goal-owner')
+      .leftJoinAndSelect('user.confirmations', 'confirmations')
+      .leftJoinAndSelect('confirmations.goal', 'confirmation-goal')
+      .leftJoinAndSelect('confirmation-goal.characteristic', 'confirmation-goal-characteristic')
+      .leftJoinAndSelect('confirmation-goal.owner', 'confirmation-goal-owner')
       .where('user.nickname = :nickname', { nickname })
       .getOneOrFail();
     const following = !userId ? false : await this.subscriptionService.checkOnFollowing(user.id, userId);
@@ -59,6 +63,7 @@ export class PageService {
         characteristic: user.characteristic,
         userMembership: user.membership,
         clientMembership: client?.membership || [],
+        confirmations: user.confirmations,
         following,
         goals,
       },

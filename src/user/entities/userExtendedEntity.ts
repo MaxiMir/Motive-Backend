@@ -22,19 +22,19 @@ export class UserExtendedEntity extends UserBaseEntity {
   })
   provider: string;
 
-  @Column('boolean', { nullable: true })
+  @Column('boolean', { select: false, nullable: true })
   @ApiProperty({
     example: true,
   })
   online: boolean;
 
-  @Column({ type: 'timestamp with time zone', nullable: true })
+  @Column({ type: 'timestamp with time zone', select: false, nullable: true })
   @ApiProperty({
     example: '2022-02-16 00:00:00+03',
   })
   lastSeen: string;
 
-  @Column({ nullable: true })
+  @Column({ select: false, nullable: true })
   @ApiProperty({
     example: 'mobile',
   })

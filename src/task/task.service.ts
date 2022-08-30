@@ -21,7 +21,7 @@ export class TaskService {
     const task = await this.findByPK(id);
     const isMember = task.userId !== userId;
     const member = !isMember ? null : await this.memberService.findOne({ where: { user: userId } });
-    const updateTask = !task.completedByOther || !isMember;
+    const updateTask = !isMember || !task.completedByOther;
     const updateMember = member && !member.completedTasks.includes(id);
 
     return this.taskRepository.manager.transaction(async (transactionalManager) => {

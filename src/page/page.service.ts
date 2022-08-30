@@ -30,6 +30,15 @@ export class PageService {
     const user = await this.userService
       .getRepository()
       .createQueryBuilder('user')
+      .select([
+        'user.id',
+        'user.nickname',
+        'user.name',
+        'user.avatar',
+        'user.online',
+        'user.lastSeen',
+        'user.device',
+      ])
       .leftJoinAndSelect('user.characteristic', 'characteristic')
       .leftJoinAndSelect('user.goals', 'goals', 'goals."completed" = false')
       .leftJoinAndSelect('goals.characteristic', 'goals-characteristic')

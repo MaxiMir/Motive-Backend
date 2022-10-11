@@ -68,6 +68,12 @@ export class UserCharacteristicEntity {
   })
   followers: number;
 
+  @Column({ default: 0 })
+  @ApiProperty({
+    example: 0,
+  })
+  following: number;
+
   @OneToOne(() => UserEntity, { nullable: false })
   @JoinColumn()
   @ApiHideProperty()

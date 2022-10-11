@@ -54,14 +54,16 @@ export class SubscriptionService {
   }
 
   async update(dto: UpdateSubscriptionDto, operation: OperationDto, userId: number) {
-    const follower = await this.userService.findByPK(userId);
+    const follower = await this.userService.findByPK(userId, { relations: ['characteristic'] });
     const uniq = this.getUniq(dto.userId, userId);
     const following = await this.userService.findByPK(dto.userId, { relations: ['characteristic'] });
     following.characteristic.followers += operation === 'insert' ? 1 : -1;
+    follower.characteristic.following += operation === 'insert' ? 1 : -1;
 
     return this.subscriptionRepository.manager.transaction(async (transactionalManager) => {
       await transactionalManager[operation](SubscriptionEntity, { user: following, follower, uniq });
       await transactionalManager.save(following);
+      await transactionalManager.save(follower);
     });
   }
 

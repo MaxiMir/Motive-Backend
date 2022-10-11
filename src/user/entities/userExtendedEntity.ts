@@ -22,7 +22,7 @@ export class UserExtendedEntity extends UserBaseEntity {
   })
   provider: string;
 
-  @Column('boolean', { select: false, nullable: true })
+  @Column('boolean', { nullable: true })
   @ApiProperty({
     example: true,
   })

@@ -1,6 +1,7 @@
 import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
 import { IsEnum, IsNumber, IsOptional, IsString, MaxLength, Min, MinLength } from 'class-validator';
 import { TopicTypeDto } from './topic-type.dto';
+import { Transform } from 'class-transformer';
 
 export class CreateTopicDto {
   @IsNumber()
@@ -11,6 +12,7 @@ export class CreateTopicDto {
   readonly dayId: number;
 
   @IsString()
+  @Transform(({ value }) => value.trim())
   @MinLength(1)
   @MaxLength(500)
   @ApiProperty({

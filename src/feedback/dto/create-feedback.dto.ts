@@ -1,6 +1,6 @@
 import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
 import { IsInt, IsOptional, IsString, MaxLength, Min } from 'class-validator';
-import { Type } from 'class-transformer';
+import { Transform, Type } from 'class-transformer';
 
 export class CreateFeedbackDto {
   @Type(() => Number)
@@ -12,6 +12,7 @@ export class CreateFeedbackDto {
   readonly dayId: number;
 
   @IsString()
+  @Transform(({ value }) => value?.trim())
   @IsOptional()
   @MaxLength(500)
   @ApiPropertyOptional({

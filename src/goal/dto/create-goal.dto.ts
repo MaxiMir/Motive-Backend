@@ -5,6 +5,7 @@ import { CreateTaskDto } from 'src/task/dto/create-task.dto';
 
 export class CreateGoalDto {
   @IsString()
+  @Transform(({ value }) => value.trim())
   @Length(5, 32)
   @ApiProperty({
     example: 'learn French',

@@ -1,8 +1,10 @@
 import { IsOptional, IsString, Length } from 'class-validator';
 import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
+import { Transform } from 'class-transformer';
 
 export class CreateTaskDto {
   @IsString()
+  @Transform(({ value }) => value.trim())
   @Length(5, 320)
   @ApiProperty({
     example: 'read 20 pages Harry Potter',

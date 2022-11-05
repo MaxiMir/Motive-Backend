@@ -1,6 +1,6 @@
 import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
 import { IsDateString, IsInt, IsOptional, IsString, MaxLength, Min } from 'class-validator';
-import { Type } from 'class-transformer';
+import { Transform, Type } from 'class-transformer';
 
 export class CreateConfirmationDto {
   @Type(() => Number)
@@ -17,6 +17,7 @@ export class CreateConfirmationDto {
   readonly end: string;
 
   @IsString()
+  @Transform(({ value }) => value?.trim())
   @IsOptional()
   @MaxLength(500)
   @ApiPropertyOptional({

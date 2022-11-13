@@ -34,6 +34,9 @@ export class UserService {
     const user = await this.findByPK(userId);
     user.name = dto.name;
     user.nickname = dto.nickname;
+    user.motto = dto.motto;
+    user.location = dto.location;
+    user.bio = dto.bio;
 
     return this.userRepository.save(user);
   }

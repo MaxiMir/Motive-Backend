@@ -39,4 +39,22 @@ export class UserExtendedEntity extends UserBaseEntity {
     example: 'mobile',
   })
   device: string;
+
+  @Column({ select: false, nullable: true })
+  @ApiProperty({
+    example: "It's death to settle for things in life ☠️",
+  })
+  motto: string;
+
+  @Column({ select: false, nullable: true })
+  @ApiProperty({
+    example: 'Moscow️',
+  })
+  location: string;
+
+  @Column({ select: false, nullable: true })
+  @ApiProperty({
+    example: 'Dream developer 🧿',
+  })
+  bio: string;
 }

@@ -38,6 +38,9 @@ export class PageService {
         'user.online',
         'user.lastSeen',
         'user.device',
+        'user.motto',
+        'user.location',
+        'user.bio',
       ])
       .leftJoinAndSelect('user.characteristic', 'characteristic')
       .leftJoinAndSelect('user.goals', 'goals', 'goals."completed" = false')
@@ -62,15 +65,7 @@ export class PageService {
 
     return {
       content: {
-        id: user.id,
-        nickname: user.nickname,
-        name: user.name,
-        avatar: user.avatar,
-        online: user.online,
-        lastSeen: user.lastSeen,
-        device: user.device,
-        characteristic: user.characteristic,
-        userMembership: user.membership,
+        ...user,
         clientMembership: client?.membership || [],
         confirmations: user.confirmations.reverse(),
         following,

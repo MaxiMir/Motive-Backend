@@ -1,5 +1,5 @@
 import { ApiProperty } from '@nestjs/swagger';
-import { IsString, Length } from 'class-validator';
+import { IsOptional, IsString, Length } from 'class-validator';
 import { Transform } from 'class-transformer';
 
 export class UpdateUserDto {
@@ -18,4 +18,31 @@ export class UpdateUserDto {
     example: 'maximir',
   })
   readonly nickname: string;
+
+  @IsString()
+  @IsOptional()
+  @Transform(({ value }) => value.trim())
+  @Length(1, 140)
+  @ApiProperty({
+    example: "It's death to settle for things in life ☠️",
+  })
+  readonly motto: string;
+
+  @IsString()
+  @IsOptional()
+  @Transform(({ value }) => value.trim())
+  @Length(3, 64)
+  @ApiProperty({
+    example: 'Pattaya',
+  })
+  readonly location: string;
+
+  @IsString()
+  @IsOptional()
+  @Transform(({ value }) => value.trim())
+  @Length(1, 320)
+  @ApiProperty({
+    example: 'Dream developer 🧿',
+  })
+  readonly bio: string;
 }

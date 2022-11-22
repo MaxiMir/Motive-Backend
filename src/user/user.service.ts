@@ -37,6 +37,7 @@ export class UserService {
     user.motto = dto.motto;
     user.location = dto.location;
     user.bio = dto.bio;
+    user.registered = new Date().toISOString();
 
     return this.userRepository.save(user);
   }

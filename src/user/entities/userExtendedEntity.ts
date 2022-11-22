@@ -57,4 +57,10 @@ export class UserExtendedEntity extends UserBaseEntity {
     example: 'Dream developer 🧿',
   })
   bio: string;
+
+  @Column({ type: 'timestamp with time zone', select: false, nullable: true })
+  @ApiProperty({
+    example: '2022-02-16 00:00:00+03',
+  })
+  registered: string;
 }

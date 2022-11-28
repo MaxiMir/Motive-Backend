@@ -2,6 +2,7 @@ import { ApiProperty } from '@nestjs/swagger';
 import { ArrayMaxSize, ArrayMinSize, IsArray, IsDateString, IsString, Length } from 'class-validator';
 import { Transform, Type } from 'class-transformer';
 import { CreateTaskDto } from 'src/task/dto/create-task.dto';
+import { CreateStageDto } from './create-stage.dto';
 
 export class CreateGoalDto {
   @IsString()
@@ -40,7 +41,7 @@ export class CreateGoalDto {
   @ApiProperty({
     example: ['Develop basic functionality', 'Alpha testing', 'Production release'],
   })
-  readonly stages: string[];
+  readonly stages: CreateStageDto[];
 
   @IsArray()
   @ArrayMinSize(1)

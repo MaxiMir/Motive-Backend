@@ -46,7 +46,7 @@ export class TaskEntity {
     example: true,
     description: 'completed by other',
   })
-  completedByOther = false;
+  completedByOthers = false;
 
   @ManyToOne(() => DayEntity, (day) => day.tasks, {
     nullable: false,

@@ -7,9 +7,9 @@ import { ParseGoalDateMapPipe } from 'src/pipes/parse-goal-date-map.pipe';
 import { GoalDayDto } from 'src/goal/dto/goal-day.dto';
 import { UserDto } from './dto/user.dto';
 import { FollowingDto } from './dto/following.dto';
-import { RatingDto } from './dto/rating.dto';
 import { SearchDto } from './dto/search.dto';
 import { SearchParamsDto } from './dto/search-params.dto';
+import { RatingDto } from './dto/rating.dto';
 import { PageService } from './page.service';
 
 @Controller('pages')

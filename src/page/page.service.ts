@@ -65,13 +65,11 @@ export class PageService {
     const goals = [...ownerGoals, ...memberGoals];
 
     return {
-      content: {
-        ...user,
-        clientMembership: client?.membership || [],
-        confirmations: user.confirmations.reverse(),
-        following,
-        goals,
-      },
+      ...user,
+      clientMembership: client?.membership || [],
+      confirmations: user.confirmations.reverse(),
+      following,
+      goals,
     };
   }
 
@@ -145,7 +143,7 @@ export class PageService {
   async findFollowing(pagination: PaginationDto, userId?: number) {
     const following = !userId ? [] : await this.subscriptionService.findFollowing(userId, pagination);
 
-    return { content: following };
+    return { following };
   }
 
   async findRating() {
@@ -154,11 +152,9 @@ export class PageService {
     const support = await this.findByCharacteristic('support', 100);
 
     return {
-      content: {
-        motivation,
-        creativity,
-        support,
-      },
+      motivation,
+      creativity,
+      support,
     };
   }
 
@@ -179,26 +175,24 @@ export class PageService {
     const hashtags = await this.hashtagService.find({ take: 12, order: { views: 'DESC' } });
 
     return {
-      content: {
-        q,
-        type,
-        hashtags: [
-          { name: 'motivation', views: Math.trunc(Math.random() * 10000) },
-          { name: 'develop', views: Math.trunc(Math.random() * 10000) },
-          { name: 'health', views: Math.trunc(Math.random() * 10000) },
-          { name: 'typescript', views: Math.trunc(Math.random() * 10000) },
-          { name: 'fitness', views: Math.trunc(Math.random() * 10000) },
-          { name: 'portugal', views: Math.trunc(Math.random() * 10000) },
-          { name: 'slimming', views: Math.trunc(Math.random() * 10000) },
-          { name: 'run', views: Math.trunc(Math.random() * 10000) },
-          { name: 'backend', views: Math.trunc(Math.random() * 10000) },
-          { name: 'frontend', views: Math.trunc(Math.random() * 10000) },
-          { name: 'promotion', views: Math.trunc(Math.random() * 10000) },
-          { name: 'english', views: Math.trunc(Math.random() * 10000) },
-        ],
-        goals: [goal],
-        users,
-      },
+      q,
+      type,
+      hashtags: [
+        { name: 'motivation', views: Math.trunc(Math.random() * 10000) },
+        { name: 'develop', views: Math.trunc(Math.random() * 10000) },
+        { name: 'health', views: Math.trunc(Math.random() * 10000) },
+        { name: 'typescript', views: Math.trunc(Math.random() * 10000) },
+        { name: 'fitness', views: Math.trunc(Math.random() * 10000) },
+        { name: 'portugal', views: Math.trunc(Math.random() * 10000) },
+        { name: 'slimming', views: Math.trunc(Math.random() * 10000) },
+        { name: 'run', views: Math.trunc(Math.random() * 10000) },
+        { name: 'backend', views: Math.trunc(Math.random() * 10000) },
+        { name: 'frontend', views: Math.trunc(Math.random() * 10000) },
+        { name: 'promotion', views: Math.trunc(Math.random() * 10000) },
+        { name: 'english', views: Math.trunc(Math.random() * 10000) },
+      ],
+      goals: [goal],
+      users,
     };
   }
 }

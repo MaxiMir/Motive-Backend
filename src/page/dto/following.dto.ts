@@ -3,5 +3,5 @@ import { UserWithCharacteristicEntity } from 'src/user/entities/user-with-charac
 
 export class FollowingDto {
   @ApiProperty({ type: () => UserWithCharacteristicEntity, isArray: true })
-  readonly content: UserWithCharacteristicEntity[];
+  readonly following: UserWithCharacteristicEntity[];
 }

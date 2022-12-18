@@ -1,6 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { EventSubscriber, EntitySubscriberInterface, InsertEvent, Connection } from 'typeorm';
-import { NotificationDto } from 'src/common/notification.dto';
+import { NotificationTypeDto } from 'src/common/notification-type.dto';
 import { SubscriptionService } from 'src/subscription/subscription.service';
 import { NotificationEntity } from 'src/notification/entities/notification.entity';
 import { FeedbackEntity } from './entities/feedback.entity';
@@ -24,7 +24,7 @@ export class FeedbackSubscriber implements EntitySubscriberInterface<FeedbackEnt
     const { id, owner } = day.goal;
     const followers = await this.subscriptionService.findFollowers(owner.id);
     const insertData = followers.map((recipient) => ({
-      type: NotificationDto.NewFeedback,
+      type: NotificationTypeDto.NewFeedback,
       details: { id, day: day.id, user: owner },
       recipient,
     }));

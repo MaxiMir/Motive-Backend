@@ -1,4 +1,4 @@
-export enum NotificationDto {
+export enum NotificationTypeDto {
   NewGoal = 'new-goal',
   NewFollower = 'new-follower',
   AddMotivation = 'add-motivation',

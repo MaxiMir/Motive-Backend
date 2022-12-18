@@ -3,7 +3,7 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { Cron } from '@nestjs/schedule';
 import { In, Raw, Repository } from 'typeorm';
 import { FindOneOptions } from 'typeorm/find-options/FindOneOptions';
-import { NotificationDto } from 'src/common/notification.dto';
+import { NotificationTypeDto } from 'src/common/notification-type.dto';
 import { CharacteristicDto } from 'src/common/characteristic.dto';
 import { CreateDayDto } from 'src/day/dto/create-day.dto';
 import { NotificationEntity } from 'src/notification/entities/notification.entity';
@@ -101,7 +101,7 @@ export class GoalService {
       (acc, goal) => [
         ...acc,
         ...followersMap.get(goal.owner.id).map((recipient) => ({
-          type: NotificationDto.WebCoverage,
+          type: NotificationTypeDto.WebCoverage,
           details: { id: goal.id, name: goal.name, user: goal.owner },
           recipient,
         })),

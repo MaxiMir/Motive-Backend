@@ -1,6 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { EventSubscriber, EntitySubscriberInterface, InsertEvent, Connection } from 'typeorm';
-import { NotificationDto } from 'src/common/notification.dto';
+import { NotificationTypeDto } from 'src/common/notification-type.dto';
 import { NotificationEntity } from 'src/notification/entities/notification.entity';
 import { SubscriptionEntity } from './entities/subscription.entity';
 
@@ -18,7 +18,7 @@ export class SubscriptionSubscriber implements EntitySubscriberInterface<Subscri
   async afterInsert(event: InsertEvent<SubscriptionEntity>) {
     const { user, follower } = event.entity;
     const insertData = {
-      type: NotificationDto.NewFollower,
+      type: NotificationTypeDto.NewFollower,
       details: { user: follower },
       recipient: user,
     };

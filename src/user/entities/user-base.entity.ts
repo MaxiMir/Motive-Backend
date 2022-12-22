@@ -23,10 +23,10 @@ export class UserBaseEntity {
   })
   name: string;
 
-  @Column({ nullable: true })
+  @Column({ type: 'text', nullable: true })
   @ApiProperty({
     example: '/avatars/15058de3-3950-4d29-a380-7d3813aab1bc.webp',
     description: 'the path to the avatar',
   })
-  avatar: string;
+  avatar: string | null;
 }

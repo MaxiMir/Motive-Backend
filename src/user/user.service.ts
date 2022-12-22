@@ -44,12 +44,24 @@ export class UserService {
 
   async updateAvatar(file: Express.Multer.File, userId: number) {
     const user = await this.findByPK(userId);
-    const lastAvatar = user.avatar;
-    const uploadedAvatar = await this.fileService.uploadImage(file, 'avatars', { width: 1280 });
-    user.avatar = uploadedAvatar.src;
+    const deletedAvatar = user.avatar;
+    const newAvatar = await this.fileService.uploadImage(file, 'avatars', { width: 1280 });
+    user.avatar = newAvatar.src;
 
-    if (lastAvatar) {
-      this.fileService.removeImage(lastAvatar);
+    if (deletedAvatar) {
+      this.fileService.removeImage(deletedAvatar);
+    }
+
+    return this.userRepository.save(user);
+  }
+
+  async deleteAvatar(userId: number) {
+    const user = await this.findByPK(userId);
+    const deletedAvatar = user.avatar;
+    user.avatar = null;
+
+    if (deletedAvatar) {
+      this.fileService.removeImage(deletedAvatar);
     }
 
     return this.userRepository.save(user);

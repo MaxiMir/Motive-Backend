@@ -9,6 +9,7 @@ import {
   UseGuards,
   Query,
   Put,
+  Delete,
   ParseIntPipe,
 } from '@nestjs/common';
 import { ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
@@ -62,5 +63,13 @@ export class UserController {
     @Identify() clientId: number,
   ) {
     return this.userService.updateAvatar(file, clientId);
+  }
+
+  @Delete(':id/avatar')
+  @UseGuards(AuthGuard)
+  @ApiOperation({ summary: 'Delete user avatar' })
+  @ApiResponse({ status: 204 })
+  deleteAvatar(@Param('id', ParseIntPipe) id: number, @Identify() clientId: number) {
+    return this.userService.deleteAvatar(clientId);
   }
 }

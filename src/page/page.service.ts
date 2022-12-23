@@ -170,7 +170,7 @@ export class PageService {
 
   async findSearch(params: SearchParamsDto) {
     const { q = '', type } = params;
-    const users = await this.findByCharacteristic('motivation', 6);
+    const users = await this.findByCharacteristic('motivation', 8);
     const goal = []; // await this.goalService.findByPK(1, { relations: ['characteristic', 'owner'] });
     const hashtags = await this.hashtagService.find({ take: 12, order: { views: 'DESC' } });
 

@@ -47,17 +47,32 @@ cli.entitiesDir — директория, куда по умолчанию до�
 
 **В package.json:**
 
+Добавляет обертку в виде ts-node для запуска cli TypeORM
 ```json
 {
-  "typeorm": "ts-node -r tsconfig-paths/register ./node_modules/typeorm/cli.js", // добавляет обертку в виде ts-node для запуска cli TypeORM
-  "migration:generate": "yarn run typeorm migration:generate -n", // создание миграции на основе изменений в ваших моделях
-  "migration:create": "yarn run typeorm migration:create -n", // создание пустой миграции
-  "migration:run": "yarn run typeorm migration:run" // запуск миграций
+  "typeorm": "ts-node -r tsconfig-paths/register ./node_modules/typeorm/cli.js" 
+}
+```
+Создание миграции на основе изменений в ваших моделях
+```json
+{
+  "migration:generate": "yarn run typeorm migration:generate -n"
+}
+```
+Создание пустой миграции
+```json
+{
+  "migration:create": "yarn run typeorm migration:create -n"
+}
+```
+Запуск миграций
+```json
+{
+  "migration:run": "yarn run typeorm migration:run"
 }
 ```
 ```shell
 yarn add @nestjsx/crud class-transformer class-validator
-
 
 # @nestjsx/crud — базовый пакет, который предоставляет декоратор Crud() для генерации роутов, конфигурирования и валидации;
 # @nestjsx/crud-request — пакет, предоставляющий билдер/парсер запросов для использования на стороне frontend;

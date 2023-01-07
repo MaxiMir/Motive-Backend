@@ -63,4 +63,10 @@ export class UserExtendedEntity extends UserBaseEntity {
     example: '2022-02-16 00:00:00+03',
   })
   registered: string;
+
+  @Column('simple-json', { select: false, nullable: true })
+  @ApiProperty({
+    example: [{ href: 'https://t.me/MaximMir', title: 'Telegram' }],
+  })
+  links: Array<{ href: string; title?: string }>;
 }

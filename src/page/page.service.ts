@@ -42,6 +42,7 @@ export class PageService {
         'user.location',
         'user.bio',
         'user.registered',
+        'user.links',
       ])
       .leftJoinAndSelect('user.characteristic', 'characteristic')
       .leftJoinAndSelect('user.goals', 'goals', 'goals."completed" = false')

@@ -46,6 +46,7 @@ export class PageService {
       ])
       .leftJoinAndSelect('user.characteristic', 'characteristic')
       .leftJoinAndSelect('user.goals', 'goals', 'goals."completed" = false')
+      .orderBy('goals.id', 'ASC')
       .leftJoinAndSelect('goals.characteristic', 'goals-characteristic')
       .leftJoinAndSelect('goals.owner', 'owner')
       .leftJoinAndSelect('user.membership', 'membership')

@@ -14,9 +14,8 @@ async function bootstrap() {
   await redisIoAdapter.connectToRedis();
   app.useWebSocketAdapter(redisIoAdapter);
   app.setGlobalPrefix('/api/v1');
-  app.useGlobalPipes(new ValidationPipe({ transform: true })); // validation for all endpoints
+  app.useGlobalPipes(new ValidationPipe({ transform: true }));
   app.useGlobalFilters(new AllExceptionsFilter());
-  useContainer(app.select(AppModule), { fallbackOnErrors: true });
   app.enableCors({ origin: process.env.CLIENT, credentials: true });
   app.use(cookieParser());
   app.use(
@@ -26,6 +25,7 @@ async function bootstrap() {
       },
     }),
   );
+  useContainer(app.select(AppModule), { fallbackOnErrors: true });
 
   const config = new DocumentBuilder()
     .setTitle('Be Better Backend')

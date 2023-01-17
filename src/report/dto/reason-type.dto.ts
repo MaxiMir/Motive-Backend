@@ -1,4 +1,4 @@
-export enum ReasonTypeDto {
+export const enum ReasonTypeDto {
   Nudity = 'Nudity',
   Violence = 'Violence',
   Terrorism = 'Terrorism',

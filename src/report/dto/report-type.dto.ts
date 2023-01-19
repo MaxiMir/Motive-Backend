@@ -1,4 +1,4 @@
-export const enum ReportTypeDto {
+export enum ReportTypeDto {
   User = 'user',
   Goal = 'goal',
   Topic = 'message',

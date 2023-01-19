@@ -1,4 +1,4 @@
-export const enum TopicTypeDto {
+export enum TopicTypeDto {
   Question = 'question',
   Answer = 'answer',
   Support = 'support',

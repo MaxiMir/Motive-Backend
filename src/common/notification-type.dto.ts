@@ -1,4 +1,4 @@
-export const enum NotificationTypeDto {
+export enum NotificationTypeDto {
   NewGoal = 'new-goal',
   NewFollower = 'new-follower',
   AddMotivation = 'add-motivation',

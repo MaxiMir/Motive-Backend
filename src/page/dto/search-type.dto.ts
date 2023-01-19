@@ -1,3 +1,3 @@
-export const enum SearchTypeDto {
+export enum SearchTypeDto {
   Tag = 'tag',
 }

@@ -14,7 +14,7 @@ export class CreateTopicDto {
   @IsString()
   @Transform(({ value }) => value.trim())
   @MinLength(1)
-  @MaxLength(500)
+  @MaxLength(1000)
   @ApiProperty({
     example: 'What other books have you read?',
   })

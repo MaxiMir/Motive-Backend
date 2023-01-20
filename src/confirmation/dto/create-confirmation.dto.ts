@@ -19,7 +19,7 @@ export class CreateConfirmationDto {
   @IsString()
   @Transform(({ value }) => value?.trim())
   @IsOptional()
-  @MaxLength(500)
+  @MaxLength(1000)
   @ApiPropertyOptional({
     example: 'It was not just...',
   })

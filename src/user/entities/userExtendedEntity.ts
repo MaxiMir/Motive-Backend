@@ -28,13 +28,13 @@ export class UserExtendedEntity extends UserBaseEntity {
   })
   online: boolean;
 
-  @Column({ type: 'timestamp with time zone', select: false, nullable: true })
+  @Column({ type: 'timestamp with time zone', nullable: true })
   @ApiProperty({
     example: '2022-02-16 00:00:00+03',
   })
-  lastSeen: string;
+  lastSeen: string | null;
 
-  @Column({ select: false, nullable: true })
+  @Column({ nullable: true })
   @ApiProperty({
     example: 'mobile',
   })

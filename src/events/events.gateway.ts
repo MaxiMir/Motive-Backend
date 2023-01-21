@@ -37,7 +37,7 @@ export class EventsGateway implements OnGatewayInit, OnGatewayConnection, OnGate
     }
 
     this.usersMap.set(id, socket.id);
-    this.userService.getRepository().update({ id }, { online: true, device });
+    this.userService.getRepository().update({ id }, { online: true, lastSeen: null, device });
   }
 
   handleDisconnect(socket: Socket) {

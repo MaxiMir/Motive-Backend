@@ -54,6 +54,7 @@ export class PageService {
       .leftJoinAndSelect('membership-goal.characteristic', 'membership-goal-characteristic')
       .leftJoinAndSelect('membership-goal.owner', 'membership-goal-owner')
       .leftJoinAndSelect('user.confirmations', 'confirmations')
+      .orderBy('confirmations.id', 'DESC')
       .leftJoinAndSelect('confirmations.goal', 'confirmation-goal')
       .leftJoinAndSelect('confirmation-goal.characteristic', 'confirmation-goal-characteristic')
       .leftJoinAndSelect('confirmation-goal.owner', 'confirmation-goal-owner')
@@ -69,7 +70,7 @@ export class PageService {
     return {
       ...user,
       clientMembership: client?.membership || [],
-      confirmations: user.confirmations.reverse(),
+      confirmations: user.confirmations,
       following,
       goals,
     };

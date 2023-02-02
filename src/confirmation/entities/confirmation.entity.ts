@@ -4,11 +4,7 @@ import { GoalEntity } from 'src/goal/entities/goal.entity';
 import { UserEntity } from 'src/user/entities/user.entity';
 import { ConfirmationBaseEntity } from './confirmation-base.entity';
 
-@Entity('confirmations', {
-  orderBy: {
-    id: 'DESC',
-  },
-})
+@Entity('confirmations')
 export class ConfirmationEntity extends ConfirmationBaseEntity {
   @Column({ type: 'timestamp with time zone' })
   @ApiProperty({

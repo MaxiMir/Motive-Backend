@@ -25,7 +25,7 @@ export class PageService {
     private readonly hashtagService: HashtagService,
   ) {}
 
-  async findUser(nickname: string, goalDateMap?: GoalDayDto[], userId?: number) {
+  async findUser(nickname: string, goalDayMap?: GoalDayDto[], userId?: number) {
     const client = !userId ? null : await this.userService.findByPK(userId, { relations: ['membership'] });
     const user = await this.userService
       .getRepository()
@@ -61,32 +61,32 @@ export class PageService {
       .where('user.nickname = :nickname', { nickname })
       .getOneOrFail();
     const following = !userId ? false : await this.subscriptionService.checkOnFollowing(user.id, userId);
-    const membership = this.getMembership(user.membership, goalDateMap);
-    const reactionsList = await this.findReactionsList([...user.goals, ...membership.goals], userId);
-    const ownerGoals = await this.findDays(user.goals, reactionsList, goalDateMap);
-    const memberGoals = await this.findDays(membership.goals, reactionsList, membership.goalDateMap, true);
+    const membership = this.getMembership(user.membership, goalDayMap);
+    const reactions = await this.findReactionsMap([...user.goals, ...membership.goals], userId);
+    const ownerGoals = await this.findDays(user.goals, reactions, goalDayMap);
+    const memberGoals = await this.findDays(membership.goals, reactions, membership.goalDayMap, true);
     const goals = [...ownerGoals, ...memberGoals];
 
     return {
       ...user,
-      clientMembership: client?.membership || [],
-      confirmations: user.confirmations,
       following,
       goals,
+      confirmations: user.confirmations,
+      clientMembership: client?.membership || [],
     };
   }
 
   private async findDays(
     goals: GoalEntity[],
-    reactionsList: ReactionsMap,
-    goalDatesMap?: GoalDayDto[],
+    reactionsMap: ReactionsMap,
+    goalDayMap?: GoalDayDto[],
     inherited?: boolean,
   ) {
     const relations = ['characteristic', 'tasks', 'feedback'];
 
     return Promise.all(
       goals.map(async (goal) => {
-        const { dayId } = goalDatesMap?.find(({ goalId }) => goalId === goal.id) || {};
+        const { dayId } = goalDayMap?.find(({ goalId }) => goalId === goal.id) || {};
         const day = dayId
           ? await this.dayService.findByPK(dayId, { relations })
           : await this.dayService.findOne({
@@ -97,27 +97,27 @@ export class PageService {
               },
             });
         const calendar = await this.goalService.findCalendar(goal.id);
-        const reactions = reactionsList[goal.id] || { motivation: [], creativity: [] };
+        const reactions = reactionsMap[goal.id] || { motivation: [], creativity: [] };
 
         return { ...goal, day, calendar, reactions, inherited };
       }),
     );
   }
 
-  private getMembership(membership: MemberEntity[], goalDateMap: GoalDayDto[] = []) {
+  private getMembership(membership: MemberEntity[], goalDayMap: GoalDayDto[] = []) {
     return membership.reduce(
       (acc, { goal, goalId, dayId }) => {
-        const goalIdExist = acc.goalDateMap.some((d) => d.goalId === goalId);
-        const goalDateMap = goalIdExist ? acc.goalDateMap : [...acc.goalDateMap, { goalId, dayId }];
+        const goalIdExist = acc.goalDayMap.some((d) => d.goalId === goalId);
+        const goalDayMap = goalIdExist ? acc.goalDayMap : [...acc.goalDayMap, { goalId, dayId }];
         const goals = [...acc.goals, goal];
 
-        return { goals, goalDateMap };
+        return { goals, goalDayMap };
       },
-      { goals: [], goalDateMap },
+      { goals: [], goalDayMap },
     );
   }
 
-  private async findReactionsList(goals, userId?: number) {
+  private async findReactionsMap(goals, userId?: number) {
     const ids = !userId ? [] : goals.filter((g) => g.owner.id !== userId).map((g) => g.id);
 
     if (!ids.length) {

@@ -29,10 +29,10 @@ export class PageController {
   @ApiResponse({ status: 200, type: UserDto })
   getUser(
     @Param('nickname') nickname: string,
-    @Query('d', ParseGoalDateMapPipe) goalDateMap?: GoalDayDto[],
+    @Query('d', ParseGoalDateMapPipe) goalDayMap?: GoalDayDto[],
     @Identify() clientId?: number,
   ) {
-    return this.pageService.findUser(nickname, goalDateMap, clientId);
+    return this.pageService.findUser(nickname, goalDayMap, clientId);
   }
 
   @Get('following')

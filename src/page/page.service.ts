@@ -62,9 +62,9 @@ export class PageService {
       .getOneOrFail();
     const following = !userId ? false : await this.subscriptionService.checkOnFollowing(user.id, userId);
     const membership = this.getMembership(user.membership, goalDayMap);
-    const reactions = await this.findReactionsMap([...user.goals, ...membership.goals], userId);
-    const ownerGoals = await this.findDays(user.goals, reactions, goalDayMap);
-    const memberGoals = await this.findDays(membership.goals, reactions, membership.goalDayMap, true);
+    const reactionsMap = await this.findReactionsMap([...user.goals, ...membership.goals], userId);
+    const ownerGoals = await this.findDays(user.goals, reactionsMap, goalDayMap);
+    const memberGoals = await this.findDays(membership.goals, reactionsMap, membership.goalDayMap, true);
     const goals = [...ownerGoals, ...memberGoals];
 
     return {

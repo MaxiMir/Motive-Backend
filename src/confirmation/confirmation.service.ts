@@ -35,7 +35,7 @@ export class ConfirmationService {
     confirmation.photos = await this.fileService.uploadAndMeasureImages(photos, 'confirmation');
     confirmation.goal = goal;
     confirmation.user = user;
-    confirmation.inherited = !!member;
+    confirmation.member = !!member;
 
     if (!member) {
       confirmation.goal.completed = true;

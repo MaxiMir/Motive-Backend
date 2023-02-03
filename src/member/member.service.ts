@@ -8,6 +8,7 @@ import { GoalService } from 'src/goal/goal.service';
 import { DayService } from 'src/day/day.service';
 import { GoalCharacteristicEntity } from 'src/goal-characteristic/entities/goal-characteristic.entity';
 import { UserCharacteristicEntity } from 'src/user-characteristic/entities/user-characteristic.entity';
+import { DayEntity } from 'src/day/entities/day.entity';
 import { CreateMemberDto } from './dto/create-member.dto';
 import { MemberEntity } from './entities/member.entity';
 import { UpdateMemberDto } from './dto/update-member.dto';
@@ -90,6 +91,22 @@ export class MemberService {
       await transactionalManager.decrement(GoalCharacteristicEntity, { goal: member.goalId }, 'members', 1);
       await transactionalManager.remove(member);
     });
+  }
+
+  async findDay(id: number, dayId: number) {
+    const member = await this.findOne({ where: { id } });
+    const day = await this.dayService.findByPK(dayId, { relations: ['characteristic', 'tasks', 'feedback'] });
+
+    return this.transformToMemberDay(day, member);
+  }
+
+  transformToMemberDay(day: DayEntity, member: MemberEntity) {
+    const tasks = day.tasks.map((t) => ({
+      ...t,
+      completed: member?.completedTasks.includes(day.id) || false,
+    }));
+
+    return { ...day, tasks };
   }
 
   getUniq(userId: number, goalId: number) {

@@ -30,5 +30,5 @@ export class ConfirmationEntity extends ConfirmationBaseEntity {
   @ApiProperty({
     example: true,
   })
-  inherited: boolean;
+  member: boolean;
 }

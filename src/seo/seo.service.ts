@@ -9,7 +9,7 @@ export class SeoService {
   async findSitemap() {
     const staticLinks = [
       { url: '/', changefreq: 'daily', priority: 0.3 },
-      { url: '/top-of-the-day', changefreq: 'daily', priority: 0.6 },
+      { url: '/feed', changefreq: 'daily', priority: 0.6 },
       { url: '/search', changefreq: 'daily', priority: 0.3 },
       { url: '/rating', changefreq: 'daily', priority: 0.6 },
       { url: '/following', changefreq: 'daily', priority: 0.3 },

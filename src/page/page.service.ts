@@ -10,6 +10,7 @@ import { ReactionService } from 'src/reaction/reaction.service';
 import { DayService } from 'src/day/day.service';
 import { GoalService } from 'src/goal/goal.service';
 import { HashtagService } from 'src/hashtag/hashtag.service';
+import { MemberService } from 'src/member/member.service';
 import { SearchParamsDto } from './dto/search-params.dto';
 
 type ReactionsMap = Record<number, { [k in CharacteristicDto]: number[] }>;
@@ -22,12 +23,15 @@ export class PageService {
     private readonly dayService: DayService,
     private readonly subscriptionService: SubscriptionService,
     private readonly reactionService: ReactionService,
+    private readonly memberService: MemberService,
     private readonly hashtagService: HashtagService,
   ) {}
 
-  async findUser(nickname: string, goalDayMap?: GoalDayDto[], userId?: number) {
-    const client = !userId ? null : await this.userService.findByPK(userId, { relations: ['membership'] });
-    const user = await this.userService
+  async findUser(nickname: string, clientId?: number, queryDayMap: GoalDayDto[] = []) {
+    const client = !clientId
+      ? null
+      : await this.userService.findByPK(clientId, { relations: ['membership'] });
+    const { membership, ...user } = await this.userService
       .getRepository()
       .createQueryBuilder('user')
       .select([
@@ -60,12 +64,12 @@ export class PageService {
       .leftJoinAndSelect('confirmation-goal.owner', 'confirmation-goal-owner')
       .where('user.nickname = :nickname', { nickname })
       .getOneOrFail();
-    const following = !userId ? false : await this.subscriptionService.checkOnFollowing(user.id, userId);
-    const membership = this.getMembership(user.membership, goalDayMap);
-    const reactionsMap = await this.findReactionsMap([...user.goals, ...membership.goals], userId);
-    const ownerGoals = await this.findDays(user.goals, reactionsMap, goalDayMap);
-    const memberGoals = await this.findDays(membership.goals, reactionsMap, membership.goalDayMap, true);
-    const goals = [...ownerGoals, ...memberGoals];
+    const following = !clientId ? false : await this.subscriptionService.checkOnFollowing(user.id, clientId);
+    const memberGoals = membership.map((m) => m.goal);
+    const reactionsMap = await this.findReactionsMap([...user.goals, ...memberGoals], clientId);
+    const ownerGoalsWithDay = await this.findDays(user.goals, reactionsMap, queryDayMap);
+    const memberGoalsWithDay = await this.findDays(memberGoals, reactionsMap, queryDayMap, membership);
+    const goals = [...ownerGoalsWithDay, ...memberGoalsWithDay];
 
     return {
       ...user,
@@ -79,15 +83,18 @@ export class PageService {
   private async findDays(
     goals: GoalEntity[],
     reactionsMap: ReactionsMap,
-    goalDayMap?: GoalDayDto[],
-    inherited?: boolean,
+    queryDayMap: GoalDayDto[],
+    membership?: MemberEntity[],
   ) {
     const relations = ['characteristic', 'tasks', 'feedback'];
+    const dayMap = !membership ? queryDayMap : this.getMemberGoalDayMap(membership, queryDayMap);
 
     return Promise.all(
       goals.map(async (goal) => {
-        const { dayId } = goalDayMap?.find(({ goalId }) => goalId === goal.id) || {};
-        const day = dayId
+        const member = membership?.find((m) => m.goalId === goal.id);
+        const reactions = reactionsMap[goal.id] || { motivation: [], creativity: [] };
+        const { dayId } = dayMap.find(({ goalId }) => goalId === goal.id) || {};
+        const foundDay = dayId
           ? await this.dayService.findByPK(dayId, { relations })
           : await this.dayService.findOne({
               relations,
@@ -97,27 +104,22 @@ export class PageService {
               },
             });
         const calendar = await this.goalService.findCalendar(goal.id);
-        const reactions = reactionsMap[goal.id] || { motivation: [], creativity: [] };
+        const day = !member ? foundDay : this.memberService.transformToMemberDay(foundDay, member);
 
-        return { ...goal, day, calendar, reactions, inherited };
+        return { ...goal, day, calendar, reactions, member };
       }),
     );
   }
 
-  private getMembership(membership: MemberEntity[], goalDayMap: GoalDayDto[] = []) {
-    return membership.reduce(
-      (acc, { goal, goalId, dayId }) => {
-        const goalIdExist = acc.goalDayMap.some((d) => d.goalId === goalId);
-        const goalDayMap = goalIdExist ? acc.goalDayMap : [...acc.goalDayMap, { goalId, dayId }];
-        const goals = [...acc.goals, goal];
+  private getMemberGoalDayMap(membership: MemberEntity[], queryDayMap: GoalDayDto[]) {
+    return membership.reduce((acc, { goalId, dayId }) => {
+      const goalIdExist = acc.some((d) => d.goalId === goalId);
 
-        return { goals, goalDayMap };
-      },
-      { goals: [], goalDayMap },
-    );
+      return goalIdExist ? acc : [...acc, { goalId, dayId }];
+    }, queryDayMap);
   }
 
-  private async findReactionsMap(goals, userId?: number) {
+  private async findReactionsMap(goals, userId?: number): Promise<ReactionsMap> {
     const ids = !userId ? [] : goals.filter((g) => g.owner.id !== userId).map((g) => g.id);
 
     if (!ids.length) {

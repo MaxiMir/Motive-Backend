@@ -1,4 +1,5 @@
 import {
+  Get,
   Body,
   Controller,
   Delete,
@@ -12,6 +13,7 @@ import {
 import { ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
 import { Identify } from 'src/decorators/identify.decorator';
 import { AuthGuard } from 'src/guards/auth.guard';
+import { DayEntity } from 'src/day/entities/day.entity';
 import { CreateMemberDto } from './dto/create-member.dto';
 import { MemberEntity } from './entities/member.entity';
 import { MemberService } from './member.service';
@@ -46,5 +48,12 @@ export class MemberController {
   @ApiResponse({ status: 204 })
   delete(@Param('id', ParseIntPipe) id: number, @Identify() clientId: number) {
     return this.memberService.delete(id, clientId);
+  }
+
+  @Get(':id/days/:dayId')
+  @ApiOperation({ summary: 'Get member day' })
+  @ApiResponse({ status: 200, type: DayEntity })
+  getDay(@Param('id', ParseIntPipe) id: number, @Param('dayId', ParseIntPipe) dayId: number) {
+    return this.memberService.findDay(id, dayId);
   }
 }

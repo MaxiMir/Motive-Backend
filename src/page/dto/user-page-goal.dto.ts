@@ -4,7 +4,7 @@ import { DayEntity } from 'src/day/entities/day.entity';
 import { CalendarDto } from 'src/goal/dto/calendar.dto';
 
 export class UserPageGoal extends GoalEntity {
-  readonly inherited: boolean;
+  readonly member: boolean;
   readonly calendar: CalendarDto[];
   readonly reactions: Record<CharacteristicDto, number[]>;
   readonly day: DayEntity;

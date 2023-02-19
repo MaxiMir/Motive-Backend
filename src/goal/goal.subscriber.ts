@@ -24,7 +24,8 @@ export class GoalSubscriber implements EntitySubscriberInterface<GoalEntity> {
     const followers = await this.subscriptionService.findFollowers(owner.id);
     const insertData = followers.map((recipient) => ({
       type: NotificationTypeDto.NewGoal,
-      details: { id, day: days[0].id, name, user: owner },
+      details: { id, day: days[0].id, name },
+      initiator: owner,
       recipient,
     }));
 

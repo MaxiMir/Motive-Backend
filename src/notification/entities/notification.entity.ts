@@ -24,13 +24,17 @@ export class NotificationEntity {
   })
   type: NotificationTypeDto;
 
-  @Column('simple-json')
-  public details: DetailsDto;
-
   @CreateDateColumn({ type: 'timestamp with time zone', default: () => 'CURRENT_TIMESTAMP(6)' })
-  public created: Date;
+  created: Date;
 
-  @ManyToOne(() => UserEntity, { nullable: false })
+  @Column('simple-json', { nullable: true })
+  details: DetailsDto;
+
+  @ManyToOne(() => UserEntity, { eager: true, nullable: true })
+  @JoinColumn()
+  initiator: UserEntity;
+
+  @ManyToOne(() => UserEntity)
   @JoinColumn()
   recipient: UserEntity;
 

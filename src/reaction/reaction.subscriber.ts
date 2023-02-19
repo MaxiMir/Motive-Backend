@@ -23,7 +23,8 @@ export class ReactionSubscriber implements EntitySubscriberInterface<ReactionEnt
         characteristic === 'motivation'
           ? NotificationTypeDto.AddMotivation
           : NotificationTypeDto.AddCreativity,
-      details: { id: goal.id, name: goal.name, day: day.id, user },
+      details: { id: goal.id, name: goal.name, day: day.id },
+      initiator: user,
       recipient: { id: goal.ownerId },
     };
 

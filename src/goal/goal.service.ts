@@ -102,7 +102,8 @@ export class GoalService {
         ...acc,
         ...followersMap.get(goal.owner.id).map((recipient) => ({
           type: NotificationTypeDto.WebCoverage,
-          details: { id: goal.id, name: goal.name, user: goal.owner },
+          details: { id: goal.id, name: goal.name },
+          initiator: goal.owner,
           recipient,
         })),
       ],

@@ -19,7 +19,8 @@ export class SubscriptionSubscriber implements EntitySubscriberInterface<Subscri
     const { user, follower } = event.entity;
     const insertData = {
       type: NotificationTypeDto.NewFollower,
-      details: { user: follower },
+      details: {},
+      initiator: follower,
       recipient: user,
     };
 

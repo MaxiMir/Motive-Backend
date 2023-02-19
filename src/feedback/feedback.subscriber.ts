@@ -25,7 +25,8 @@ export class FeedbackSubscriber implements EntitySubscriberInterface<FeedbackEnt
     const followers = await this.subscriptionService.findFollowers(owner.id);
     const insertData = followers.map((recipient) => ({
       type: NotificationTypeDto.NewFeedback,
-      details: { id, day: day.id, user: owner },
+      details: { id, day: day.id },
+      initiator: owner,
       recipient,
     }));
 

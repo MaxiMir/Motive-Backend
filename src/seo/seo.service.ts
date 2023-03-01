@@ -13,6 +13,7 @@ export class SeoService {
       { url: '/search', changefreq: 'daily', priority: 0.3 },
       { url: '/rating', changefreq: 'daily', priority: 0.6 },
       { url: '/following', changefreq: 'daily', priority: 0.3 },
+      { url: '/articles', changefreq: 'daily', priority: 0.8 },
     ];
     const smStream = new SitemapStream({
       hostname: process.env.CLIENT,

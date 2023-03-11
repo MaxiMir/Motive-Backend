@@ -66,7 +66,7 @@ export class UserExtendedEntity extends UserBaseEntity {
 
   @Column('simple-json', { select: false, nullable: true })
   @ApiProperty({
-    example: [{ href: 'https://t.me/MaximMir', title: 'Telegram' }],
+    example: [{ href: 'https://linkedin.com/in/maximir', host: 'linkedin.com', title: 'Linkedin' }],
   })
-  links: Array<{ href: string; title?: string }>;
+  links: Array<{ href: string; host: string; title?: string }>;
 }

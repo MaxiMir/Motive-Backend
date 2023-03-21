@@ -15,8 +15,11 @@ export class SeoService {
       { url: '/following', changefreq: 'daily', priority: 0.3 },
       { url: '/articles', changefreq: 'daily', priority: 0.8 },
       { url: '/articles/how-to-accomplish-your-goals', changefreq: 'daily', priority: 0.8 },
+      { url: '/articles/meditation-the-way-to-harmony', changefreq: 'daily', priority: 0.8 },
+      { url: '/articles/five-steps-to-successful-goal-achievement', changefreq: 'daily', priority: 0.8 },
       { url: '/contact', changefreq: 'monthly', priority: 0.8 },
       { url: '/donate', changefreq: 'monthly', priority: 0.8 },
+      { url: '/privacy-policy', changefreq: 'monthly', priority: 0.3 },
     ];
     const smStream = new SitemapStream({ hostname: process.env.CLIENT });
     const users = await this.userService.getRepository().find({ select: ['nickname'] });

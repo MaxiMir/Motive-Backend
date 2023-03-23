@@ -11,7 +11,9 @@ import { DayService } from 'src/day/day.service';
 import { GoalService } from 'src/goal/goal.service';
 import { HashtagService } from 'src/hashtag/hashtag.service';
 import { MemberService } from 'src/member/member.service';
+import { BlogService } from 'src/blog/blog.service';
 import { SearchParamsDto } from './dto/search-params.dto';
+import { LocaleDto } from 'src/locale/dto/locale.dto';
 
 type ReactionsMap = Record<number, { [k in CharacteristicDto]: number[] }>;
 
@@ -25,6 +27,7 @@ export class PageService {
     private readonly reactionService: ReactionService,
     private readonly memberService: MemberService,
     private readonly hashtagService: HashtagService,
+    private readonly blogService: BlogService,
   ) {}
 
   async findUser(nickname: string, clientId?: number, queryDayMap: GoalDayDto[] = []) {
@@ -199,5 +202,48 @@ export class PageService {
       goals: [goal],
       users,
     };
+  }
+
+  async findBlog(locale: LocaleDto) {
+    const articles = await this.blogService
+      .getRepository()
+      .createQueryBuilder('article')
+      .select([
+        'article.id',
+        'article.date',
+        'article.image',
+        'article.views',
+        'article.pathname',
+        'article.likeCount',
+        'article.bookmarkedCount',
+        'article.sharesCount',
+        `article.${locale}`,
+      ])
+      .getMany();
+
+    return {
+      articles: articles.map(({ [locale]: content, ...article }) => ({ ...article, content })),
+    };
+  }
+
+  async findArticle(pathname: string, locale: LocaleDto) {
+    const { [locale]: content, ...data } = await this.blogService
+      .getRepository()
+      .createQueryBuilder('article')
+      .select([
+        'article.id',
+        'article.date',
+        'article.image',
+        'article.views',
+        'article.pathname',
+        'article.likeCount',
+        'article.bookmarkedCount',
+        'article.sharesCount',
+        `article.${locale}`,
+      ])
+      .where('article.pathname = :pathname', { pathname })
+      .getOneOrFail();
+
+    return { ...data, content };
   }
 }

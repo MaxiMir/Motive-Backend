@@ -3,8 +3,12 @@ import { CharacteristicDto, CHARACTERISTICS } from 'src/common/characteristic.dt
 
 @Injectable()
 export class ParseCharacteristicPipe implements PipeTransform {
+  validate(value: string): value is CharacteristicDto {
+    return (CHARACTERISTICS as ReadonlyArray<string>).includes(value);
+  }
+
   transform(value: string, metadata: ArgumentMetadata): CharacteristicDto {
-    if (!(CHARACTERISTICS as ReadonlyArray<string>).includes(value)) {
+    if (!this.validate(value)) {
       throw new BadRequestException(`Validation failed (incorrect param ${metadata.data})`);
     }
 

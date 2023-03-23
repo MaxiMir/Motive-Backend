@@ -15,7 +15,7 @@ import { OperationDto, OPERATIONS } from 'src/common/operation.dto';
 import { ApiPagination } from 'src/decorators/api-pagination.decorator';
 import { Identify } from 'src/decorators/identify.decorator';
 import { AuthGuard } from 'src/guards/auth.guard';
-import { ParseOperationPipe } from 'src/pipes/parse-operation.pipe';
+import { ParseOperationPipe } from 'src/pipes/parse-operation-pipe.service';
 import { UserWithCharacteristicEntity } from 'src/user/entities/user-with-characteristic.entity';
 import { SubscriptionService } from './subscription.service';
 import { UpdateSubscriptionDto } from './dto/update-subscription.dto';

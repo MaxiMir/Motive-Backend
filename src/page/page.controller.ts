@@ -5,7 +5,6 @@ import { ApiPagination } from 'src/decorators/api-pagination.decorator';
 import { Identify } from 'src/decorators/identify.decorator';
 import { ParseGoalDateMapPipe } from 'src/pipes/parse-goal-date-map.pipe';
 import { LocaleDto, LOCALES } from 'src/locale/dto/locale.dto';
-import { BlogEntity } from 'src/blog/entities/blog.entity';
 import { PageService } from './page.service';
 import { GoalDayDto } from 'src/goal/dto/goal-day.dto';
 import { UserDto } from './dto/user.dto';
@@ -14,6 +13,7 @@ import { SearchDto } from './dto/search.dto';
 import { SearchParamsDto } from './dto/search-params.dto';
 import { RatingDto } from './dto/rating.dto';
 import { BlogDto } from './dto/blog.dto';
+import { ArticleDto } from './dto/article.dto';
 
 @Controller('pages')
 @ApiTags('Pages')
@@ -71,7 +71,7 @@ export class PageController {
   @Get('blog/:pathname')
   @ApiOperation({ summary: 'Get article page' })
   @ApiQuery({ name: 'locale', enum: LOCALES })
-  @ApiResponse({ status: 200, type: BlogEntity })
+  @ApiResponse({ status: 200, type: ArticleDto })
   getArticle(@Param('pathname') pathname: string, @Query('locale') locale: LocaleDto) {
     return this.pageService.findArticle(pathname, locale);
   }

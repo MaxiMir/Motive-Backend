@@ -1,7 +1,7 @@
 import { ApiProperty } from '@nestjs/swagger';
-import { BlogEntity } from 'src/blog/entities/blog.entity';
+import { ArticleDto } from './article.dto';
 
 export class BlogDto {
-  @ApiProperty({ type: () => BlogEntity, isArray: true })
-  readonly articles: BlogEntity[];
+  @ApiProperty({ type: () => ArticleDto, isArray: true })
+  readonly articles: ArticleDto[];
 }

@@ -11,9 +11,10 @@ import { DayService } from 'src/day/day.service';
 import { GoalService } from 'src/goal/goal.service';
 import { HashtagService } from 'src/hashtag/hashtag.service';
 import { MemberService } from 'src/member/member.service';
-import { BlogService } from 'src/blog/blog.service';
+import { ArticleService } from 'src/article/article.service';
 import { SearchParamsDto } from './dto/search-params.dto';
 import { LocaleDto } from 'src/locale/dto/locale.dto';
+import { Not } from 'typeorm';
 
 type ReactionsMap = Record<number, { [k in CharacteristicDto]: number[] }>;
 
@@ -27,7 +28,7 @@ export class PageService {
     private readonly reactionService: ReactionService,
     private readonly memberService: MemberService,
     private readonly hashtagService: HashtagService,
-    private readonly blogService: BlogService,
+    private readonly articleService: ArticleService,
   ) {}
 
   async findUser(nickname: string, clientId?: number, queryDayMap: GoalDayDto[] = []) {
@@ -205,45 +206,38 @@ export class PageService {
   }
 
   async findBlog(locale: LocaleDto) {
-    const articles = await this.blogService
+    const fields = this.articleService.getFields(locale);
+    const articles = await this.articleService
       .getRepository()
       .createQueryBuilder('article')
-      .select([
-        'article.id',
-        'article.date',
-        'article.image',
-        'article.views',
-        'article.pathname',
-        'article.likeCount',
-        'article.bookmarkedCount',
-        'article.sharesCount',
-        `article.${locale}`,
-      ])
+      .select(fields)
       .getMany();
+    const spreadLocale = this.articleService.getSpreadLocale(locale);
 
     return {
-      articles: articles.map(({ [locale]: content, ...article }) => ({ ...article, content })),
+      articles: articles.map(spreadLocale),
     };
   }
 
   async findArticle(pathname: string, locale: LocaleDto) {
-    const { [locale]: content, ...data } = await this.blogService
+    const fields = this.articleService.getFields(locale);
+    const foundArticle = await this.articleService
       .getRepository()
       .createQueryBuilder('article')
-      .select([
-        'article.id',
-        'article.date',
-        'article.image',
-        'article.views',
-        'article.pathname',
-        'article.likeCount',
-        'article.bookmarkedCount',
-        'article.sharesCount',
-        `article.${locale}`,
-      ])
+      .select(fields)
       .where('article.pathname = :pathname', { pathname })
       .getOneOrFail();
+    const spreadLocale = this.articleService.getSpreadLocale(locale);
+    const article = spreadLocale(foundArticle);
+    const articles = await this.articleService
+      .getRepository()
+      .createQueryBuilder('article')
+      .select(fields)
+      .take(3)
+      .where({ id: Not(article.id) })
+      .getMany();
+    const more = articles.map(spreadLocale);
 
-    return { ...data, content };
+    return { ...article, more };
   }
 }

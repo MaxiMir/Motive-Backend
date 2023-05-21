@@ -1,8 +1,9 @@
 import { ApiProperty } from '@nestjs/swagger';
 import { Column, Entity, Index, PrimaryGeneratedColumn } from 'typeorm';
+import { LocaleContentDto } from 'src/article/dto/locale-content.dto';
 
-@Entity('blog')
-export class BlogEntity {
+@Entity('articles')
+export class ArticleEntity {
   @PrimaryGeneratedColumn()
   @ApiProperty({
     example: 1,
@@ -27,7 +28,7 @@ export class BlogEntity {
   })
   pathname: string;
 
-  @Column({ type: 'text', nullable: true }) // TODO REMOVE nullable
+  @Column({ type: 'text' })
   @ApiProperty({
     example: '/static/blog/developing-emotional-intelligence.webp',
   })
@@ -57,27 +58,27 @@ export class BlogEntity {
   })
   bookmarkedCount: number;
 
-  @Column({ type: 'text', select: false })
+  @Column('simple-json', { select: false, nullable: true })
   @ApiProperty({
     example: "In today's fast-paced world...",
   })
-  en: string;
+  en: LocaleContentDto;
 
-  @Column({ type: 'text', select: false })
+  @Column('simple-json', { select: false, nullable: true })
   @ApiProperty({
     example: 'В сегодняшнем быстром мире...',
   })
-  ru: string;
+  ru: LocaleContentDto;
 
-  @Column({ type: 'text', select: false })
+  @Column('simple-json', { select: false, nullable: true })
   @ApiProperty({
     example: 'У сьогоднішньому швидкому світі...',
   })
-  uk: string;
+  uk: LocaleContentDto;
 
-  @Column({ type: 'text', select: false })
+  @Column('simple-json', { select: false, nullable: true })
   @ApiProperty({
     example: '在今天这个快节奏的世界里...',
   })
-  'zh-CN': string;
+  'zh-CN': LocaleContentDto;
 }

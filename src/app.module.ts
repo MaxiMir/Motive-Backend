@@ -27,7 +27,7 @@ import { MemberModule } from './member/member.module';
 import { SeoModule } from './seo/seo.module';
 import { NotificationModule } from './notification/notification.module';
 import { EventsGateway } from './events/events.gateway';
-import { BlogModule } from './blog/blog.module';
+import { ArticleModule } from './article/article.module';
 
 @Module({
   imports: [
@@ -75,7 +75,7 @@ import { BlogModule } from './blog/blog.module';
     MemberModule,
     SeoModule,
     NotificationModule,
-    BlogModule,
+    ArticleModule,
   ],
   providers: [EventsGateway],
 })

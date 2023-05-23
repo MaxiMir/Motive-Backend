@@ -12,7 +12,7 @@ import { GoalService } from 'src/goal/goal.service';
 import { HashtagService } from 'src/hashtag/hashtag.service';
 import { MemberService } from 'src/member/member.service';
 import { ArticleService } from 'src/article/article.service';
-import { SearchParamsDto } from './dto/search-params.dto';
+import { SearchQueryDto } from './dto/search-query.dto';
 import { LocaleDto } from 'src/locale/dto/locale.dto';
 import { Not } from 'typeorm';
 
@@ -177,7 +177,7 @@ export class PageService {
       .getMany();
   }
 
-  async findSearch(params: SearchParamsDto) {
+  async findSearch(params: SearchQueryDto) {
     const { q = '', type } = params;
     const users = await this.findByCharacteristic('motivation', 8);
     const goal = []; // await this.goalService.findByPK(1, { relations: ['characteristic', 'owner'] });
@@ -219,24 +219,27 @@ export class PageService {
     };
   }
 
-  async findArticle(pathname: string, locale: LocaleDto) {
+  async findArticle(pathname: string, locale: LocaleDto, share?: string) {
     const fields = this.articleService.getFields(locale);
-    const foundArticle = await this.articleService
-      .getRepository()
+    const repository = this.articleService.getRepository();
+    const foundArticle = await repository
       .createQueryBuilder('article')
       .select(fields)
       .where('article.pathname = :pathname', { pathname })
       .getOneOrFail();
     const spreadLocale = this.articleService.getSpreadLocale(locale);
     const article = spreadLocale(foundArticle);
-    const articles = await this.articleService
-      .getRepository()
+    const articles = await repository
       .createQueryBuilder('article')
       .select(fields)
       .take(3)
       .where({ id: Not(article.id) })
       .getMany();
     const more = articles.map(spreadLocale);
+    foundArticle.sharesCount += !share ? 0 : 1;
+    foundArticle.views++;
+
+    await repository.save(foundArticle);
 
     return { ...article, more };
   }

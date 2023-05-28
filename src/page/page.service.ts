@@ -136,6 +136,7 @@ export class PageService {
       .getRepository()
       .createQueryBuilder('article')
       .select(fields)
+      .orderBy('article.id', 'DESC')
       .getMany();
     const spreadLocale = this.articleService.getSpreadLocale(locale);
 

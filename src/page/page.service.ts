@@ -84,71 +84,6 @@ export class PageService {
     };
   }
 
-  private async findDays(
-    goals: GoalEntity[],
-    reactionsMap: ReactionsMap,
-    queryDayMap: GoalDayDto[],
-    membership?: MemberEntity[],
-  ) {
-    const relations = ['characteristic', 'tasks', 'feedback'];
-    const dayMap = !membership ? queryDayMap : this.getMemberGoalDayMap(membership, queryDayMap);
-
-    return Promise.all(
-      goals.map(async (goal) => {
-        const member = membership?.find((m) => m.goalId === goal.id);
-        const reactions = reactionsMap[goal.id] || { motivation: [], creativity: [] };
-        const { dayId } = dayMap.find(({ goalId }) => goalId === goal.id) || {};
-        const foundDay = dayId
-          ? await this.dayService.findByPK(dayId, { relations })
-          : await this.dayService.findOne({
-              relations,
-              where: { goal: goal.id },
-              order: {
-                id: 'DESC',
-              },
-            });
-        const calendar = await this.goalService.findCalendar(goal.id);
-        const day = !member ? foundDay : this.memberService.transformToMemberDay(foundDay, member);
-
-        return { ...goal, day, calendar, reactions, member };
-      }),
-    );
-  }
-
-  private getMemberGoalDayMap(membership: MemberEntity[], queryDayMap: GoalDayDto[]) {
-    return membership.reduce((acc, { goalId, dayId }) => {
-      const goalIdExist = acc.some((d) => d.goalId === goalId);
-
-      return goalIdExist ? acc : [...acc, { goalId, dayId }];
-    }, queryDayMap);
-  }
-
-  private async findReactionsMap(goals, userId?: number): Promise<ReactionsMap> {
-    const ids = !userId ? [] : goals.filter((g) => g.owner.id !== userId).map((g) => g.id);
-
-    if (!ids.length) {
-      return {};
-    }
-
-    const reactions = await this.reactionService
-      .getRepository()
-      .createQueryBuilder('reaction')
-      .select(['reaction.goal.id as goal_id', 'reaction.day.id as day_id', 'characteristic'])
-      .where('reaction.goal.id IN (:...ids)', { ids })
-      .andWhere('reaction.user.id = :userId', { userId })
-      .getRawMany();
-
-    return reactions.reduce((acc, { goal_id, day_id, characteristic }) => {
-      if (!acc[goal_id]) {
-        acc[goal_id] = { motivation: [], creativity: [] };
-      }
-
-      acc[goal_id][characteristic].push(day_id);
-
-      return acc;
-    }, {});
-  }
-
   async findFollowing(pagination: PaginationDto, userId?: number) {
     const following = !userId ? [] : await this.subscriptionService.findFollowing(userId, pagination);
 
@@ -165,16 +100,6 @@ export class PageService {
       creativity,
       support,
     };
-  }
-
-  private findByCharacteristic(characteristic: string, take: number) {
-    return this.userService
-      .getRepository()
-      .createQueryBuilder('user')
-      .leftJoinAndSelect('user.characteristic', 'characteristic')
-      .orderBy(`characteristic.${characteristic}`, 'DESC')
-      .take(take)
-      .getMany();
   }
 
   async findSearch(params: SearchQueryDto) {
@@ -242,5 +167,80 @@ export class PageService {
     await repository.save(foundArticle);
 
     return { ...article, more };
+  }
+
+  private async findDays(
+    goals: GoalEntity[],
+    reactionsMap: ReactionsMap,
+    queryDayMap: GoalDayDto[],
+    membership?: MemberEntity[],
+  ) {
+    const relations = ['characteristic', 'tasks', 'feedback'];
+    const dayMap = !membership ? queryDayMap : this.getMemberGoalDayMap(membership, queryDayMap);
+
+    return Promise.all(
+      goals.map(async (goal) => {
+        const member = membership?.find((m) => m.goalId === goal.id);
+        const reactions = reactionsMap[goal.id] || { motivation: [], creativity: [] };
+        const { dayId } = dayMap.find(({ goalId }) => goalId === goal.id) || {};
+        const foundDay = dayId
+          ? await this.dayService.findByPK(dayId, { relations })
+          : await this.dayService.findOne({
+              relations,
+              where: { goal: goal.id },
+              order: {
+                id: 'DESC',
+              },
+            });
+        const calendar = await this.goalService.findCalendar(goal.id);
+        const day = !member ? foundDay : this.memberService.transformToMemberDay(foundDay, member);
+
+        return { ...goal, day, calendar, reactions, member };
+      }),
+    );
+  }
+
+  private findByCharacteristic(characteristic: string, take: number) {
+    return this.userService
+      .getRepository()
+      .createQueryBuilder('user')
+      .leftJoinAndSelect('user.characteristic', 'characteristic')
+      .orderBy(`characteristic.${characteristic}`, 'DESC')
+      .take(take)
+      .getMany();
+  }
+
+  private getMemberGoalDayMap(membership: MemberEntity[], queryDayMap: GoalDayDto[]) {
+    return membership.reduce((acc, { goalId, dayId }) => {
+      const goalIdExist = acc.some((d) => d.goalId === goalId);
+
+      return goalIdExist ? acc : [...acc, { goalId, dayId }];
+    }, queryDayMap);
+  }
+
+  private async findReactionsMap(goals, userId?: number): Promise<ReactionsMap> {
+    const ids = !userId ? [] : goals.filter((g) => g.owner.id !== userId).map((g) => g.id);
+
+    if (!ids.length) {
+      return {};
+    }
+
+    const reactions = await this.reactionService
+      .getRepository()
+      .createQueryBuilder('reaction')
+      .select(['reaction.goal.id as goal_id', 'reaction.day.id as day_id', 'characteristic'])
+      .where('reaction.goal.id IN (:...ids)', { ids })
+      .andWhere('reaction.user.id = :userId', { userId })
+      .getRawMany();
+
+    return reactions.reduce((acc, { goal_id, day_id, characteristic }) => {
+      if (!acc[goal_id]) {
+        acc[goal_id] = { motivation: [], creativity: [] };
+      }
+
+      acc[goal_id][characteristic].push(day_id);
+
+      return acc;
+    }, {});
   }
 }

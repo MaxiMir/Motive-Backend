@@ -14,7 +14,7 @@ import { ApiOperation, ApiParam, ApiQuery, ApiResponse, ApiTags } from '@nestjs/
 import { OperationDto, OPERATIONS } from 'src/common/operation.dto';
 import { CharacteristicDto, CHARACTERISTICS } from 'src/common/characteristic.dto';
 import { ParseCharacteristicPipe } from 'src/pipes/parse-characteristic.pipe';
-import { parseInsertOperationPipe } from 'src/pipes/parse-insert-operation.pipe';
+import { ParseOperationPipe } from 'src/pipes/parse-operation-pipe.service';
 import { Identify } from 'src/decorators/identify.decorator';
 import { AuthGuard } from 'src/guards/auth.guard';
 import { CreateDayDto } from 'src/day/dto/create-day.dto';
@@ -78,13 +78,13 @@ export class GoalController {
   @HttpCode(204)
   @ApiOperation({ summary: 'Update day characteristic' })
   @ApiParam({ name: 'characteristic', enum: CHARACTERISTICS })
-  @ApiQuery({ name: 'operation', example: OPERATIONS[0] })
+  @ApiQuery({ name: 'operation', enum: OPERATIONS })
   @ApiResponse({ status: 204 })
   updateCharacteristic(
     @Param('id', ParseIntPipe) id: number,
     @Param('dayId', ParseIntPipe) dayId: number,
     @Param('characteristic', ParseCharacteristicPipe) characteristic: CharacteristicDto,
-    @Query('operation', parseInsertOperationPipe) operation: OperationDto,
+    @Query('operation', ParseOperationPipe) operation: OperationDto,
     @Identify() clientId: number,
   ) {
     return this.goalService.updateCharacteristic(id, dayId, characteristic, clientId);

@@ -11,7 +11,10 @@ import { DayService } from 'src/day/day.service';
 import { GoalService } from 'src/goal/goal.service';
 import { HashtagService } from 'src/hashtag/hashtag.service';
 import { MemberService } from 'src/member/member.service';
-import { SearchParamsDto } from './dto/search-params.dto';
+import { ArticleService } from 'src/article/article.service';
+import { SearchQueryDto } from './dto/search-query.dto';
+import { LocaleDto } from 'src/locale/dto/locale.dto';
+import { Not } from 'typeorm';
 
 type ReactionsMap = Record<number, { [k in CharacteristicDto]: number[] }>;
 
@@ -25,6 +28,7 @@ export class PageService {
     private readonly reactionService: ReactionService,
     private readonly memberService: MemberService,
     private readonly hashtagService: HashtagService,
+    private readonly articleService: ArticleService,
   ) {}
 
   async findUser(nickname: string, clientId?: number, queryDayMap: GoalDayDto[] = []) {
@@ -80,6 +84,92 @@ export class PageService {
     };
   }
 
+  async findFollowing(pagination: PaginationDto, userId?: number) {
+    const following = !userId ? [] : await this.subscriptionService.findFollowing(userId, pagination);
+
+    return { following };
+  }
+
+  async findRating() {
+    const motivation = await this.findByCharacteristic('motivation', 100);
+    const creativity = await this.findByCharacteristic('creativity', 100);
+    const support = await this.findByCharacteristic('support', 100);
+
+    return {
+      motivation,
+      creativity,
+      support,
+    };
+  }
+
+  async findSearch(params: SearchQueryDto) {
+    const { q = '', type } = params;
+    const users = await this.findByCharacteristic('motivation', 8);
+    const goal = []; // await this.goalService.findByPK(1, { relations: ['characteristic', 'owner'] });
+    const hashtags = await this.hashtagService.find({ take: 12, order: { views: 'DESC' } });
+
+    return {
+      q,
+      type,
+      hashtags: [
+        { name: 'motivation', views: Math.trunc(Math.random() * 10000) },
+        { name: 'develop', views: Math.trunc(Math.random() * 10000) },
+        { name: 'health', views: Math.trunc(Math.random() * 10000) },
+        { name: 'typescript', views: Math.trunc(Math.random() * 10000) },
+        { name: 'fitness', views: Math.trunc(Math.random() * 10000) },
+        { name: 'portugal', views: Math.trunc(Math.random() * 10000) },
+        { name: 'slimming', views: Math.trunc(Math.random() * 10000) },
+        { name: 'run', views: Math.trunc(Math.random() * 10000) },
+        { name: 'backend', views: Math.trunc(Math.random() * 10000) },
+        { name: 'frontend', views: Math.trunc(Math.random() * 10000) },
+        { name: 'promotion', views: Math.trunc(Math.random() * 10000) },
+        { name: 'english', views: Math.trunc(Math.random() * 10000) },
+      ],
+      goals: [goal],
+      users,
+    };
+  }
+
+  async findBlog(locale: LocaleDto) {
+    const fields = this.articleService.getFields(locale);
+    const articles = await this.articleService
+      .getRepository()
+      .createQueryBuilder('article')
+      .select(fields)
+      .orderBy('article.id', 'DESC')
+      .getMany();
+    const spreadLocale = this.articleService.getSpreadLocale(locale);
+
+    return {
+      articles: articles.map(spreadLocale),
+    };
+  }
+
+  async findArticle(pathname: string, locale: LocaleDto, share?: string) {
+    const fields = this.articleService.getFields(locale);
+    const repository = this.articleService.getRepository();
+    const foundArticle = await repository
+      .createQueryBuilder('article')
+      .select(fields)
+      .where('article.pathname = :pathname', { pathname })
+      .getOneOrFail();
+    const spreadLocale = this.articleService.getSpreadLocale(locale);
+    const article = spreadLocale(foundArticle);
+    const articles = await repository
+      .createQueryBuilder('article')
+      .select(fields)
+      .take(3)
+      .where({ id: Not(article.id) })
+      .getMany();
+    const more = articles.map(spreadLocale);
+    foundArticle.sharesCount += !share ? 0 : 1;
+    foundArticle.views++;
+
+    await repository.save(foundArticle);
+
+    return { ...article, more };
+  }
+
   private async findDays(
     goals: GoalEntity[],
     reactionsMap: ReactionsMap,
@@ -109,6 +199,16 @@ export class PageService {
         return { ...goal, day, calendar, reactions, member };
       }),
     );
+  }
+
+  private findByCharacteristic(characteristic: string, take: number) {
+    return this.userService
+      .getRepository()
+      .createQueryBuilder('user')
+      .leftJoinAndSelect('user.characteristic', 'characteristic')
+      .orderBy(`characteristic.${characteristic}`, 'DESC')
+      .take(take)
+      .getMany();
   }
 
   private getMemberGoalDayMap(membership: MemberEntity[], queryDayMap: GoalDayDto[]) {
@@ -143,61 +243,5 @@ export class PageService {
 
       return acc;
     }, {});
-  }
-
-  async findFollowing(pagination: PaginationDto, userId?: number) {
-    const following = !userId ? [] : await this.subscriptionService.findFollowing(userId, pagination);
-
-    return { following };
-  }
-
-  async findRating() {
-    const motivation = await this.findByCharacteristic('motivation', 100);
-    const creativity = await this.findByCharacteristic('creativity', 100);
-    const support = await this.findByCharacteristic('support', 100);
-
-    return {
-      motivation,
-      creativity,
-      support,
-    };
-  }
-
-  private findByCharacteristic(characteristic: string, take: number) {
-    return this.userService
-      .getRepository()
-      .createQueryBuilder('user')
-      .leftJoinAndSelect('user.characteristic', 'characteristic')
-      .orderBy(`characteristic.${characteristic}`, 'DESC')
-      .take(take)
-      .getMany();
-  }
-
-  async findSearch(params: SearchParamsDto) {
-    const { q = '', type } = params;
-    const users = await this.findByCharacteristic('motivation', 8);
-    const goal = []; // await this.goalService.findByPK(1, { relations: ['characteristic', 'owner'] });
-    const hashtags = await this.hashtagService.find({ take: 12, order: { views: 'DESC' } });
-
-    return {
-      q,
-      type,
-      hashtags: [
-        { name: 'motivation', views: Math.trunc(Math.random() * 10000) },
-        { name: 'develop', views: Math.trunc(Math.random() * 10000) },
-        { name: 'health', views: Math.trunc(Math.random() * 10000) },
-        { name: 'typescript', views: Math.trunc(Math.random() * 10000) },
-        { name: 'fitness', views: Math.trunc(Math.random() * 10000) },
-        { name: 'portugal', views: Math.trunc(Math.random() * 10000) },
-        { name: 'slimming', views: Math.trunc(Math.random() * 10000) },
-        { name: 'run', views: Math.trunc(Math.random() * 10000) },
-        { name: 'backend', views: Math.trunc(Math.random() * 10000) },
-        { name: 'frontend', views: Math.trunc(Math.random() * 10000) },
-        { name: 'promotion', views: Math.trunc(Math.random() * 10000) },
-        { name: 'english', views: Math.trunc(Math.random() * 10000) },
-      ],
-      goals: [goal],
-      users,
-    };
   }
 }

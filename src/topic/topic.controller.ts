@@ -16,7 +16,7 @@ import { OperationDto } from 'src/common/operation.dto';
 import { ApiPagination } from 'src/decorators/api-pagination.decorator';
 import { Identify } from 'src/decorators/identify.decorator';
 import { AuthGuard } from 'src/guards/auth.guard';
-import { ParseOperationPipe } from 'src/pipes/parse-operation.pipe';
+import { ParseOperationPipe } from 'src/pipes/parse-operation-pipe.service';
 import { TopicService } from 'src/topic/topic.service';
 import { CreateTopicDto } from './dto/create-topic.dto';
 import { FindQueryDto } from './dto/find-query.dto';

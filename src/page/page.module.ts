@@ -6,6 +6,7 @@ import { SubscriptionModule } from 'src/subscription/subscription.module';
 import { ReactionModule } from 'src/reaction/reaction.module';
 import { HashtagModule } from 'src/hashtag/hashtag.module';
 import { MemberModule } from 'src/member/member.module';
+import { ArticleModule } from 'src/article/article.module';
 import { PageController } from './page.controller';
 import { PageService } from './page.service';
 
@@ -20,6 +21,7 @@ import { PageService } from './page.service';
     ReactionModule,
     MemberModule,
     HashtagModule,
+    ArticleModule,
   ],
 })
 export class PageModule {}

@@ -4,13 +4,17 @@ import { PaginationDto } from 'src/common/pagination.dto';
 import { ApiPagination } from 'src/decorators/api-pagination.decorator';
 import { Identify } from 'src/decorators/identify.decorator';
 import { ParseGoalDateMapPipe } from 'src/pipes/parse-goal-date-map.pipe';
+import { LocaleDto, LOCALES } from 'src/locale/dto/locale.dto';
+import { PageService } from './page.service';
 import { GoalDayDto } from 'src/goal/dto/goal-day.dto';
 import { UserDto } from './dto/user.dto';
 import { FollowingDto } from './dto/following.dto';
 import { SearchDto } from './dto/search.dto';
-import { SearchParamsDto } from './dto/search-params.dto';
+import { SearchQueryDto } from './dto/search-query.dto';
 import { RatingDto } from './dto/rating.dto';
-import { PageService } from './page.service';
+import { BlogDto } from './dto/blog.dto';
+import { ArticleDto } from './dto/article.dto';
+import { ArticleQueryDto } from './dto/article-query.dto';
 
 @Controller('pages')
 @ApiTags('Pages')
@@ -53,7 +57,31 @@ export class PageController {
   @Get('search')
   @ApiOperation({ summary: 'Get search page' })
   @ApiResponse({ status: 200, type: SearchDto })
-  getSearch(@Query() query: SearchParamsDto) {
+  getSearch(@Query() query: SearchQueryDto) {
     return this.pageService.findSearch(query);
+  }
+
+  @Get('blog')
+  @ApiOperation({ summary: 'Get blog page' })
+  @ApiQuery({ name: 'locale', enum: LOCALES })
+  @ApiResponse({ status: 200, type: BlogDto })
+  getBlog(@Query('locale') locale: LocaleDto) {
+    return this.pageService.findBlog(locale);
+  }
+
+  @Get('blog/:pathname')
+  @ApiOperation({ summary: 'Get article page' })
+  @ApiQuery({
+    name: 'share',
+    example: 'web',
+    description: 'type of share',
+    allowEmptyValue: true,
+  })
+  @ApiQuery({ name: 'locale', enum: LOCALES })
+  @ApiResponse({ status: 200, type: ArticleDto })
+  getArticle(@Param('pathname') pathname: string, @Query() query: ArticleQueryDto) {
+    const { locale, share } = query;
+
+    return this.pageService.findArticle(pathname, locale, share);
   }
 }

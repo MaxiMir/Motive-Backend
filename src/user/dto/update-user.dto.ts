@@ -21,7 +21,7 @@ export class UpdateUserDto {
 
   @IsString()
   @IsOptional()
-  @Transform(({ value }) => value.trim())
+  @Transform(({ value }) => value?.trim())
   @MaxLength(140)
   @ApiProperty({
     example: "It's death to settle for things in life ☠️",
@@ -30,7 +30,7 @@ export class UpdateUserDto {
 
   @IsString()
   @IsOptional()
-  @Transform(({ value }) => value.trim())
+  @Transform(({ value }) => value?.trim())
   @MaxLength(64)
   @ApiProperty({
     example: 'Pattaya',
@@ -39,7 +39,7 @@ export class UpdateUserDto {
 
   @IsString()
   @IsOptional()
-  @Transform(({ value }) => value.trim())
+  @Transform(({ value }) => value?.trim())
   @MaxLength(320)
   @ApiProperty({
     example: 'Dream developer 🧿',

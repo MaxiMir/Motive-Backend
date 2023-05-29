@@ -26,6 +26,7 @@ export class UserService {
     const user = this.userRepository.create(dto);
     user.nickname = v4();
     user.characteristic = new UserCharacteristicEntity();
+    user.registered = new Date().toISOString();
 
     return this.userRepository.save(user);
   }
@@ -37,7 +38,6 @@ export class UserService {
     user.motto = dto.motto;
     user.location = dto.location;
     user.bio = dto.bio;
-    user.registered = new Date().toISOString();
 
     return this.userRepository.save(user);
   }

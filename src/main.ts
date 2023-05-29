@@ -14,7 +14,7 @@ async function bootstrap() {
   await redisIoAdapter.connectToRedis();
   app.useWebSocketAdapter(redisIoAdapter);
   app.setGlobalPrefix('/api/v1');
-  app.useGlobalPipes(new ValidationPipe({ transform: true }));
+  app.useGlobalPipes(new ValidationPipe({ transform: true, enableDebugMessages: true }));
   app.useGlobalFilters(new AllExceptionsFilter());
   app.enableCors({ origin: process.env.CLIENT, credentials: true });
   app.use(cookieParser());

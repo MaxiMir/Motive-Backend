@@ -2,6 +2,7 @@ import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { FindOneOptions } from 'typeorm/find-options/FindOneOptions';
+import { v4 } from 'uuid';
 import { FileService } from 'src/file/file.service';
 import { UserCharacteristicEntity } from 'src/user-characteristic/entities/user-characteristic.entity';
 import { UpdateUserDto } from './dto/update-user.dto';
@@ -23,7 +24,7 @@ export class UserService {
 
   async create(dto: CreateUserDto) {
     const user = this.userRepository.create(dto);
-    user.nickname = crypto.randomUUID();
+    user.nickname = v4();
     user.characteristic = new UserCharacteristicEntity();
 
     return this.userRepository.save(user);

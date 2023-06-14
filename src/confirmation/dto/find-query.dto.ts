@@ -4,9 +4,7 @@ import { PaginationDto } from 'src/common/pagination.dto';
 
 export class FindQueryDto extends PaginationDto {
   @IsObject()
-  @Transform(({ value }) => ({ user: +value.user }), {
-    toClassOnly: true,
-  })
+  @Transform(({ value }) => ({ user: +value.user }))
   @Type(() => Object)
   readonly where: { user: number };
 }

@@ -129,7 +129,7 @@ export class GoalService {
     goal.updated = dto.started;
     goal.characteristic = new GoalCharacteristicEntity();
     goal.hashtags = dto.hashtags;
-    goal.stages = dto.stages.map((s) => s.name);
+    goal.stages = dto.stages;
     goal.days = [day];
     goal.owner = owner;
 

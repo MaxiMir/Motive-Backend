@@ -19,14 +19,12 @@ export class CreateGoalDto {
 
   @IsArray()
   @ArrayMaxSize(100)
-  @Transform(
-    ({ value }) =>
-      value
-        .toLowerCase()
-        .split(' ')
-        .map((v) => v.replace(/[^a-z\d]/g, ''))
-        .filter(Boolean),
-    { toClassOnly: true },
+  @Transform(({ value }) =>
+    value
+      .toLowerCase()
+      .split(' ')
+      .map((v) => v.replace(/[^a-z\d]/g, ''))
+      .filter(Boolean),
   )
   @Type(() => String)
   @ApiProperty({
@@ -36,12 +34,12 @@ export class CreateGoalDto {
 
   @IsArray()
   @ArrayMaxSize(100)
-  @Transform(({ value }) => value.map((v) => v.trim()).filter(Boolean), { toClassOnly: true })
-  @Type(() => String)
+  @Transform(({ value }) => value.map((v) => v.name.trim()).filter(Boolean))
+  @Type(() => CreateStageDto)
   @ApiProperty({
     example: ['Develop basic functionality', 'Alpha testing', 'Production release'],
   })
-  readonly stages: CreateStageDto[];
+  readonly stages: string[];
 
   @IsArray()
   @ArrayMinSize(1)

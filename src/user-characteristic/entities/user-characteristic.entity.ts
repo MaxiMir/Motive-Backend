@@ -14,41 +14,78 @@ export class UserCharacteristicEntity {
   @Column({ default: 0 })
   @ApiProperty({
     example: 1541,
-    description: 'motivation points',
+    description: 'user points',
   })
-  motivation_all: number;
+  points: number;
 
   @Column({ default: 0 })
   @ApiProperty({
     example: 1541,
-    description: 'creativity points',
+    description: 'points for next level',
   })
-  creativity_all: number;
-
-  @Column({ default: 0 })
-  @ApiProperty({
-    example: 1541,
-    description: 'support points',
-  })
-  support_all: number;
+  nextLevelPoints: number;
 
   @Column({ type: 'float', scale: 4, default: 1.0 })
   @ApiProperty({
     example: 13,
   })
-  motivation: number;
+  progress: number;
 
-  @Column({ type: 'float', scale: 4, default: 1.0 })
-  @ApiProperty({
-    example: 26,
-  })
-  creativity: number;
-
-  @Column({ type: 'float', scale: 4, default: 1.0 })
+  @Column({ type: 'float', scale: 2, default: 0 })
   @ApiProperty({
     example: 3,
+    description: 'health points',
   })
-  support: number;
+  health: number;
+
+  @Column({ type: 'float', scale: 2, default: 0 })
+  @ApiProperty({
+    example: 3,
+    description: 'family points',
+  })
+  family: number;
+
+  @Column({ type: 'float', scale: 2, default: 0 })
+  @ApiProperty({
+    example: 9,
+    description: 'money points',
+  })
+  money: number;
+
+  @Column({ type: 'float', scale: 2, default: 0 })
+  @ApiProperty({
+    example: 9,
+    description: 'friends points',
+  })
+  friends: number;
+
+  @Column({ type: 'float', scale: 2, default: 0 })
+  @ApiProperty({
+    example: 9,
+    description: 'development points',
+  })
+  development: number;
+
+  @Column({ type: 'float', scale: 2, default: 0 })
+  @ApiProperty({
+    example: 3,
+    description: 'work points',
+  })
+  work: number;
+
+  @Column({ type: 'float', scale: 2, default: 0 })
+  @ApiProperty({
+    example: 5,
+    description: 'vacation points',
+  })
+  vacation: number;
+
+  @Column({ type: 'float', scale: 2, default: 0 })
+  @ApiProperty({
+    example: 5,
+    description: 'hobbies points',
+  })
+  hobbies: number;
 
   @Column({ default: 0 })
   @ApiProperty({

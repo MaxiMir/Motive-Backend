@@ -1,12 +1,12 @@
 import { Injectable } from '@nestjs/common';
+import { Not } from 'typeorm';
 import { PaginationDto } from 'src/common/pagination.dto';
-import { CharacteristicDto } from 'src/common/characteristic.dto';
 import { GoalDayDto } from 'src/goal/dto/goal-day.dto';
 import { GoalEntity } from 'src/goal/entities/goal.entity';
 import { MemberEntity } from 'src/member/entities/member.entity';
 import { UserService } from 'src/user/user.service';
 import { SubscriptionService } from 'src/subscription/subscription.service';
-import { ReactionService } from 'src/reaction/reaction.service';
+import { DayPointService } from 'src/day-point/day-point.service';
 import { DayService } from 'src/day/day.service';
 import { GoalService } from 'src/goal/goal.service';
 import { HashtagService } from 'src/hashtag/hashtag.service';
@@ -14,9 +14,8 @@ import { MemberService } from 'src/member/member.service';
 import { ArticleService } from 'src/article/article.service';
 import { SearchQueryDto } from './dto/search-query.dto';
 import { LocaleDto } from 'src/locale/dto/locale.dto';
-import { Not } from 'typeorm';
 
-type ReactionsMap = Record<number, { [k in CharacteristicDto]: number[] }>;
+type PointsMap = Record<number, number[]>;
 
 @Injectable()
 export class PageService {
@@ -25,7 +24,7 @@ export class PageService {
     private readonly goalService: GoalService,
     private readonly dayService: DayService,
     private readonly subscriptionService: SubscriptionService,
-    private readonly reactionService: ReactionService,
+    private readonly dayPointService: DayPointService,
     private readonly memberService: MemberService,
     private readonly hashtagService: HashtagService,
     private readonly articleService: ArticleService,
@@ -55,31 +54,27 @@ export class PageService {
       .leftJoinAndSelect('user.characteristic', 'characteristic')
       .leftJoinAndSelect('user.goals', 'goals', 'goals."completed" = false')
       .orderBy('goals.id', 'ASC')
-      .leftJoinAndSelect('goals.characteristic', 'goals-characteristic')
       .leftJoinAndSelect('goals.owner', 'owner')
       .leftJoinAndSelect('user.membership', 'membership')
       .leftJoinAndSelect('membership.goal', 'membership-goal')
-      .leftJoinAndSelect('membership-goal.characteristic', 'membership-goal-characteristic')
       .leftJoinAndSelect('membership-goal.owner', 'membership-goal-owner')
       .leftJoinAndSelect('user.confirmations', 'confirmations')
       .orderBy('confirmations.id', 'DESC')
       .leftJoinAndSelect('confirmations.goal', 'confirmation-goal')
-      .leftJoinAndSelect('confirmation-goal.characteristic', 'confirmation-goal-characteristic')
       .leftJoinAndSelect('confirmation-goal.owner', 'confirmation-goal-owner')
       .where('user.nickname = :nickname', { nickname })
       .getOneOrFail();
     const following = !clientId ? false : await this.subscriptionService.checkOnFollowing(user.id, clientId);
     const memberGoals = membership.map((m) => m.goal);
-    const reactionsMap = await this.findReactionsMap([...user.goals, ...memberGoals], clientId);
-    const ownerGoalsWithDay = await this.findDays(user.goals, reactionsMap, queryDayMap);
-    const memberGoalsWithDay = await this.findDays(memberGoals, reactionsMap, queryDayMap, membership);
+    const pointsMap = await this.findPointsMap([...user.goals, ...memberGoals], clientId);
+    const ownerGoalsWithDay = await this.findDays(user.goals, pointsMap, queryDayMap);
+    const memberGoalsWithDay = await this.findDays(memberGoals, pointsMap, queryDayMap, membership);
     const goals = [...ownerGoalsWithDay, ...memberGoalsWithDay];
 
     return {
       ...user,
       following,
       goals,
-      confirmations: user.confirmations,
       clientMembership: client?.membership || [],
     };
   }
@@ -90,22 +85,14 @@ export class PageService {
     return { following };
   }
 
-  async findRating() {
-    const motivation = await this.findByCharacteristic('motivation', 100);
-    const creativity = await this.findByCharacteristic('creativity', 100);
-    const support = await this.findByCharacteristic('support', 100);
-
-    return {
-      motivation,
-      creativity,
-      support,
-    };
+  findRating() {
+    return this.findByProgress(100);
   }
 
   async findSearch(params: SearchQueryDto) {
     const { q = '', type } = params;
-    const users = await this.findByCharacteristic('motivation', 8);
-    const goal = []; // await this.goalService.findByPK(1, { relations: ['characteristic', 'owner'] });
+    const users = await this.findByProgress(8);
+    const goal = []; // await this.goalService.findByPK(1, { relations: ['owner'] });
     const hashtags = await this.hashtagService.find({ take: 12, order: { views: 'DESC' } });
 
     return {
@@ -138,10 +125,10 @@ export class PageService {
       .select(fields)
       .orderBy('article.id', 'DESC')
       .getMany();
-    const spreadLocale = this.articleService.getSpreadLocale(locale);
+    const localize = this.articleService.toLocalize(locale);
 
     return {
-      articles: articles.map(spreadLocale),
+      articles: articles.map(localize),
     };
   }
 
@@ -153,15 +140,15 @@ export class PageService {
       .select(fields)
       .where('article.pathname = :pathname', { pathname })
       .getOneOrFail();
-    const spreadLocale = this.articleService.getSpreadLocale(locale);
-    const article = spreadLocale(foundArticle);
+    const localize = this.articleService.toLocalize(locale);
+    const article = localize(foundArticle);
     const articles = await repository
       .createQueryBuilder('article')
       .select(fields)
       .take(3)
       .where({ id: Not(article.id) })
       .getMany();
-    const more = articles.map(spreadLocale);
+    const more = articles.map(localize);
     foundArticle.sharesCount += !share ? 0 : 1;
     foundArticle.views++;
 
@@ -172,17 +159,16 @@ export class PageService {
 
   private async findDays(
     goals: GoalEntity[],
-    reactionsMap: ReactionsMap,
+    pointsMap: PointsMap,
     queryDayMap: GoalDayDto[],
     membership?: MemberEntity[],
   ) {
-    const relations = ['characteristic', 'tasks', 'feedback'];
-    const dayMap = !membership ? queryDayMap : this.getMemberGoalDayMap(membership, queryDayMap);
+    const relations = ['tasks', 'feedback'];
+    const dayMap = !membership ? queryDayMap : this.getMemberDayMap(membership, queryDayMap);
 
     return Promise.all(
       goals.map(async (goal) => {
         const member = membership?.find((m) => m.goalId === goal.id);
-        const reactions = reactionsMap[goal.id] || { motivation: [], creativity: [] };
         const { dayId } = dayMap.find(({ goalId }) => goalId === goal.id) || {};
         const foundDay = dayId
           ? await this.dayService.findByPK(dayId, { relations })
@@ -195,23 +181,24 @@ export class PageService {
             });
         const calendar = await this.goalService.findCalendar(goal.id);
         const day = !member ? foundDay : this.memberService.transformToMemberDay(foundDay, member);
+        const clientPoints = pointsMap[goal.id] || [];
 
-        return { ...goal, day, calendar, reactions, member };
+        return { ...goal, day, calendar, clientPoints, member };
       }),
     );
   }
 
-  private findByCharacteristic(characteristic: string, take: number) {
+  private findByProgress(take: number) {
     return this.userService
       .getRepository()
       .createQueryBuilder('user')
       .leftJoinAndSelect('user.characteristic', 'characteristic')
-      .orderBy(`characteristic.${characteristic}`, 'DESC')
+      .orderBy('characteristic.progress', 'DESC')
       .take(take)
       .getMany();
   }
 
-  private getMemberGoalDayMap(membership: MemberEntity[], queryDayMap: GoalDayDto[]) {
+  private getMemberDayMap(membership: MemberEntity[], queryDayMap: GoalDayDto[]) {
     return membership.reduce((acc, { goalId, dayId }) => {
       const goalIdExist = acc.some((d) => d.goalId === goalId);
 
@@ -219,29 +206,24 @@ export class PageService {
     }, queryDayMap);
   }
 
-  private async findReactionsMap(goals, userId?: number): Promise<ReactionsMap> {
+  private async findPointsMap(goals, userId?: number): Promise<PointsMap> {
     const ids = !userId ? [] : goals.filter((g) => g.owner.id !== userId).map((g) => g.id);
 
     if (!ids.length) {
       return {};
     }
 
-    const reactions = await this.reactionService
+    const likedDays = await this.dayPointService
       .getRepository()
-      .createQueryBuilder('reaction')
-      .select(['reaction.goal.id as goal_id', 'reaction.day.id as day_id', 'characteristic'])
-      .where('reaction.goal.id IN (:...ids)', { ids })
-      .andWhere('reaction.user.id = :userId', { userId })
+      .createQueryBuilder('day-point')
+      .select(['day-point.goal.id as goal_id', 'day-point.day.id as day_id'])
+      .where('day-point.goal.id IN (:...ids)', { ids })
+      .andWhere('day-point.user.id = :userId', { userId })
       .getRawMany();
 
-    return reactions.reduce((acc, { goal_id, day_id, characteristic }) => {
-      if (!acc[goal_id]) {
-        acc[goal_id] = { motivation: [], creativity: [] };
-      }
-
-      acc[goal_id][characteristic].push(day_id);
-
-      return acc;
-    }, {});
+    return likedDays.reduce(
+      (acc, { goal_id, day_id }) => ({ ...acc, [goal_id]: [...(acc[goal_id] || []), day_id] }),
+      {},
+    );
   }
 }

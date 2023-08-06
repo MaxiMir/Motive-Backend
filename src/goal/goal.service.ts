@@ -4,17 +4,15 @@ import { Cron } from '@nestjs/schedule';
 import { In, Raw, Repository } from 'typeorm';
 import { FindOneOptions } from 'typeorm/find-options/FindOneOptions';
 import { NotificationTypeDto } from 'src/common/notification-type.dto';
-import { CharacteristicDto } from 'src/common/characteristic.dto';
+import { OperationDto } from 'src/common/operation.dto';
 import { CreateDayDto } from 'src/day/dto/create-day.dto';
 import { NotificationEntity } from 'src/notification/entities/notification.entity';
-import { DayCharacteristicEntity } from 'src/day-characteristic/entities/day-characteristic.entity';
-import { GoalCharacteristicEntity } from 'src/goal-characteristic/entities/goal-characteristic.entity';
 import { UserCharacteristicEntity } from 'src/user-characteristic/entities/user-characteristic.entity';
-import { ReactionEntity } from 'src/reaction/entities/reaction.entity';
 import { SubscriptionService } from 'src/subscription/subscription.service';
 import { UserService } from 'src/user/user.service';
 import { ExpService } from 'src/exp/exp.service';
 import { DayService } from 'src/day/day.service';
+import { DayPointEntity } from 'src/day-point/entities/day-point.entity';
 import { MemberEntity } from 'src/member/entities/member.entity';
 import { FileService } from 'src/file/file.service';
 import { CreateGoalDto } from './dto/create-goal.dto';
@@ -127,7 +125,6 @@ export class GoalService {
     goal.name = dto.name;
     goal.started = dto.started;
     goal.updated = dto.started;
-    goal.characteristic = new GoalCharacteristicEntity();
     goal.hashtags = dto.hashtags;
     goal.stages = dto.stages;
     goal.days = [day];
@@ -170,51 +167,40 @@ export class GoalService {
     return this.goalRepository.update({ id, owner }, { stage: dto.stage });
   }
 
-  async updateCharacteristic(id: number, dayId: number, characteristic: CharacteristicDto, userId: number) {
+  async updatePoints(id: number, dayId: number, operation: OperationDto, userId: number) {
     const user = await this.userService.findByPK(userId);
-    const uniq = this.getUniq(userId, dayId, characteristic);
-    const goal = await this.findByPK(id, { relations: ['characteristic'] });
-    const day = await this.dayService.findByPK(dayId, { relations: ['characteristic'] });
-    const canReact = this.checkCanChange(goal, userId);
+    const uniq = [userId, dayId].join(':');
+    const goal = await this.findByPK(id);
+    const day = await this.dayService.findByPK(dayId);
+    const canReact = goal.ownerId !== userId;
+    const insert = operation === 'insert';
+    const incrementBy = operation === 'insert' ? 1 : -1;
 
     if (!canReact) {
       throw new BadRequestException();
     }
 
-    if (!day.characteristic) {
-      day.characteristic = new DayCharacteristicEntity();
-      day.characteristic[characteristic] = 0;
-    }
-
-    day.characteristic[characteristic] += 1;
-    goal.characteristic[characteristic] += 1;
+    goal.points += incrementBy;
+    day.points += incrementBy;
+    day.pointsRated += incrementBy;
 
     return this.goalRepository.manager.transaction(async (transactionalManager) => {
+      const pointMethod = insert ? 'insert' : 'delete';
+
       if (goal.completed) {
         const criteria = { user: { id: goal.ownerId } };
         const userCharacteristic = await transactionalManager
           .getRepository(UserCharacteristicEntity)
           .findOneOrFail(criteria);
-        const field = `${characteristic}_all`;
-        const fieldValue = userCharacteristic[field] + 1;
 
         await transactionalManager.update(UserCharacteristicEntity, criteria, {
-          [field]: fieldValue,
-          [characteristic]: this.expService.getProgress(fieldValue),
+          points: userCharacteristic.points + incrementBy,
         });
       }
 
-      await transactionalManager.insert(ReactionEntity, { user, characteristic, goal, day, uniq });
+      await transactionalManager[pointMethod](DayPointEntity, { user, goal, day, uniq });
       await transactionalManager.save(day);
       await transactionalManager.save(goal);
     });
-  }
-
-  getUniq(userId: number, dayId: number, characteristic: CharacteristicDto) {
-    return [userId, dayId, characteristic].join(':');
-  }
-
-  checkCanChange(goal: GoalEntity, userId: number) {
-    return goal.ownerId !== userId;
   }
 }

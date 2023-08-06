@@ -11,14 +11,6 @@ export class SubscriptionEntity {
   })
   id: number;
 
-  @ManyToOne(() => UserEntity, { nullable: false })
-  @JoinColumn()
-  user: UserEntity;
-
-  @ManyToOne(() => UserEntity, { nullable: false })
-  @JoinColumn()
-  follower: UserEntity;
-
   @Index({ unique: true })
   @Column()
   @ApiProperty({
@@ -26,4 +18,12 @@ export class SubscriptionEntity {
     description: '{user.id}:{follower.id}',
   })
   uniq: string;
+
+  @ManyToOne(() => UserEntity, { nullable: false })
+  @JoinColumn()
+  user: UserEntity;
+
+  @ManyToOne(() => UserEntity, { nullable: false })
+  @JoinColumn()
+  follower: UserEntity;
 }

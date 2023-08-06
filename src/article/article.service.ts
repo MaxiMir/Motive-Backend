@@ -25,7 +25,7 @@ export class ArticleService {
     ];
   }
 
-  getSpreadLocale(locale: LocaleDto) {
+  toLocalize(locale: LocaleDto) {
     return (article: ArticleEntity) => {
       const { [locale]: content, ...data } = article;
 

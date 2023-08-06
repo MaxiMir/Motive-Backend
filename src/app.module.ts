@@ -11,15 +11,13 @@ import { GoalModule } from './goal/goal.module';
 import { UserCharacteristicModule } from './user-characteristic/user-characteristic.module';
 import { FileModule } from './file/file.module';
 import { DayModule } from './day/day.module';
+import { DayPointModule } from './day-point/day-point.module';
 import { HashtagModule } from './hashtag/hashtag.module';
-import { GoalCharacteristicModule } from './goal-characteristic/goal-characteristic.module';
 import { TaskModule } from './task/task.module';
 import { PageModule } from './page/page.module';
-import { DayCharacteristicModule } from './day-characteristic/day-characteristic.module';
 import { SubscriptionModule } from './subscription/subscription.module';
 import { FeedbackModule } from './feedback/feedback.module';
 import { TopicModule } from './topic/topic.module';
-import { ReactionModule } from './reaction/reaction.module';
 import { LikeModule } from './like/like.module';
 import { ReportModule } from './report/report.module';
 import { ConfirmationModule } from './confirmation/confirmation.module';
@@ -59,16 +57,14 @@ import { ArticleModule } from './article/article.module';
     UserCharacteristicModule,
     GoalModule,
     HashtagModule,
-    GoalCharacteristicModule,
     DayModule,
+    DayPointModule,
     TaskModule,
     FileModule,
     PageModule,
-    DayCharacteristicModule,
     SubscriptionModule,
     FeedbackModule,
     TopicModule,
-    ReactionModule,
     LikeModule,
     ReportModule,
     ConfirmationModule,

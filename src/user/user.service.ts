@@ -9,6 +9,7 @@ import { UpdateUserDto } from './dto/update-user.dto';
 import { CreateUserDto } from './dto/create-user.dto';
 import { FindQueryDto } from './dto/find-query.dto';
 import { UserEntity } from './entities/user.entity';
+import { ExpService } from '../exp/exp.service';
 
 @Injectable()
 export class UserService {
@@ -16,6 +17,7 @@ export class UserService {
     @InjectRepository(UserEntity)
     private readonly userRepository: Repository<UserEntity>,
     private readonly fileService: FileService,
+    private readonly expService: ExpService,
   ) {}
 
   getRepository() {
@@ -26,6 +28,7 @@ export class UserService {
     const user = this.userRepository.create(dto);
     user.nickname = v4();
     user.characteristic = new UserCharacteristicEntity();
+    user.characteristic.nextLevelPoints = this.expService.toLevel(2);
     user.registered = new Date().toISOString();
 
     return this.userRepository.save(user);

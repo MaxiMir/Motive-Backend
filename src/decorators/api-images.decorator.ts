@@ -1,5 +1,6 @@
 import { fileMimetypeFilter } from 'src/filters/file-mimetype-filter';
 import { ApiFiles } from './api-files.decorator';
 
-export const ApiImageFiles = (fieldName = 'images', maxCount = 10) =>
-  ApiFiles(fieldName, maxCount, { fileFilter: fileMimetypeFilter('image') });
+export function ApiImageFiles(fieldName = 'images', maxCount = 10) {
+  return ApiFiles(fieldName, maxCount, { fileFilter: fileMimetypeFilter('image') });
+}

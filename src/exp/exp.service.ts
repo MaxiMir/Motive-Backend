@@ -2,29 +2,30 @@ import { Injectable } from '@nestjs/common';
 
 @Injectable()
 export class ExpService {
-  static STEP = 14;
-  static EASY_COEFFICIENT = 1.4;
-  static MIDDLE_COEFFICIENT = 2;
-  static HARD_COEFFICIENT = 3;
-  static EXTRA_POINTS = 5;
+  static step = 15;
+  static easyCoefficient = 1;
+  static middleCoefficient = 3;
+  static hardCoefficient = 5;
+  static middleLevel = 30;
+  static hardLevel = 70;
 
   toPoints(level: number): number {
     if (level === 1) {
       return 0;
     }
 
-    const coefficient = this.getCoefficientByLevel(level);
+    const coefficient = this.toCoefficient(level);
 
-    return (level * ExpService.STEP) ** coefficient;
+    return (level * ExpService.step) ** coefficient;
   }
 
   toLevel(points: number): number {
-    const coefficient = this.getCoefficientByPoints(points);
+    const coefficient = this.toCoefficientByPoints(points);
 
-    return Math.trunc(points ** (1 / coefficient) / ExpService.STEP) || 1;
+    return Math.trunc(points ** (1 / coefficient) / ExpService.step) || 1;
   }
 
-  getProgress(points: number): number {
+  toProgress(points: number): number {
     const level = this.toLevel(points);
     const startPoints = this.toPoints(level);
     const nextPoints = this.toPoints(level + 1);
@@ -34,25 +35,25 @@ export class ExpService {
     return level + levelPointsCurrent / levelPointsAll;
   }
 
-  getCoefficientByLevel(level: number) {
+  toCoefficient(level: number): number {
     switch (true) {
-      case level > 70:
-        return ExpService.HARD_COEFFICIENT;
-      case level > 40:
-        return ExpService.MIDDLE_COEFFICIENT;
+      case level >= ExpService.hardLevel:
+        return ExpService.hardCoefficient;
+      case level >= ExpService.middleLevel:
+        return ExpService.middleCoefficient;
       default:
-        return ExpService.EASY_COEFFICIENT;
+        return ExpService.easyCoefficient;
     }
   }
 
-  getCoefficientByPoints(points: number) {
+  toCoefficientByPoints(points: number): number {
     switch (true) {
-      case points >= 982107784:
-        return ExpService.HARD_COEFFICIENT;
-      case points >= 329476:
-        return ExpService.MIDDLE_COEFFICIENT;
+      case points >= this.toPoints(ExpService.hardLevel):
+        return ExpService.hardCoefficient;
+      case points >= this.toPoints(ExpService.middleLevel):
+        return ExpService.middleCoefficient;
       default:
-        return ExpService.EASY_COEFFICIENT;
+        return ExpService.easyCoefficient;
     }
   }
 }

@@ -24,10 +24,6 @@ export class LikeService {
     return likes.map((l) => l.topic_id);
   }
 
-  getUniq(userId: number, topicId: number) {
-    return [userId, topicId].join(':');
-  }
-
   checkCanLike(userId: number, topic: TopicEntity, operation: OperationDto) {
     const isLikeSelf = topic.user.id === userId;
     const isDeleteSupport = topic.type === TopicTypeDto.Support && operation === 'delete';

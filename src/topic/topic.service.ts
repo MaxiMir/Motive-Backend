@@ -6,10 +6,9 @@ import { OperationDto } from 'src/common/operation.dto';
 import { UserService } from 'src/user/user.service';
 import { DayService } from 'src/day/day.service';
 import { LikeService } from 'src/like/like.service';
-import { ExpService } from 'src/exp/exp.service';
 import { LikeEntity } from 'src/like/entities/like.entity';
-import { GoalCharacteristicEntity } from 'src/goal-characteristic/entities/goal-characteristic.entity';
-import { DayCharacteristicEntity } from 'src/day-characteristic/entities/day-characteristic.entity';
+import { DayEntity } from 'src/day/entities/day.entity';
+import { GoalEntity } from 'src/goal/entities/goal.entity';
 import { CreateTopicDto } from './dto/create-topic.dto';
 import { FindQueryDto } from './dto/find-query.dto';
 import { TopicTypeDto } from './dto/topic-type.dto';
@@ -24,7 +23,6 @@ export class TopicService {
     private readonly userService: UserService,
     private readonly dayService: DayService,
     private readonly likeService: LikeService,
-    private readonly expService: ExpService,
   ) {}
 
   async save(dto: CreateTopicDto, userId: number) {
@@ -88,9 +86,10 @@ export class TopicService {
   async updateLikes(id: number, operation: OperationDto, userId: number) {
     const user = { id: userId };
     const topic = await this.findByPK(id, { relations: ['user', 'user.characteristic'] });
-    const uniq = this.likeService.getUniq(userId, topic.id);
+    const uniq = [userId, topic.id].join(':');
     const validateLike = this.likeService.checkCanLike(userId, topic, operation);
-    topic.likeCount += operation === 'insert' ? 1 : -1;
+    const incrementBy = operation === 'insert' ? 1 : -1;
+    topic.likeCount += incrementBy;
 
     if (!validateLike) {
       throw new BadRequestException();
@@ -101,19 +100,11 @@ export class TopicService {
 
       switch (topic.type) {
         case TopicTypeDto.Answer:
-          await transactionalManager.increment(DayCharacteristicEntity, { day: topic.dayId }, 'support', 1);
-          await transactionalManager.increment(
-            GoalCharacteristicEntity,
-            { goal: topic.goalId },
-            'support',
-            1,
-          );
+          await transactionalManager.increment(DayEntity, { id: topic.dayId }, 'points', incrementBy);
+          await transactionalManager.increment(GoalEntity, { id: topic.goalId }, 'points', incrementBy);
           break;
         case TopicTypeDto.Support:
-          topic.user.characteristic.support_all += 1;
-          topic.user.characteristic.support = this.expService.getProgress(
-            topic.user.characteristic.support_all,
-          );
+          topic.user.characteristic.points += 1;
           break;
       }
 

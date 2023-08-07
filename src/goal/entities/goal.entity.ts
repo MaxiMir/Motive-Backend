@@ -1,8 +1,7 @@
 import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
-import { Column, Entity, ManyToOne, OneToMany, OneToOne, PrimaryGeneratedColumn, RelationId } from 'typeorm';
+import { Column, Entity, ManyToOne, OneToMany, PrimaryGeneratedColumn, RelationId } from 'typeorm';
 import { UserEntity } from 'src/user/entities/user.entity';
 import { DayEntity } from 'src/day/entities/day.entity';
-import { GoalCharacteristicEntity } from 'src/goal-characteristic/entities/goal-characteristic.entity';
 
 @Entity('goals')
 export class GoalEntity {
@@ -53,11 +52,19 @@ export class GoalEntity {
   @Column({ default: 0 })
   stage: number;
 
-  @OneToOne(() => GoalCharacteristicEntity, (characteristic) => characteristic.goal, {
-    cascade: true,
+  @Column({ default: 0 })
+  @ApiProperty({
+    example: 1541,
+    description: 'goal points',
   })
-  @ApiPropertyOptional({ type: () => GoalCharacteristicEntity })
-  characteristic: GoalCharacteristicEntity;
+  points: number;
+
+  @ApiProperty({
+    example: 1,
+    description: 'members',
+  })
+  @Column({ default: 0 })
+  members: number;
 
   @OneToMany(() => DayEntity, (day) => day.goal, { cascade: true })
   @ApiPropertyOptional({ type: () => DayEntity, isArray: true })

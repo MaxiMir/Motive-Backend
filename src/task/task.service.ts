@@ -3,6 +3,7 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { FindOneOptions } from 'typeorm/find-options/FindOneOptions';
 import { MemberService } from 'src/member/member.service';
+import { GoalEntity } from 'src/goal/entities/goal.entity';
 import { TaskEntity } from './entities/task.entity';
 
 @Injectable()
@@ -18,13 +19,17 @@ export class TaskService {
   }
 
   async updateCompleted(id: number, userId: number) {
-    const task = await this.findByPK(id);
+    const task = await this.findByPK(id, { relations: ['day'] });
     const isMember = task.userId !== userId;
     const member = !isMember ? null : await this.memberService.findOne({ where: { user: userId } });
     const updateTask = !isMember || !task.completedByOthers;
     const updateMember = member && !member.completedTasks.includes(id);
 
     return this.taskRepository.manager.transaction(async (transactionalManager) => {
+      if (!isMember) {
+        await transactionalManager.increment(GoalEntity, { id: task.day.goalId }, 'points', 1);
+      }
+
       if (updateTask) {
         task.completed = !isMember ? true : task.completed;
         task.completedByOthers = true;

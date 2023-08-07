@@ -55,7 +55,7 @@ export class SubscriptionService {
 
   async update(dto: UpdateSubscriptionDto, operation: OperationDto, userId: number) {
     const follower = await this.userService.findByPK(userId, { relations: ['characteristic'] });
-    const uniq = this.getUniq(dto.userId, userId);
+    const uniq = [dto.userId, userId].join(':');
     const following = await this.userService.findByPK(dto.userId, { relations: ['characteristic'] });
     following.characteristic.followers += operation === 'insert' ? 1 : -1;
     follower.characteristic.following += operation === 'insert' ? 1 : -1;
@@ -65,9 +65,5 @@ export class SubscriptionService {
       await transactionalManager.save(following);
       await transactionalManager.save(follower);
     });
-  }
-
-  getUniq(userId: number, followerId: number) {
-    return [userId, followerId].join(':');
   }
 }

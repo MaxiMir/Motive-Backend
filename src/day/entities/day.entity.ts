@@ -2,10 +2,9 @@ import { ApiHideProperty, ApiProperty, ApiPropertyOptional } from '@nestjs/swagg
 import { Column, Entity, ManyToOne, OneToMany, OneToOne, PrimaryGeneratedColumn, RelationId } from 'typeorm';
 import { GoalEntity } from 'src/goal/entities/goal.entity';
 import { TaskEntity } from 'src/task/entities/task.entity';
-import { DayCharacteristicEntity } from 'src/day-characteristic/entities/day-characteristic.entity';
 import { FeedbackEntity } from 'src/feedback/entities/feedback.entity';
 import { TopicEntity } from 'src/topic/entities/topic.entity';
-import { ReactionEntity } from 'src/reaction/entities/reaction.entity';
+import { DayPointEntity } from 'src/day-point/entities/day-point.entity';
 
 @Entity('days')
 export class DayEntity {
@@ -29,17 +28,25 @@ export class DayEntity {
   @Column({ default: 0 })
   stage: number;
 
-  @OneToOne(() => DayCharacteristicEntity, (characteristic) => characteristic.day, {
-    cascade: true,
-  })
-  @ApiProperty({ type: () => DayCharacteristicEntity })
-  characteristic: DayCharacteristicEntity;
-
   @OneToMany(() => TaskEntity, (task) => task.day, {
     cascade: true,
   })
   @ApiProperty({ type: () => TaskEntity, isArray: true })
   tasks: TaskEntity[];
+
+  @Column({ default: 0 })
+  @ApiProperty({
+    example: 1541,
+    description: 'day points',
+  })
+  points: number;
+
+  @Column({ default: 0 })
+  @ApiProperty({
+    example: 1541,
+    description: 'rated by users',
+  })
+  pointsRated: number;
 
   @Column({ default: 0 })
   @ApiProperty({
@@ -67,12 +74,12 @@ export class DayEntity {
   })
   topicCount: number;
 
-  @OneToMany(() => ReactionEntity, (reaction) => reaction.day, {
+  @OneToMany(() => DayPointEntity, (point) => point.day, {
     cascade: true,
     onDelete: 'CASCADE',
   })
   @ApiHideProperty()
-  reactions: ReactionEntity[];
+  likes: DayPointEntity[];
 
   @ManyToOne(() => GoalEntity, (goal) => goal.days, {
     nullable: false,

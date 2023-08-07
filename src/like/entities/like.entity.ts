@@ -12,6 +12,14 @@ export class LikeEntity {
   })
   id: number;
 
+  @Index({ unique: true })
+  @Column()
+  @ApiProperty({
+    example: '1:53',
+    description: '{user.id}:{topic.id}',
+  })
+  uniq: string;
+
   @ManyToOne(() => TopicEntity, { nullable: false, onDelete: 'CASCADE' })
   @JoinColumn()
   topic: TopicEntity;
@@ -25,12 +33,4 @@ export class LikeEntity {
 
   @RelationId((like: LikeEntity) => like.user)
   userId: number;
-
-  @Index({ unique: true })
-  @Column()
-  @ApiProperty({
-    example: '1:53',
-    description: '{user.id}:{topic.id}',
-  })
-  uniq: string;
 }

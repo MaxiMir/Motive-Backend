@@ -10,10 +10,8 @@ import {
   UseGuards,
   ParseIntPipe,
 } from '@nestjs/common';
-import { ApiOperation, ApiParam, ApiQuery, ApiResponse, ApiTags } from '@nestjs/swagger';
+import { ApiOperation, ApiQuery, ApiResponse, ApiTags } from '@nestjs/swagger';
 import { OperationDto, OPERATIONS } from 'src/common/operation.dto';
-import { CharacteristicDto, CHARACTERISTICS } from 'src/common/characteristic.dto';
-import { ParseCharacteristicPipe } from 'src/pipes/parse-characteristic.pipe';
 import { ParseOperationPipe } from 'src/pipes/parse-operation-pipe.service';
 import { Identify } from 'src/decorators/identify.decorator';
 import { AuthGuard } from 'src/guards/auth.guard';
@@ -73,20 +71,18 @@ export class GoalController {
     return this.goalService.updateStage(id, dto, clientId);
   }
 
-  @Patch(':id/days/:dayId/characteristic/:characteristic')
+  @Patch(':id/days/:dayId/points')
   @UseGuards(AuthGuard)
   @HttpCode(204)
-  @ApiOperation({ summary: 'Update day characteristic' })
-  @ApiParam({ name: 'characteristic', enum: CHARACTERISTICS })
+  @ApiOperation({ summary: 'Update day points' })
   @ApiQuery({ name: 'operation', enum: OPERATIONS })
   @ApiResponse({ status: 204 })
   updateCharacteristic(
     @Param('id', ParseIntPipe) id: number,
     @Param('dayId', ParseIntPipe) dayId: number,
-    @Param('characteristic', ParseCharacteristicPipe) characteristic: CharacteristicDto,
     @Query('operation', ParseOperationPipe) operation: OperationDto,
     @Identify() clientId: number,
   ) {
-    return this.goalService.updateCharacteristic(id, dayId, characteristic, clientId);
+    return this.goalService.updatePoints(id, dayId, operation, clientId);
   }
 }

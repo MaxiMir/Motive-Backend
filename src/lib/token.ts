@@ -1,6 +1,6 @@
 import { decode } from 'next-auth/jwt';
 
-export const getToken = async (req: any) => {
+export async function getToken(req: any) {
   const { NEXTAUTH_SECRET, NEXTAUTH_COOKIE } = process.env;
 
   if (!NEXTAUTH_SECRET || !NEXTAUTH_COOKIE || !req.cookies[NEXTAUTH_COOKIE]) {
@@ -13,4 +13,4 @@ export const getToken = async (req: any) => {
   });
 
   return typeof token?.exp === 'number' && token?.exp > Date.now() / 1000 ? token : null;
-};
+}

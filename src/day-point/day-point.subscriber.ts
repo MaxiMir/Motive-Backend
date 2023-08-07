@@ -2,27 +2,23 @@ import { Injectable } from '@nestjs/common';
 import { Connection, EntitySubscriberInterface, EventSubscriber, InsertEvent } from 'typeorm';
 import { NotificationTypeDto } from 'src/common/notification-type.dto';
 import { NotificationEntity } from 'src/notification/entities/notification.entity';
-import { ReactionEntity } from './entities/reaction.entity';
+import { DayPointEntity } from './entities/day-point.entity';
 
 @Injectable()
 @EventSubscriber()
-export class ReactionSubscriber implements EntitySubscriberInterface<ReactionEntity> {
+export class DayPointSubscriber implements EntitySubscriberInterface<DayPointEntity> {
   constructor(private readonly connection: Connection) {
     connection.subscribers.push(this);
   }
 
   listenTo() {
-    return ReactionEntity;
+    return DayPointEntity;
   }
 
-  async afterInsert(event: InsertEvent<ReactionEntity>) {
-    const { characteristic, user, goal, day } = event.entity;
-
+  async afterInsert(event: InsertEvent<DayPointEntity>) {
+    const { user, goal, day } = event.entity;
     const insertData = {
-      type:
-        characteristic === 'motivation'
-          ? NotificationTypeDto.AddMotivation
-          : NotificationTypeDto.AddCreativity,
+      type: NotificationTypeDto.AddedPoints,
       details: { id: goal.id, name: goal.name, day: day.id },
       initiator: user,
       recipient: { id: goal.ownerId },

@@ -1,8 +1,7 @@
 export enum NotificationTypeDto {
   NewGoal = 'new-goal',
   NewFollower = 'new-follower',
-  AddMotivation = 'add-motivation',
-  AddCreativity = 'add-creativity',
+  AddedPoints = 'added-points',
   NewQuestion = 'new-question',
   NewSupport = 'new-support',
   NewAnswer = 'new-answer',

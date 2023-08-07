@@ -1,13 +1,13 @@
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
-import { ReactionEntity } from './entities/reaction.entity';
+import { DayPointEntity } from './entities/day-point.entity';
 
 @Injectable()
-export class ReactionService {
+export class DayPointService {
   constructor(
-    @InjectRepository(ReactionEntity)
-    private readonly reactionRepository: Repository<ReactionEntity>,
+    @InjectRepository(DayPointEntity)
+    private readonly reactionRepository: Repository<DayPointEntity>,
   ) {}
 
   getRepository() {

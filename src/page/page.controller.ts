@@ -11,7 +11,6 @@ import { UserDto } from './dto/user.dto';
 import { FollowingDto } from './dto/following.dto';
 import { SearchDto } from './dto/search.dto';
 import { SearchQueryDto } from './dto/search-query.dto';
-import { RatingDto } from './dto/rating.dto';
 import { BlogDto } from './dto/blog.dto';
 import { ArticleDto } from './dto/article.dto';
 import { ArticleQueryDto } from './dto/article-query.dto';
@@ -49,7 +48,7 @@ export class PageController {
 
   @Get('rating')
   @ApiOperation({ summary: 'Get rating page' })
-  @ApiResponse({ status: 200, type: RatingDto })
+  @ApiResponse({ status: 200, type: UserDto, isArray: true })
   getRating() {
     return this.pageService.findRating();
   }

@@ -1,5 +1,5 @@
 import { Injectable, PipeTransform, BadRequestException, ArgumentMetadata } from '@nestjs/common';
-import { LOCALES, LocaleDto } from 'src/locale/dto/locale.dto';
+import { LOCALES, LocaleDto } from 'src/common/locale.dto';
 
 @Injectable()
 export class ParseCharacteristicPipe implements PipeTransform {

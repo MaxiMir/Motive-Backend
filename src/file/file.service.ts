@@ -6,13 +6,13 @@ import * as sharp from 'sharp';
 
 @Injectable()
 export class FileService {
-  static ROOT_FOLDER = 'client';
-  static STATIC_FOLDER = 'static';
+  static rootFolder = 'client';
+  static staticFolder = 'static';
 
   async uploadImage(file: Express.Multer.File, folder: string, options: { width?: number; height?: number }) {
     try {
-      const src = join('/', FileService.STATIC_FOLDER, folder, `${uuid.v4()}.webp`);
-      const rootPath = join(FileService.ROOT_FOLDER, src);
+      const src = join('/', FileService.staticFolder, folder, `${uuid.v4()}.webp`);
+      const rootPath = join(FileService.rootFolder, src);
       const meta = await sharp(file.buffer, { unlimited: true })
         .rotate()
         .resize(options)
@@ -26,7 +26,7 @@ export class FileService {
   }
 
   removeImage(relativePath: string) {
-    const file = join(FileService.ROOT_FOLDER, relativePath);
+    const file = join(FileService.rootFolder, relativePath);
 
     if (!existsSync(file)) {
       return;

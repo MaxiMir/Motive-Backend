@@ -4,13 +4,13 @@ import { Repository } from 'typeorm';
 import { OperationDto } from 'src/common/operation.dto';
 import { TopicEntity } from 'src/topic/entities/topic.entity';
 import { TopicTypeDto } from 'src/topic/dto/topic-type.dto';
-import { LikeEntity } from './entities/like.entity';
+import { TopicLikeEntity } from './entities/topic-like.entity';
 
 @Injectable()
-export class LikeService {
+export class TopicLikeService {
   constructor(
-    @InjectRepository(LikeEntity)
-    private readonly topicRepository: Repository<LikeEntity>,
+    @InjectRepository(TopicLikeEntity)
+    private readonly topicRepository: Repository<TopicLikeEntity>,
   ) {}
 
   async findLikedTopics(userId: number, topicIds: number[]) {

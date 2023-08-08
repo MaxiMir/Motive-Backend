@@ -31,6 +31,9 @@ export class UserCharacteristicEntity {
   })
   progress: number;
 
+  // calculated in afterLoad
+  public level: number;
+
   @Column({ type: 'float', scale: 2, default: 0 })
   @ApiProperty({
     example: 3,

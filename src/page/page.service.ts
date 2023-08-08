@@ -13,7 +13,7 @@ import { HashtagService } from 'src/hashtag/hashtag.service';
 import { MemberService } from 'src/member/member.service';
 import { ArticleService } from 'src/article/article.service';
 import { SearchQueryDto } from './dto/search-query.dto';
-import { LocaleDto } from 'src/locale/dto/locale.dto';
+import { LocaleDto } from 'src/common/locale.dto';
 
 type PointsMap = Record<number, number[]>;
 

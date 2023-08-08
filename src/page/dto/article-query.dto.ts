@@ -1,5 +1,5 @@
 import { IsEnum, IsOptional, IsString } from 'class-validator';
-import { LocaleDto, LOCALES } from 'src/locale/dto/locale.dto';
+import { LocaleDto, LOCALES } from 'src/common/locale.dto';
 
 export class ArticleQueryDto {
   @IsOptional()

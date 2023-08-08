@@ -1,7 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
-import { LocaleDto } from 'src/locale/dto/locale.dto';
+import { LocaleDto } from 'src/common/locale.dto';
 import { ArticleEntity } from './entities/article.entity';
 
 @Injectable()

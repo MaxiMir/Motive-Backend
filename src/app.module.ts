@@ -18,7 +18,7 @@ import { PageModule } from './page/page.module';
 import { SubscriptionModule } from './subscription/subscription.module';
 import { FeedbackModule } from './feedback/feedback.module';
 import { TopicModule } from './topic/topic.module';
-import { LikeModule } from './like/like.module';
+import { TopicLikeModule } from './topic-like/topic-like.module';
 import { ReportModule } from './report/report.module';
 import { ConfirmationModule } from './confirmation/confirmation.module';
 import { MemberModule } from './member/member.module';
@@ -32,9 +32,7 @@ import { ArticleModule } from './article/article.module';
     ScheduleModule.forRoot(),
     ConfigModule.forRoot({ isGlobal: true }),
     MulterModule.register(),
-    ServeStaticModule.forRoot({
-      exclude: ['/api*'],
-    }),
+    ServeStaticModule.forRoot({ exclude: ['/api*'] }),
     TypeOrmModule.forRoot({
       type: 'postgres',
       host: process.env.POSTGRES_HOST,
@@ -42,7 +40,7 @@ import { ArticleModule } from './article/article.module';
       username: process.env.POSTGRES_USER,
       password: process.env.POSTGRES_PASSWORD,
       database: process.env.POSTGRES_DB,
-      entities: [__dirname + '/**/*.entity{.ts,.js}'],
+      entities: [join(__dirname, '/**/*.entity{.ts,.js}')],
       migrations: [join(__dirname, '..', 'migrations/**/*.ts')],
       synchronize: true,
       dropSchema: false,
@@ -65,7 +63,7 @@ import { ArticleModule } from './article/article.module';
     SubscriptionModule,
     FeedbackModule,
     TopicModule,
-    LikeModule,
+    TopicLikeModule,
     ReportModule,
     ConfirmationModule,
     MemberModule,

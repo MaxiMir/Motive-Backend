@@ -4,7 +4,7 @@ import { PaginationDto } from 'src/common/pagination.dto';
 import { ApiPagination } from 'src/decorators/api-pagination.decorator';
 import { Identify } from 'src/decorators/identify.decorator';
 import { ParseGoalDateMapPipe } from 'src/pipes/parse-goal-date-map.pipe';
-import { LocaleDto, LOCALES } from 'src/locale/dto/locale.dto';
+import { LocaleDto, LOCALES } from 'src/common/locale.dto';
 import { PageService } from './page.service';
 import { GoalDayDto } from 'src/goal/dto/goal-day.dto';
 import { UserDto } from './dto/user.dto';

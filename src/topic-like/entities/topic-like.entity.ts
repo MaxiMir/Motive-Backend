@@ -3,8 +3,8 @@ import { Column, Entity, Index, JoinColumn, ManyToOne, PrimaryGeneratedColumn, R
 import { UserEntity } from 'src/user/entities/user.entity';
 import { TopicEntity } from 'src/topic/entities/topic.entity';
 
-@Entity('likes')
-export class LikeEntity {
+@Entity('topic-likes')
+export class TopicLikeEntity {
   @PrimaryGeneratedColumn()
   @ApiProperty({
     example: 1,
@@ -24,13 +24,13 @@ export class LikeEntity {
   @JoinColumn()
   topic: TopicEntity;
 
-  @RelationId((like: LikeEntity) => like.topic)
+  @RelationId((like: TopicLikeEntity) => like.topic)
   topicId: number;
 
   @ManyToOne(() => UserEntity, { nullable: false })
   @JoinColumn()
   user: UserEntity;
 
-  @RelationId((like: LikeEntity) => like.user)
+  @RelationId((like: TopicLikeEntity) => like.user)
   userId: number;
 }

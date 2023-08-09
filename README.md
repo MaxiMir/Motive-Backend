@@ -6,11 +6,11 @@ yarn start:dev
 
 ### ARTIFACTORY:
 ```shell
-docker build -t mmirrev/backend:1.0.56 .
+docker build -t mmirrev/backend:1.0.57 .
 
-docker tag <IMAGE_ID> mmirrev/backend:1.0.56
-docker push mmirrev/backend:1.0.56
-docker pull mmirrev/backend:1.0.56
+docker tag <IMAGE_ID> mmirrev/backend:1.0.57
+docker push mmirrev/backend:1.0.57
+docker pull mmirrev/backend:1.0.57
 ```
 
 ### INSTALL:

@@ -23,6 +23,10 @@ export class MemberService {
     private readonly dayService: DayService,
   ) {}
 
+  getRepository() {
+    return this.memberRepository;
+  }
+
   @Cron('00 00 01 * * *')
   async handleAbandoned() {
     const members = await this.memberRepository.find({

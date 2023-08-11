@@ -17,7 +17,7 @@ export class TopicLikeService {
     const likes = await this.topicRepository
       .createQueryBuilder('like')
       .select(['like.topic.id as topic_id'])
-      .where('like.topic.id IN (:...topicIds)', { topicIds })
+      .where('like.topic.id in (:...topicIds)', { topicIds })
       .andWhere('like.user.id = :userId', { userId })
       .getRawMany();
 

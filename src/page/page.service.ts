@@ -31,9 +31,6 @@ export class PageService {
   ) {}
 
   async findUser(nickname: string, clientId?: number, queryDayMap: GoalDayDto[] = []) {
-    const client = !clientId
-      ? null
-      : await this.userService.findByPK(clientId, { relations: ['membership'] });
     const { membership, ...user } = await this.userService
       .getRepository()
       .createQueryBuilder('user')
@@ -65,17 +62,17 @@ export class PageService {
       .where('user.nickname = :nickname', { nickname })
       .getOneOrFail();
     const following = !clientId ? false : await this.subscriptionService.checkOnFollowing(user.id, clientId);
-    const memberGoals = membership.map((m) => m.goal);
+    const memberGoals = await this.findClientMemberGoals(membership);
     const pointsMap = await this.findPointsMap([...user.goals, ...memberGoals], clientId);
     const ownerGoalsWithDay = await this.findDays(user.goals, pointsMap, queryDayMap);
     const memberGoalsWithDay = await this.findDays(memberGoals, pointsMap, queryDayMap, membership);
-    const goals = [...ownerGoalsWithDay, ...memberGoalsWithDay];
+    const goals = await this.findLastMembers([...ownerGoalsWithDay, ...memberGoalsWithDay]);
 
     return {
       ...user,
       following,
       goals,
-      clientMembership: client?.membership || [],
+      clientMembership: [], // TODO
     };
   }
 
@@ -181,9 +178,9 @@ export class PageService {
             });
         const calendar = await this.goalService.findCalendar(goal.id);
         const day = !member ? foundDay : this.memberService.transformToMemberDay(foundDay, member);
-        const clientPoints = pointsMap[goal.id] || [];
+        const viewerPoints = pointsMap[goal.id] || [];
 
-        return { ...goal, day, calendar, clientPoints, member };
+        return { ...goal, day, calendar, viewerPoints, member };
       }),
     );
   }
@@ -206,7 +203,7 @@ export class PageService {
     }, queryDayMap);
   }
 
-  private async findPointsMap(goals, userId?: number): Promise<PointsMap> {
+  private async findPointsMap(goals: GoalEntity[], userId?: number): Promise<PointsMap> {
     const ids = !userId ? [] : goals.filter((g) => g.owner.id !== userId).map((g) => g.id);
 
     if (!ids.length) {
@@ -217,7 +214,7 @@ export class PageService {
       .getRepository()
       .createQueryBuilder('day-point')
       .select(['day-point.goal.id as goal_id', 'day-point.day.id as day_id'])
-      .where('day-point.goal.id IN (:...ids)', { ids })
+      .where('day-point.goal.id in (:...ids)', { ids })
       .andWhere('day-point.user.id = :userId', { userId })
       .getRawMany();
 
@@ -225,5 +222,46 @@ export class PageService {
       (acc, { goal_id, day_id }) => ({ ...acc, [goal_id]: [...(acc[goal_id] || []), day_id] }),
       {},
     );
+  }
+
+  private async findClientMemberGoals(membership: MemberEntity[], clientId?: number) {
+    const client = !clientId
+      ? null
+      : await this.userService.findByPK(clientId, { relations: ['membership'] });
+
+    return membership.map(({ goal }) => ({
+      ...goal,
+      member: client?.membership?.find((m) => m.goalId === goal.id),
+    }));
+  }
+
+  private async findLastMembers(goals: GoalEntity[]) {
+    const maxCount = 3;
+    const ids = goals.map((g) => g.id);
+
+    if (!ids.length) {
+      return goals;
+    }
+
+    const members = await this.memberService
+      .getRepository()
+      .createQueryBuilder('members')
+      .leftJoinAndSelect('members.user', 'user')
+      .select([
+        'members.goal.id as goal',
+        'user.id as id',
+        'user.name as name',
+        'user.nickname as nickname',
+        'user.avatar as avatar',
+      ])
+      .where('members.goal.id in (:...ids)', { ids })
+      .limit(ids.length * maxCount)
+      .orderBy('members.id', 'DESC')
+      .getRawMany();
+
+    return goals.map((goal) => ({
+      ...goal,
+      lastMembers: members.filter((m) => m.goal === goal.id).slice(0, maxCount),
+    }));
   }
 }

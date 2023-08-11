@@ -4,6 +4,7 @@
 client/static/avatars
 client/static/confirmation
 client/static/feedback
+client/static/goals
 
 # Logs
 logs

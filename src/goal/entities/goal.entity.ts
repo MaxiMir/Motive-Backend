@@ -2,6 +2,7 @@ import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
 import { Column, Entity, ManyToOne, OneToMany, PrimaryGeneratedColumn, RelationId } from 'typeorm';
 import { UserEntity } from 'src/user/entities/user.entity';
 import { DayEntity } from 'src/day/entities/day.entity';
+import { SphereType } from 'src/common/sphere-type.dto';
 
 @Entity('goals')
 export class GoalEntity {
@@ -17,6 +18,20 @@ export class GoalEntity {
     example: 'Learn English',
   })
   name: string;
+
+  @Column({
+    type: 'enum',
+    enum: SphereType,
+    default: 'development',
+  })
+  sphere: SphereType;
+
+  @Column({ nullable: true })
+  @ApiProperty({
+    example: '/goals/1c1cabbd-57fe-4733-adb3-d9c51bb6d125.webp',
+    description: 'the path to the goal cover',
+  })
+  cover: string;
 
   @Column({
     type: 'timestamp with time zone',

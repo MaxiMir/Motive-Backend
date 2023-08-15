@@ -87,7 +87,7 @@ export class TopicService {
     const user = { id: userId };
     const topic = await this.findByPK(id, { relations: ['user', 'user.characteristic'] });
     const uniq = [userId, topic.id].join(':');
-    const validateLike = this.topicLikeService.checkCanLike(userId, topic, operation);
+    const validateLike = topic.user.id !== userId;
     const incrementBy = operation === 'insert' ? 1 : -1;
     topic.likeCount += incrementBy;
 

@@ -31,6 +31,7 @@ async function bootstrap() {
     .setTitle('Be Better Backend')
     .setDescription('The app api')
     .setVersion('1.0.0')
+    .addBearerAuth()
     .build();
   const document = SwaggerModule.createDocument(app, config);
   SwaggerModule.setup('swagger', app, document);

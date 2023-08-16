@@ -8,6 +8,8 @@ import {
   Post,
   Patch,
   UseGuards,
+  Delete,
+  UploadedFile,
   ParseIntPipe,
 } from '@nestjs/common';
 import { ApiOperation, ApiQuery, ApiResponse, ApiTags } from '@nestjs/swagger';
@@ -21,6 +23,9 @@ import { CalendarDto } from './dto/calendar.dto';
 import { UpdateStageDto } from './dto/update-stage.dto';
 import { GoalEntity } from './entities/goal.entity';
 import { GoalService } from './goal.service';
+import { ApiImageFile } from '../decorators/api-image.decorator';
+import { UserEntity } from '../user/entities/user.entity';
+import { ParseFile } from '../pipes/parse-file.pipe';
 
 @Controller('goals')
 @ApiTags('Goals')
@@ -84,5 +89,26 @@ export class GoalController {
     @Identify() clientId: number,
   ) {
     return this.goalService.updatePoints(id, dayId, operation, clientId);
+  }
+
+  @Patch(':id/cover')
+  @UseGuards(AuthGuard)
+  @ApiImageFile('image')
+  @ApiOperation({ summary: 'Update goal cover' })
+  @ApiResponse({ status: 200, type: UserEntity })
+  updateCover(
+    @Param('id', ParseIntPipe) id: number,
+    @UploadedFile(ParseFile) file: Express.Multer.File,
+    @Identify() clientId: number,
+  ) {
+    return this.goalService.updateCover(file, id, clientId);
+  }
+
+  @Delete(':id/cover')
+  @UseGuards(AuthGuard)
+  @ApiOperation({ summary: 'Delete goal cover' })
+  @ApiResponse({ status: 204 })
+  deleteCover(@Param('id', ParseIntPipe) id: number, @Identify() clientId: number) {
+    return this.goalService.deleteCover(id, clientId);
   }
 }

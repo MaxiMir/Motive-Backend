@@ -26,12 +26,12 @@ export class GoalEntity {
   })
   sphere: SphereType;
 
-  @Column({ nullable: true })
+  @Column({ type: 'text', nullable: true })
   @ApiProperty({
     example: '/goals/1c1cabbd-57fe-4733-adb3-d9c51bb6d125.webp',
     description: 'the path to the goal cover',
   })
-  cover: string;
+  cover: string | null;
 
   @Column({
     type: 'timestamp with time zone',

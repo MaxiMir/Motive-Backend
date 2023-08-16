@@ -60,12 +60,11 @@ export class UserService {
 
   async deleteAvatar(userId: number) {
     const user = await this.findByPK(userId);
-    const deletedAvatar = user.avatar;
-    user.avatar = null;
 
-    if (deletedAvatar) {
-      this.fileService.removeImage(deletedAvatar);
-    }
+    if (!user.avatar) return;
+
+    this.fileService.removeImage(user.avatar);
+    user.avatar = null;
 
     return this.userRepository.save(user);
   }

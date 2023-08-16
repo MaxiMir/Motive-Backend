@@ -54,7 +54,7 @@ export class UserController {
 
   @Patch(':id/avatar')
   @UseGuards(AuthGuard)
-  @ApiImageFile('avatar')
+  @ApiImageFile('image')
   @ApiOperation({ summary: 'Update user avatar' })
   @ApiResponse({ status: 200, type: UserEntity })
   updateAvatar(

@@ -203,4 +203,28 @@ export class GoalService {
       await transactionalManager.save(goal);
     });
   }
+
+  async updateCover(file: Express.Multer.File, id: number, owner: number) {
+    const goal = await this.goalRepository.findOneOrFail({ where: { id, owner } });
+
+    if (goal.cover) {
+      this.fileService.removeImage(goal.cover);
+    }
+
+    const newAvatar = await this.fileService.uploadImage(file, 'avatars', { width: 900 });
+    goal.cover = newAvatar.src;
+
+    return this.goalRepository.save(goal);
+  }
+
+  async deleteCover(id: number, owner: number) {
+    const goal = await this.goalRepository.findOneOrFail({ where: { id, owner } });
+
+    if (!goal.cover) return;
+
+    this.fileService.removeImage(goal.cover);
+    goal.cover = null;
+
+    return this.goalRepository.save(goal);
+  }
 }

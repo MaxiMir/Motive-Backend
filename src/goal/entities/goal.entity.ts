@@ -2,7 +2,7 @@ import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
 import { Column, Entity, ManyToOne, OneToMany, PrimaryGeneratedColumn, RelationId } from 'typeorm';
 import { UserEntity } from 'src/user/entities/user.entity';
 import { DayEntity } from 'src/day/entities/day.entity';
-import { SphereType } from 'src/common/sphere-type.dto';
+import { SphereTypeDto } from 'src/common/sphere-type.dto';
 
 @Entity('goals')
 export class GoalEntity {
@@ -21,10 +21,10 @@ export class GoalEntity {
 
   @Column({
     type: 'enum',
-    enum: SphereType,
+    enum: SphereTypeDto,
     default: 'development',
   })
-  sphere: SphereType;
+  sphere: SphereTypeDto;
 
   @Column({ type: 'text', nullable: true })
   @ApiProperty({

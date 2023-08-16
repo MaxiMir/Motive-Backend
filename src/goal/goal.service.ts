@@ -123,6 +123,7 @@ export class GoalService {
     const goal = new GoalEntity();
     const day = this.dayService.create({ date: dto.started, tasks: dto.tasks }, userId);
     goal.name = dto.name;
+    goal.sphere = dto.sphere;
     goal.started = dto.started;
     goal.updated = dto.started;
     goal.hashtags = dto.hashtags;

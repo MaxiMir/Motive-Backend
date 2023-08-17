@@ -49,10 +49,11 @@ export class GoalService {
       new Map(),
     );
     const multipleOwnersCount = Object.entries(Object.fromEntries(ownersCount)).filter(([, v]) => v > 1);
-    const photos = goals
-      .map((g) => g.days.map((d) => d.feedback?.photos?.map((p) => p.src)))
-      .flat(3)
-      .filter(Boolean);
+    const images = goals
+      .flatMap((g) =>
+        g.days.reduce((acc, d) => [...acc, ...(d.feedback?.photos?.map((p) => p.src) || [])], [g.cover]),
+      )
+      .filter((v): v is string => Boolean(v));
 
     return this.goalRepository.manager.transaction(async (transactionalManager) => {
       await transactionalManager.increment(UserCharacteristicEntity, { user: In(owners) }, 'abandoned', 1);
@@ -68,7 +69,7 @@ export class GoalService {
       );
       await transactionalManager.delete(MemberEntity, { goal: In(owners) });
       await transactionalManager.remove(goals);
-      photos.forEach(this.fileService.removeImage);
+      images.forEach(this.fileService.removeImage);
     });
   }
 

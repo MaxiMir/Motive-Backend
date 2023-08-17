@@ -175,7 +175,6 @@ export class GoalService {
     const goal = await this.findByPK(id);
     const day = await this.dayService.findByPK(dayId);
     const canReact = goal.ownerId !== userId;
-    const insert = operation === 'insert';
     const incrementBy = operation === 'insert' ? 1 : -1;
 
     if (!canReact) {
@@ -187,8 +186,6 @@ export class GoalService {
     day.pointsRated += incrementBy;
 
     return this.goalRepository.manager.transaction(async (transactionalManager) => {
-      const pointMethod = insert ? 'insert' : 'delete';
-
       if (goal.completed) {
         const criteria = { user: { id: goal.ownerId } };
         const userCharacteristic = await transactionalManager
@@ -200,7 +197,7 @@ export class GoalService {
         });
       }
 
-      await transactionalManager[pointMethod](DayPointEntity, { user, goal, day, uniq });
+      await transactionalManager[operation](DayPointEntity, { user, goal, day, uniq });
       await transactionalManager.save(day);
       await transactionalManager.save(goal);
     });

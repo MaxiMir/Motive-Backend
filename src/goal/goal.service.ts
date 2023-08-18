@@ -135,6 +135,22 @@ export class GoalService {
     return this.goalRepository.save(goal);
   }
 
+  async delete(id: number, owner: number) {
+    const goal = await this.goalRepository.findOneOrFail({
+      where: { id, owner, updated: Raw((alias) => `${alias} = CURRENT_DATE`) },
+      relations: ['days', 'days.feedback'],
+    });
+    const images = goal.days
+      .flatMap<string | null>((d) => d.feedback?.photos?.map((p) => p.src))
+      .concat(goal.cover)
+      .filter(Boolean);
+
+    return this.goalRepository.manager.transaction(async (transactionalManager) => {
+      await transactionalManager.remove(goal);
+      images.forEach(this.fileService.removeImage);
+    });
+  }
+
   findByPK(id: number, options?: FindOneOptions<GoalEntity>) {
     return this.goalRepository.findOneOrFail({ id }, options);
   }
@@ -205,13 +221,13 @@ export class GoalService {
 
   async updateCover(file: Express.Multer.File, id: number, owner: number) {
     const goal = await this.goalRepository.findOneOrFail({ where: { id, owner } });
+    const newCover = await this.fileService.uploadImage(file, 'avatars', { width: 900 });
+    const prevCover = goal.cover;
+    goal.cover = newCover.src;
 
-    if (goal.cover) {
-      this.fileService.removeImage(goal.cover);
+    if (prevCover) {
+      this.fileService.removeImage(prevCover);
     }
-
-    const newAvatar = await this.fileService.uploadImage(file, 'avatars', { width: 900 });
-    goal.cover = newAvatar.src;
 
     return this.goalRepository.save(goal);
   }

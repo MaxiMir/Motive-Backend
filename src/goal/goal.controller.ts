@@ -40,6 +40,16 @@ export class GoalController {
     return this.goalService.save(dto, clientId);
   }
 
+  @Delete(':id')
+  @UseGuards(AuthGuard)
+  @ApiResponse({ status: 201 })
+  @HttpCode(204)
+  @ApiOperation({ summary: 'Delete goal' })
+  @ApiResponse({ status: 204 })
+  delete(@Param('id', ParseIntPipe) id: number, @Identify() clientId: number) {
+    return this.goalService.delete(id, clientId);
+  }
+
   @Get(':id')
   @ApiOperation({ summary: 'Get goal' })
   @ApiResponse({ status: 200, type: GoalEntity })

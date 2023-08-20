@@ -10,6 +10,7 @@ import { CreateUserDto } from './dto/create-user.dto';
 import { FindQueryDto } from './dto/find-query.dto';
 import { UserEntity } from './entities/user.entity';
 import { ExpService } from '../exp/exp.service';
+import { UpdateCharacteristicDto } from './dto/update-characteristic.dto';
 
 @Injectable()
 export class UserService {
@@ -65,6 +66,13 @@ export class UserService {
 
     this.fileService.removeImage(user.avatar);
     user.avatar = null;
+
+    return this.userRepository.save(user);
+  }
+
+  async updateCharacteristic(dto: UpdateCharacteristicDto, userId: number) {
+    const user = await this.findByPK(userId, { relations: ['characteristic'] });
+    user.characteristic[dto.sphere] = dto.value;
 
     return this.userRepository.save(user);
   }

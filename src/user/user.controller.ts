@@ -10,6 +10,7 @@ import {
   Query,
   Put,
   Delete,
+  HttpCode,
   ParseIntPipe,
 } from '@nestjs/common';
 import { ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
@@ -21,6 +22,7 @@ import { ParseFile } from 'src/pipes/parse-file.pipe';
 import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
 import { FindQueryDto } from './dto/find-query.dto';
+import { UpdateCharacteristicDto } from './dto/update-characteristic.dto';
 import { UserEntity } from './entities/user.entity';
 import { UserService } from './user.service';
 
@@ -63,6 +65,19 @@ export class UserController {
     @Identify() clientId: number,
   ) {
     return this.userService.updateAvatar(file, clientId);
+  }
+
+  @Patch(':id/characteristic')
+  @UseGuards(AuthGuard)
+  @HttpCode(204)
+  @ApiOperation({ summary: 'update characteristic' })
+  @ApiResponse({ status: 204 })
+  updateStage(
+    @Param('id', ParseIntPipe) id: number,
+    @Body() dto: UpdateCharacteristicDto,
+    @Identify() clientId: number,
+  ) {
+    return this.userService.updateCharacteristic(dto, clientId);
   }
 
   @Delete(':id/avatar')

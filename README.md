@@ -8,7 +8,7 @@ yarn start:dev
 ```shell
 docker build -t mmirrev/backend:1.0.57 .
 
-docker tag <IMAGE_ID> mmirrev/backend:1.0.57
+docker tag $ mmirrev/backend:1.0.57
 docker push mmirrev/backend:1.0.57
 docker pull mmirrev/backend:1.0.57
 ```

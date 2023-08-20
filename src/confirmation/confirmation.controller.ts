@@ -35,12 +35,12 @@ export class ConfirmationController {
   })
   @ApiImageFiles('photos')
   @ApiResponse({ status: 201, type: ConfirmationEntity })
-  save(
+  create(
     @Body() dto: CreateConfirmationDto,
     @UploadedFiles() files: Express.Multer.File[],
     @Identify() clientId: number,
   ) {
-    return this.confirmationService.save(dto, files, clientId);
+    return this.confirmationService.create(dto, files, clientId);
   }
 
   @Get()

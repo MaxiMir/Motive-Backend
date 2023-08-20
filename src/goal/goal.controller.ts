@@ -36,8 +36,8 @@ export class GoalController {
   @UseGuards(AuthGuard)
   @ApiOperation({ summary: 'Create goal' })
   @ApiResponse({ status: 201, type: GoalEntity })
-  save(@Body() dto: CreateGoalDto, @Identify() clientId: number) {
-    return this.goalService.save(dto, clientId);
+  create(@Body() dto: CreateGoalDto, @Identify() clientId: number) {
+    return this.goalService.create(dto, clientId);
   }
 
   @Delete(':id')

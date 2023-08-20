@@ -32,7 +32,7 @@ export class FeedbackController {
   @ApiImageFiles('photos')
   @ApiResponse({ status: 201, type: FeedbackEntity })
   @ApiOperation({ summary: 'Create feedback' })
-  createFeedback(@Body() dto: CreateFeedbackDto, @UploadedFiles() files: Express.Multer.File[]) {
-    return this.feedbackService.save(dto, files);
+  create(@Body() dto: CreateFeedbackDto, @UploadedFiles() files: Express.Multer.File[]) {
+    return this.feedbackService.create(dto, files);
   }
 }

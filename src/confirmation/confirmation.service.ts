@@ -20,7 +20,7 @@ export class ConfirmationService {
     private readonly fileService: FileService,
   ) {}
 
-  async save(dto: CreateConfirmationDto, photos: Express.Multer.File[], userId: number) {
+  async create(dto: CreateConfirmationDto, photos: Express.Multer.File[], userId: number) {
     const user = await this.userService.findByPK(userId, { relations: ['characteristic'] });
     const goal = await this.goalService.findByPK(dto.goalId, { relations: ['owner'] });
     const member =

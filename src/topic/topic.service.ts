@@ -25,7 +25,7 @@ export class TopicService {
     private readonly topicLikeService: TopicLikeService,
   ) {}
 
-  async save(dto: CreateTopicDto, userId: number) {
+  async create(dto: CreateTopicDto, userId: number) {
     const user = await this.userService.findByPK(userId);
     const day = await this.dayService.findByPK(dto.dayId, { relations: ['goal', 'goal.owner'] });
     const topic = new TopicEntity();

@@ -119,7 +119,7 @@ export class GoalService {
     });
   }
 
-  async save(dto: CreateGoalDto, userId: number) {
+  async create(dto: CreateGoalDto, userId: number) {
     const owner = await this.userService.findByPK(userId);
     const goal = new GoalEntity();
     const day = this.dayService.create({ date: dto.started, tasks: dto.tasks }, userId);

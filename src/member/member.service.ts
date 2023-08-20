@@ -62,7 +62,7 @@ export class MemberService {
     return this.memberRepository.findOneOrFail(options);
   }
 
-  async save(dto: CreateMemberDto, userId: number) {
+  async create(dto: CreateMemberDto, userId: number) {
     const member = new MemberEntity();
     member.uniq = [userId, dto.goalId].join(':');
     member.user = await this.userService.findByPK(userId);

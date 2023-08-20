@@ -31,8 +31,8 @@ export class TopicController {
   @Post()
   @ApiOperation({ summary: 'Create topic' })
   @ApiResponse({ status: 200, type: TopicEntity })
-  save(@Body() dto: CreateTopicDto, @Identify() clientId: number) {
-    return this.topicService.save(dto, clientId);
+  create(@Body() dto: CreateTopicDto, @Identify() clientId: number) {
+    return this.topicService.create(dto, clientId);
   }
 
   @Get()

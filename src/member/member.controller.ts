@@ -28,8 +28,8 @@ export class MemberController {
   @UseGuards(AuthGuard)
   @ApiOperation({ summary: 'Create member' })
   @ApiResponse({ status: 201, type: MemberEntity })
-  save(@Body() dto: CreateMemberDto, @Identify() clientId: number) {
-    return this.memberService.save(dto, clientId);
+  create(@Body() dto: CreateMemberDto, @Identify() clientId: number) {
+    return this.memberService.create(dto, clientId);
   }
 
   @Patch(':id')

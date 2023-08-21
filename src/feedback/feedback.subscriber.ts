@@ -1,6 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { EventSubscriber, EntitySubscriberInterface, InsertEvent, Connection } from 'typeorm';
-import { NotificationTypeDto } from 'src/common/notification-type.dto';
+import { NotificationTypeDto } from 'src/notification/dto/notification.type.dto';
 import { SubscriptionService } from 'src/subscription/subscription.service';
 import { NotificationEntity } from 'src/notification/entities/notification.entity';
 import { FeedbackEntity } from './entities/feedback.entity';

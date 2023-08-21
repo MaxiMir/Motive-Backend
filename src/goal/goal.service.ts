@@ -3,7 +3,7 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { Cron } from '@nestjs/schedule';
 import { In, Raw, Repository } from 'typeorm';
 import { FindOneOptions } from 'typeorm/find-options/FindOneOptions';
-import { NotificationTypeDto } from 'src/common/notification-type.dto';
+import { NotificationTypeDto } from 'src/notification/dto/notification.type.dto';
 import { OperationDto } from 'src/common/operation.dto';
 import { CreateDayDto } from 'src/day/dto/create-day.dto';
 import { NotificationEntity } from 'src/notification/entities/notification.entity';

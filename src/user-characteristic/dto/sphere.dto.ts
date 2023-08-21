@@ -1,4 +1,4 @@
-export enum SphereTypeDto {
+export enum SphereDto {
   Family = 'family',
   Friends = 'friends',
   Health = 'health',

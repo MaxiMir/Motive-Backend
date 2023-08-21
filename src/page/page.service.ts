@@ -72,7 +72,6 @@ export class PageService {
       ...user,
       following,
       goals,
-      clientMembership: [], // TODO
     };
   }
 

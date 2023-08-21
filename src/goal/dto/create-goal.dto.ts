@@ -2,7 +2,7 @@ import { ApiProperty } from '@nestjs/swagger';
 import { ArrayMaxSize, ArrayMinSize, IsArray, IsDateString, IsEnum, IsString, Length } from 'class-validator';
 import { Transform, Type } from 'class-transformer';
 import { CreateTaskDto } from 'src/task/dto/create-task.dto';
-import { SphereTypeDto } from 'src/common/sphere-type.dto';
+import { SphereDto } from 'src/user-characteristic/dto/sphere.dto';
 import { CreateStageDto } from './create-stage.dto';
 
 export class CreateGoalDto {
@@ -14,8 +14,8 @@ export class CreateGoalDto {
   })
   readonly name: string;
 
-  @IsEnum(SphereTypeDto)
-  readonly sphere: SphereTypeDto;
+  @IsEnum(SphereDto)
+  readonly sphere: SphereDto;
 
   @IsString()
   @IsDateString()

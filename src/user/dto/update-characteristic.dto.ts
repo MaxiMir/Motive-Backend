@@ -1,13 +1,13 @@
 import { IsEnum, IsInt, Max, Min } from 'class-validator';
 import { ApiProperty } from '@nestjs/swagger';
-import { SphereTypeDto } from 'src/common/sphere-type.dto';
+import { SphereDto } from 'src/user-characteristic/dto/sphere.dto';
 
 export class UpdateCharacteristicDto {
-  @IsEnum(SphereTypeDto)
-  readonly sphere: string;
+  @IsEnum(SphereDto)
+  readonly name: string;
 
   @IsInt()
-  @Min(0)
+  @Min(1)
   @Max(10)
   @ApiProperty({
     example: 2,

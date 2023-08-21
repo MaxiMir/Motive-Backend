@@ -1,3 +1,8 @@
-export const LOCALES = ['en', 'ru', 'uk', 'zh-CN'] as const;
+export enum LocaleDto {
+  En = 'en',
+  Ru = 'ru',
+  Uk = 'uk',
+  Zh = 'zh-CN',
+}
 
-export type LocaleDto = (typeof LOCALES)[number];
+export const LOCALES = Object.values(LocaleDto);

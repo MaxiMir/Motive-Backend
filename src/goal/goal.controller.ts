@@ -23,9 +23,9 @@ import { CalendarDto } from './dto/calendar.dto';
 import { UpdateStageDto } from './dto/update-stage.dto';
 import { GoalEntity } from './entities/goal.entity';
 import { GoalService } from './goal.service';
-import { ApiImageFile } from '../decorators/api-image.decorator';
-import { UserEntity } from '../user/entities/user.entity';
-import { ParseFile } from '../pipes/parse-file.pipe';
+import { ApiImageFile } from 'src/decorators/api-image.decorator';
+import { UserEntity } from 'src/user/entities/user.entity';
+import { ParseFile } from 'src/pipes/parse-file.pipe';
 
 @Controller('goals')
 @ApiTags('Goals')

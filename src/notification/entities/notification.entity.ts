@@ -1,6 +1,6 @@
 import { ApiProperty } from '@nestjs/swagger';
 import { Column, CreateDateColumn, Entity, JoinColumn, ManyToOne, PrimaryGeneratedColumn } from 'typeorm';
-import { NotificationTypeDto } from 'src/common/notification-type.dto';
+import { NotificationTypeDto } from 'src/notification/dto/notification.type.dto';
 import { UserEntity } from 'src/user/entities/user.entity';
 import { DetailsDto } from 'src/notification/dto/details.dto';
 

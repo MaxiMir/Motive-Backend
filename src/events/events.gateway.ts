@@ -7,7 +7,7 @@ import {
 } from '@nestjs/websockets';
 import { Logger } from '@nestjs/common';
 import { Server, Socket } from 'socket.io';
-import { NotificationTypeDto } from 'src/common/notification-type.dto';
+import { NotificationTypeDto } from 'src/notification/dto/notification.type.dto';
 import { DetailsDto } from 'src/notification/dto/details.dto';
 import { UserService } from 'src/user/user.service';
 

@@ -8,10 +8,10 @@ import { GoalService } from 'src/goal/goal.service';
 import { DayService } from 'src/day/day.service';
 import { UserCharacteristicEntity } from 'src/user-characteristic/entities/user-characteristic.entity';
 import { DayEntity } from 'src/day/entities/day.entity';
+import { GoalEntity } from 'src/goal/entities/goal.entity';
 import { CreateMemberDto } from './dto/create-member.dto';
 import { MemberEntity } from './entities/member.entity';
 import { UpdateMemberDto } from './dto/update-member.dto';
-import { GoalEntity } from '../goal/entities/goal.entity';
 
 @Injectable()
 export class MemberService {

@@ -5,11 +5,11 @@ import { FindOneOptions } from 'typeorm/find-options/FindOneOptions';
 import { v4 } from 'uuid';
 import { FileService } from 'src/file/file.service';
 import { UserCharacteristicEntity } from 'src/user-characteristic/entities/user-characteristic.entity';
+import { ExpService } from 'src/exp/exp.service';
 import { UpdateUserDto } from './dto/update-user.dto';
 import { CreateUserDto } from './dto/create-user.dto';
 import { FindQueryDto } from './dto/find-query.dto';
 import { UserEntity } from './entities/user.entity';
-import { ExpService } from '../exp/exp.service';
 import { UpdateCharacteristicDto } from './dto/update-characteristic.dto';
 
 @Injectable()
@@ -72,7 +72,7 @@ export class UserService {
 
   async updateCharacteristic(dto: UpdateCharacteristicDto, userId: number) {
     const user = await this.findByPK(userId, { relations: ['characteristic'] });
-    user.characteristic[dto.sphere] = dto.value;
+    user.characteristic[dto.name] = dto.value;
 
     return this.userRepository.save(user);
   }

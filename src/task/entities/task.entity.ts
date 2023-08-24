@@ -1,6 +1,7 @@
 import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
 import { Column, Entity, ManyToOne, PrimaryGeneratedColumn } from 'typeorm';
 import { DayEntity } from 'src/day/entities/day.entity';
+import { TaskPriorityDto } from './task-priority.dto';
 
 @Entity('tasks', {
   orderBy: {
@@ -24,6 +25,19 @@ export class TaskEntity {
   })
   name: string;
 
+  @Column({ type: 'text', nullable: true })
+  @ApiProperty({
+    example: 'task description',
+  })
+  description: string | null;
+
+  @Column({
+    type: 'enum',
+    enum: TaskPriorityDto,
+    nullable: true,
+  })
+  priority: TaskPriorityDto;
+
   @Column({
     type: 'timestamp with time zone',
     nullable: true,
@@ -32,7 +46,7 @@ export class TaskEntity {
     example: '2022-02-16 00:00:00+03',
     description: 'reminder date',
   })
-  date: string;
+  date: string | null;
 
   @Column('boolean', { default: false })
   @ApiProperty({

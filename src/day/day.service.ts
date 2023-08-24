@@ -20,13 +20,12 @@ export class DayService {
   create(dto: CreateDayDto, userId: number) {
     return this.dayRepository.create({
       date: dto.date,
-      tasks: dto.tasks.map(({ name, date }) => {
+      tasks: dto.tasks.map(({ name, date, description, priority }) => {
         const task = new TaskEntity();
         task.name = name;
-
-        if (date) {
-          task.date = date;
-        }
+        task.date = date || null;
+        task.description = description || null;
+        task.priority = priority || null;
 
         task.userId = userId;
 

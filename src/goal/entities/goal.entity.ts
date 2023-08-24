@@ -40,11 +40,18 @@ export class GoalEntity {
   @ApiProperty({
     example: '2022-02-16 00:00:00+03',
   })
+  created: string;
+
+  @Column({
+    type: 'timestamp with time zone',
+  })
+  @ApiProperty({
+    example: '2022-02-16 00:00:00+03',
+  })
   started: string;
 
   @Column({
     type: 'timestamp with time zone',
-    default: () => "'TODAY'",
   })
   @ApiProperty({
     example: '2022-02-16 00:00:00+03',

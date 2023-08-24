@@ -137,7 +137,7 @@ export class GoalService {
 
   async delete(id: number, owner: number) {
     const goal = await this.goalRepository.findOneOrFail({
-      where: { id, owner, started: Raw((alias) => `${alias} = CURRENT_DATE`) },
+      where: { id, owner, created: Raw((alias) => `${alias} = CURRENT_DATE`) },
       relations: ['days', 'days.feedback'],
     });
     const images = goal.days

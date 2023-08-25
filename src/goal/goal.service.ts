@@ -131,8 +131,9 @@ export class GoalService {
     goal.stages = dto.stages;
     goal.days = [day];
     goal.owner = owner;
+    const { days, ...entity } = await this.goalRepository.save(goal);
 
-    return this.goalRepository.save(goal);
+    return { ...entity, day, calendar: [{ id: day.id, date: dto.started }] };
   }
 
   async delete(id: number, owner: number) {
@@ -175,8 +176,9 @@ export class GoalService {
     day.stage = goal.stage;
     goal.days.push(day);
     goal.updated = dto.date;
+    const entity = await this.goalRepository.save(goal);
 
-    return this.goalRepository.save(goal);
+    return { ...entity, day };
   }
 
   async updateStage(id: number, dto: UpdateStageDto, ownerId: number) {

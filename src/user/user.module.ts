@@ -6,10 +6,11 @@ import { Unique } from 'src/validators/unique';
 import { UserEntity } from './entities/user.entity';
 import { UserController } from './user.controller';
 import { UserService } from './user.service';
+import { UserSubscriber } from './user.subscriber';
 
 @Module({
   controllers: [UserController],
-  providers: [Unique, UserService],
+  providers: [Unique, UserService, UserSubscriber],
   imports: [TypeOrmModule.forFeature([UserEntity]), FileModule, ExpModule],
   exports: [UserService],
 })

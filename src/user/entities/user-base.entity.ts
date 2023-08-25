@@ -10,7 +10,7 @@ export class UserBaseEntity {
   id: number;
 
   @Index({ unique: true })
-  @Column()
+  @Column({ nullable: true })
   @ApiProperty({
     example: 'maximir',
   })

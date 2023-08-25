@@ -2,7 +2,6 @@ import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { FindOneOptions } from 'typeorm/find-options/FindOneOptions';
-import { v4 } from 'uuid';
 import { FileService } from 'src/file/file.service';
 import { UserCharacteristicEntity } from 'src/user-characteristic/entities/user-characteristic.entity';
 import { ExpService } from 'src/exp/exp.service';
@@ -27,7 +26,6 @@ export class UserService {
 
   async create(dto: CreateUserDto) {
     const user = this.userRepository.create(dto);
-    user.nickname = v4();
     user.characteristic = new UserCharacteristicEntity();
     user.characteristic.nextLevelPoints = this.expService.toLevel(2);
     user.registered = new Date().toISOString();

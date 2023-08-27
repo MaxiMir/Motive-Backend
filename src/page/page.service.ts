@@ -89,7 +89,7 @@ export class PageService {
     const { q = '', type } = params;
     const users = await this.findByProgress(8);
     const goal = []; // await this.goalService.findByPK(1, { relations: ['owner'] });
-    const hashtags = await this.hashtagService.find({ take: 12, order: { views: 'DESC' } });
+    // const hashtags = await this.hashtagService.find({ take: 12, order: { views: 'DESC' } });
 
     return {
       q,

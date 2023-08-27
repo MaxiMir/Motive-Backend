@@ -37,17 +37,13 @@ export class UserBaseEntity {
   })
   email: string;
 
-  @Column({ select: false, nullable: true })
+  @Index({ unique: true })
+  @Column({ select: false })
   @ApiProperty({
-    example: '135316',
+    description: 'provider + sub',
+    example: 'google-104276456383276546000',
   })
-  sub: string;
-
-  @Column({ select: false, nullable: true })
-  @ApiProperty({
-    example: 'Github',
-  })
-  provider: string;
+  authId: string;
 
   @Column('boolean', { nullable: true })
   @ApiProperty({
@@ -85,7 +81,11 @@ export class UserBaseEntity {
   })
   bio: string;
 
-  @Column({ type: 'timestamp with time zone', select: false, nullable: true })
+  @Column({
+    type: 'timestamp with time zone',
+    default: () => 'CURRENT_TIMESTAMP',
+    select: false,
+  })
   @ApiProperty({
     example: '2022-02-16 00:00:00+03',
   })

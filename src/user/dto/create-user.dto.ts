@@ -12,6 +12,7 @@ export class CreateUserDto {
   readonly name: string;
 
   @IsEmail()
+  @IsOptional()
   @Transform(({ value }) => value.trim())
   @ApiProperty({
     example: 'maximir',
@@ -23,10 +24,5 @@ export class CreateUserDto {
   readonly avatar?: string;
 
   @IsString()
-  @IsOptional()
-  readonly sub?: string;
-
-  @IsString()
-  @IsOptional()
-  readonly provider?: string;
+  readonly authId: string;
 }

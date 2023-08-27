@@ -25,10 +25,16 @@ export class UserService {
   }
 
   async create(dto: CreateUserDto) {
+    const [lastUser] = await this.userRepository.find({
+      order: {
+        id: 'DESC',
+      },
+      take: 1,
+    });
     const user = this.userRepository.create(dto);
+    user.nickname = `id${lastUser?.id || 0} + 1}`;
     user.characteristic = new UserCharacteristicEntity();
     user.characteristic.nextLevelPoints = this.expService.toLevel(2);
-    user.registered = new Date().toISOString();
 
     return this.userRepository.save(user);
   }

@@ -32,7 +32,7 @@ export class UserService {
       take: 1,
     });
     const user = this.userRepository.create(dto);
-    user.nickname = `id${lastUser?.id || 0} + 1}`;
+    user.nickname = `id${(lastUser?.id || 0) + 1}`;
     user.characteristic = new UserCharacteristicEntity();
     user.characteristic.nextLevelPoints = this.expService.toLevel(2);
 

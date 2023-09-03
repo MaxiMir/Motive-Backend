@@ -70,7 +70,7 @@ export class TopicService {
     }
 
     const ids = topics.reduce((acc, { id, answer }) => [...acc, id, ...(!answer ? [] : [answer.id])], []);
-    const likedTopic = await this.topicLikeService.findLikedTopics(userId, ids);
+    const likedTopic = await this.topicLikeService.findLikedTopics(ids, userId);
 
     return topics.map((topic) => ({
       ...topic,

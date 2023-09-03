@@ -64,8 +64,8 @@ export class PageService {
     const following = !clientId ? false : await this.subscriptionService.checkOnFollowing(user.id, clientId);
     const memberGoals = await this.findClientMemberGoals(membership);
     const pointsMap = await this.findPointsMap([...user.goals, ...memberGoals], clientId);
-    const ownerGoalsWithDay = await this.findDays(user.goals, pointsMap, queryDayMap);
-    const memberGoalsWithDay = await this.findDays(memberGoals, pointsMap, queryDayMap, membership);
+    const ownerGoalsWithDay = await this.findDay(user.goals, pointsMap, queryDayMap);
+    const memberGoalsWithDay = await this.findDay(memberGoals, pointsMap, queryDayMap, membership);
     const goals = await this.findLastMembers([...ownerGoalsWithDay, ...memberGoalsWithDay]);
 
     return {
@@ -153,7 +153,7 @@ export class PageService {
     return { ...article, more };
   }
 
-  private async findDays(
+  private async findDay(
     goals: GoalEntity[],
     pointsMap: PointsMap,
     queryDayMap: GoalDayDto[],
@@ -212,15 +212,12 @@ export class PageService {
     const likedDays = await this.dayPointService
       .getRepository()
       .createQueryBuilder('day-point')
-      .select(['day-point.goal.id as goal_id', 'day-point.day.id as day_id'])
+      .select(['day-point.goal.id as goal', 'day-point.day.id as day'])
       .where('day-point.goal.id in (:...ids)', { ids })
       .andWhere('day-point.user.id = :userId', { userId })
       .getRawMany();
 
-    return likedDays.reduce(
-      (acc, { goal_id, day_id }) => ({ ...acc, [goal_id]: [...(acc[goal_id] || []), day_id] }),
-      {},
-    );
+    return likedDays.reduce((acc, { goal, day }) => ({ ...acc, [goal]: [...(acc[goal] || []), day] }), {});
   }
 
   private async findClientMemberGoals(membership: MemberEntity[], clientId?: number) {

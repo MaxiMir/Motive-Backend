@@ -10,14 +10,14 @@ export class TopicLikeService {
     private readonly topicRepository: Repository<TopicLikeEntity>,
   ) {}
 
-  async findLikedTopics(userId: number, topicIds: number[]) {
+  async findLikedTopics(ids: number[], userId: number) {
     const likes = await this.topicRepository
       .createQueryBuilder('like')
-      .select(['like.topic.id as topic_id'])
-      .where('like.topic.id in (:...topicIds)', { topicIds })
+      .select(['like.topic.id as id'])
+      .where('like.topic.id in (:...ids)', { ids })
       .andWhere('like.user.id = :userId', { userId })
       .getRawMany();
 
-    return likes.map((l) => l.topic_id);
+    return likes.map((l) => l.id);
   }
 }

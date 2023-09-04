@@ -14,6 +14,7 @@ import { MemberService } from 'src/member/member.service';
 import { ArticleService } from 'src/article/article.service';
 import { SearchQueryDto } from './dto/search-query.dto';
 import { LocaleDto } from 'src/common/locale.dto';
+import { UserPageGoal } from './dto/goal.dto';
 
 type PointsMap = Record<number, number[]>;
 
@@ -66,7 +67,8 @@ export class PageService {
     const pointsMap = await this.findPointsMap([...user.goals, ...memberGoals], clientId);
     const ownerGoalsWithDay = await this.findDay(user.goals, pointsMap, queryDayMap);
     const memberGoalsWithDay = await this.findDay(memberGoals, pointsMap, queryDayMap, membership);
-    const goals = await this.findLastMembers([...ownerGoalsWithDay, ...memberGoalsWithDay]);
+    const goalsWithMembers = await this.findLastMembers([...ownerGoalsWithDay, ...memberGoalsWithDay]);
+    const goals = await this.findLastLikes(goalsWithMembers);
 
     return {
       ...user,
@@ -231,7 +233,7 @@ export class PageService {
     }));
   }
 
-  private async findLastMembers(goals: GoalEntity[]) {
+  private async findLastMembers(goals: UserPageGoal[]) {
     const maxCount = 3;
     const ids = goals.map((g) => g.id);
 
@@ -258,6 +260,39 @@ export class PageService {
     return goals.map((goal) => ({
       ...goal,
       lastMembers: members.filter((m) => m.goal === goal.id).slice(0, maxCount),
+    }));
+  }
+
+  private async findLastLikes(goals: UserPageGoal[]) {
+    const maxCount = 4;
+    const ids = goals.map((g) => g.day.id);
+
+    if (!ids.length) {
+      return goals;
+    }
+
+    const lastRated = await this.dayPointService
+      .getRepository()
+      .createQueryBuilder('day-point')
+      .leftJoinAndSelect('day-point.user', 'user')
+      .select([
+        'day-point.day.id as day',
+        'user.id as id',
+        'user.nickname as nickname',
+        'user.name as name',
+        'user.avatar as avatar',
+      ])
+      .where('day-point.day.id in (:...ids)', { ids })
+      .limit(ids.length * maxCount)
+      .orderBy('day-point.id', 'DESC')
+      .getRawMany();
+
+    return goals.map(({ day, ...goal }) => ({
+      ...goal,
+      day: {
+        ...day,
+        lastRated: lastRated.filter((l) => l.day === day.id).slice(0, maxCount),
+      },
     }));
   }
 }

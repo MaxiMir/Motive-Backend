@@ -4,7 +4,7 @@ import { Identify } from 'src/decorators/identify.decorator';
 import { GoalEntity } from 'src/goal/entities/goal.entity';
 import { AuthGuard } from 'src/guards/auth.guard';
 import { CreateDayDto } from './dto/create-day.dto';
-import { DayEntity } from './entities/day.entity';
+import { DayDto } from './dto/day.dto';
 import { DayService } from './day.service';
 
 @Controller('days')
@@ -23,9 +23,9 @@ export class DayController {
 
   @Get(':id')
   @ApiOperation({ summary: 'Get day' })
-  @ApiResponse({ status: 200, type: DayEntity })
+  @ApiResponse({ status: 200, type: DayDto })
   getByPK(@Param('id', ParseIntPipe) id: number) {
-    return this.dayService.findByPK(id, { relations: ['tasks', 'feedback'] });
+    return this.dayService.findByPKWithRated(id, { relations: ['tasks', 'feedback'] });
   }
 
   @Patch(':id/views')

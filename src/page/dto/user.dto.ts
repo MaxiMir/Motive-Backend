@@ -3,7 +3,7 @@ import { UserCharacteristicEntity } from 'src/user-characteristic/entities/user-
 import { UserBaseEntity } from 'src/user/entities/user-base.entity';
 import { MemberEntity } from 'src/member/entities/member.entity';
 import { ConfirmationEntity } from 'src/confirmation/entities/confirmation.entity';
-import { UserPageGoal } from './user-page-goal.dto';
+import { UserPageGoal } from './goal.dto';
 
 export class UserDto extends UserBaseEntity {
   @ApiProperty({ type: 'boolean' })

@@ -265,7 +265,7 @@ export class PageService {
 
   private async findLastLikes(goals: UserPageGoal[]) {
     const maxCount = 4;
-    const ids = goals.map((g) => g.day.id);
+    const ids = goals.filter((g) => g.day.pointsRated).map((g) => g.day.id);
 
     if (!ids.length) {
       return goals;

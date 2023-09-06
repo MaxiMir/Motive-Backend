@@ -57,7 +57,7 @@ export class ConfirmationService {
     });
   }
 
-  async find(query: FindQueryDto) {
+  find(query: FindQueryDto) {
     const { where, take, skip } = query;
 
     return this.confirmationRepository.find({

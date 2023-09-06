@@ -79,8 +79,8 @@ export class TopicService {
     }));
   }
 
-  async findByPK(id: number, options?: FindOneOptions<TopicEntity>) {
-    return await this.topicRepository.findOneOrFail({ id }, options);
+  findByPK(id: number, options?: FindOneOptions<TopicEntity>) {
+    return this.topicRepository.findOneOrFail({ id }, options);
   }
 
   async updateLikes(id: number, operation: OperationDto, userId: number) {

@@ -55,13 +55,7 @@ export class DayService {
       .getRepository()
       .createQueryBuilder('day-point')
       .leftJoinAndSelect('day-point.user', 'user')
-      .select([
-        'day-point.day.id as day',
-        'user.id as id',
-        'user.nickname as nickname',
-        'user.name as name',
-        'user.avatar as avatar',
-      ])
+      .select(['user.id as id', 'user.nickname as nickname', 'user.name as name', 'user.avatar as avatar'])
       .where('day-point.day.id = :id', { id })
       .limit(4)
       .orderBy('day-point.id', 'DESC')

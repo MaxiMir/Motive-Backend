@@ -235,7 +235,7 @@ export class PageService {
 
   private async findLastMembers(goals: UserPageGoal[]) {
     const maxCount = 3;
-    const ids = goals.map((g) => g.id);
+    const ids = goals.filter((g) => g.members).map((g) => g.id);
 
     if (!ids.length) {
       return goals;

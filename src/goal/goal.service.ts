@@ -223,7 +223,7 @@ export class GoalService {
 
   async updateCover(file: Express.Multer.File, id: number, owner: number) {
     const goal = await this.goalRepository.findOneOrFail({ where: { id, owner } });
-    const newCover = await this.fileService.uploadImage(file, 'avatars', { width: 900 });
+    const newCover = await this.fileService.uploadImage(file, 'goals', { width: 900 });
     const prevCover = goal.cover;
     goal.cover = newCover.src;
 

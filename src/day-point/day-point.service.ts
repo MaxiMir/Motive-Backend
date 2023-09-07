@@ -15,17 +15,19 @@ export class DayPointService {
     return this.dayPointRepository;
   }
 
-  find(query: FindQueryDto) {
+  async find(query: FindQueryDto) {
     const { where, take, skip } = query;
 
-    return this.dayPointRepository
-      .createQueryBuilder('day-point')
-      .leftJoinAndSelect('day-point.user', 'user')
-      .select(['user.id as id', 'user.nickname as nickname', 'user.name as name', 'user.avatar as avatar'])
-      .where(where)
-      .take(take)
-      .skip(skip)
-      .orderBy('day-point.id', 'DESC')
-      .getRawMany();
+    const dayPoints = await this.dayPointRepository.find({
+      order: {
+        id: 'DESC',
+      },
+      relations: ['user', 'user.characteristic'],
+      where,
+      take,
+      skip,
+    });
+
+    return dayPoints.map((d) => d.user);
   }
 }

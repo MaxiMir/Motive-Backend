@@ -14,10 +14,6 @@ export class UserCharacteristicSubscriber implements EntitySubscriberInterface<U
     return UserCharacteristicEntity;
   }
 
-  async afterLoad(characteristic: UserCharacteristicEntity) {
-    characteristic.level = Math.trunc(characteristic.progress);
-  }
-
   async beforeUpdate(event: UpdateEvent<UserCharacteristicEntity>) {
     if (!event.entity?.id) return;
 

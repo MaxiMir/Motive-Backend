@@ -12,7 +12,7 @@ export class SubscriptionEntity {
   id: number;
 
   @Index({ unique: true })
-  @Column()
+  @Column({ select: false })
   @ApiProperty({
     example: '1:53',
     description: '{user.id}:{follower.id}',

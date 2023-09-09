@@ -13,7 +13,7 @@ export class TopicLikeEntity {
   id: number;
 
   @Index({ unique: true })
-  @Column()
+  @Column({ select: false })
   @ApiProperty({
     example: '1:53',
     description: '{user.id}:{topic.id}',

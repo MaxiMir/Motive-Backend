@@ -29,8 +29,8 @@ export class SubscriptionService {
 
   async findFollowing(userId: number, pagination: PaginationDto) {
     const result = await this.subscriptionRepository.find({
-      where: { follower: userId },
       relations: ['user', 'user.characteristic'],
+      where: { follower: userId },
       order: {
         id: 'DESC',
       },
@@ -42,8 +42,8 @@ export class SubscriptionService {
 
   async findFollowers(userId: number, pagination?: PaginationDto) {
     const result = await this.subscriptionRepository.find({
-      where: { user: userId },
       relations: ['follower', 'follower.characteristic'],
+      where: { user: userId },
       order: {
         id: 'DESC',
       },

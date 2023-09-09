@@ -1,4 +1,13 @@
-import { Column, Entity, Index, JoinColumn, ManyToOne, PrimaryGeneratedColumn, RelationId } from 'typeorm';
+import {
+  Column,
+  CreateDateColumn,
+  Entity,
+  Index,
+  JoinColumn,
+  ManyToOne,
+  PrimaryGeneratedColumn,
+  RelationId,
+} from 'typeorm';
 import { ApiProperty } from '@nestjs/swagger';
 import { UserEntity } from 'src/user/entities/user.entity';
 import { DayEntity } from 'src/day/entities/day.entity';
@@ -14,18 +23,22 @@ export class DayPointEntity {
   id: number;
 
   @Index({ unique: true })
-  @Column()
+  @Column({ select: false })
   @ApiProperty({
     example: '1:53',
     description: '{user.id}:{day.id}',
   })
   uniq: string;
 
+  @CreateDateColumn({ type: 'timestamp with time zone', default: () => 'CURRENT_TIMESTAMP' })
+  date: Date;
+
   @ManyToOne(() => GoalEntity, { nullable: false, onDelete: 'CASCADE' })
   @JoinColumn()
   goal: GoalEntity;
 
   @RelationId((reaction: DayPointEntity) => reaction.goal)
+  @Column({ select: false })
   goalId: number;
 
   @ManyToOne(() => DayEntity, { nullable: false, onDelete: 'CASCADE' })

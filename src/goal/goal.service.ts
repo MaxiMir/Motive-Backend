@@ -138,8 +138,8 @@ export class GoalService {
 
   async delete(id: number, owner: number) {
     const goal = await this.goalRepository.findOneOrFail({
-      where: { id, owner, created: Raw((alias) => `${alias} = CURRENT_DATE`) },
       relations: ['days', 'days.feedback'],
+      where: { id, owner, created: Raw((alias) => `${alias} = CURRENT_DATE`) },
     });
     const images = goal.days
       .flatMap<string | null>((d) => d.feedback?.photos?.map((p) => p.src))
@@ -169,8 +169,8 @@ export class GoalService {
   async addDay(id: number, dto: CreateDayDto, userId: number) {
     const owner = { id: userId };
     const goal = await this.goalRepository.findOneOrFail({
-      where: { id, owner },
       relations: ['days'],
+      where: { id, owner },
     });
     const day = this.dayService.create(dto, userId);
     day.stage = goal.stage;

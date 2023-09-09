@@ -56,8 +56,8 @@ export class TopicService {
   async find(query: FindQueryDto, userId?: number) {
     const { where, take, skip } = query;
     const topics = await this.topicRepository.find({
-      where: { type: Not(TopicTypeDto.Answer), ...where },
       relations: ['answer'],
+      where: { type: Not(TopicTypeDto.Answer), ...where },
       order: {
         id: 'DESC',
       },

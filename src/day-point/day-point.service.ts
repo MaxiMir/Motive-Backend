@@ -15,19 +15,17 @@ export class DayPointService {
     return this.dayPointRepository;
   }
 
-  async find(query: FindQueryDto) {
+  find(query: FindQueryDto) {
     const { where, take, skip } = query;
 
-    const dayPoints = await this.dayPointRepository.find({
+    return this.dayPointRepository.find({
+      relations: ['user', 'user.characteristic'],
       order: {
         id: 'DESC',
       },
-      relations: ['user', 'user.characteristic'],
       where,
       take,
       skip,
     });
-
-    return dayPoints.map((d) => d.user);
   }
 }

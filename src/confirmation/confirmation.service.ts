@@ -62,10 +62,10 @@ export class ConfirmationService {
 
     return this.confirmationRepository.find({
       relations: ['goal', 'goal.owner'],
-      where,
       order: {
         id: 'DESC',
       },
+      where,
       take,
       skip,
     });

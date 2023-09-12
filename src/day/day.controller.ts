@@ -25,7 +25,7 @@ export class DayController {
   @ApiOperation({ summary: 'Get day' })
   @ApiResponse({ status: 200, type: DayDto })
   getByPK(@Param('id', ParseIntPipe) id: number) {
-    return this.dayService.findByPKWithRated(id, { relations: ['tasks', 'feedback'] });
+    return this.dayService.findByPKWithLastRated(id, { relations: ['tasks', 'feedback'] });
   }
 
   @Patch(':id/views')

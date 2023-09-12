@@ -27,7 +27,12 @@ export class TaskService {
 
     return this.taskRepository.manager.transaction(async (transactionalManager) => {
       if (!isMember) {
-        await transactionalManager.increment(GoalEntity, { id: task.day.goalId }, 'points', 1);
+        await transactionalManager
+          .createQueryBuilder()
+          .update(GoalEntity)
+          .set({ points: () => 'points + 1', pointsTasks: () => '"pointsTasks" + 1' })
+          .where('id = :id', { id: task.day.goalId })
+          .execute();
       }
 
       if (updateTask) {

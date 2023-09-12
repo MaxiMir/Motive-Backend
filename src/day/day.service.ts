@@ -44,7 +44,7 @@ export class DayService {
     return this.dayRepository.findOneOrFail({ id }, options);
   }
 
-  async findByPKWithRated(id: number, options?: FindOneOptions<DayEntity>) {
+  async findByPKWithLastRated(id: number, options?: FindOneOptions<DayEntity>) {
     const day = await this.findByPK(id, options);
 
     if (!day.pointsRated) {

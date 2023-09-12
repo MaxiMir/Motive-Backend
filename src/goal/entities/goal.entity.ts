@@ -81,6 +81,13 @@ export class GoalEntity {
   })
   points: number;
 
+  @Column({ default: 0 })
+  @ApiProperty({
+    example: 32,
+    description: 'points for completed tasks',
+  })
+  pointsTasks: number;
+
   @ApiProperty({
     example: 1,
     description: 'members',

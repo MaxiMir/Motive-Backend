@@ -4,13 +4,14 @@ docker-compose up -d # установка образа с бд
 yarn start:dev
 ```
 
-### ARTIFACTORY:
+### Docker Hub:
 ```shell
-docker build -t mmirrev/backend:1.0.57 .
+docker build -t mmirrev/backend:1.0.58 .
+docker buildx build --platform linux/amd64 -t mmirrev/backend:1.0.58 .
 
-docker tag $ mmirrev/backend:1.0.57
-docker push mmirrev/backend:1.0.57
-docker pull mmirrev/backend:1.0.57
+docker tag $ mmirrev/backend:1.0.58
+docker push mmirrev/backend:1.0.58
+docker pull mmirrev/backend:1.0.58
 ```
 
 ### INSTALL:

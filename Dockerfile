@@ -12,7 +12,7 @@
 # https://www.bretfisher.com/node-docker-good-defaults/
 # http://goldbergyoni.com/checklist-best-practice-of-node-js-in-production/
 
-FROM node:16-alpine as builder
+FROM node:20-alpine as builder
 
 ENV NODE_ENV build
 
@@ -28,7 +28,7 @@ USER root
 RUN yarn add --platform=linuxmusl --arch=x64 sharp
 RUN yarn build
 
-FROM node:16-alpine
+FROM node:20-alpine
 
 ENV NODE_ENV production
 
